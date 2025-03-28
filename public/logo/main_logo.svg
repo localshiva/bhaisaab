@@ -1,9 +1,5 @@
-import { FC, SVGProps } from "react";
-
-export const MainLogo: FC<SVGProps<SVGSVGElement>> = props => {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" {...props}>
-      <g transform="translate(145, 150) scale(0.8)">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 150">
+      <g transform="translate(145, 55) scale(0.8)">
         <path
           d="M-20,-50 C10,-50 30,-35 30,-15 C30,0 20,10 10,15 C25,20 40,35 40,55 C40,80 15,100 -20,100 L-40,100 L-40,-50 L-20,-50 Z"
           fill="#2a9d8f"
@@ -26,7 +22,7 @@ export const MainLogo: FC<SVGProps<SVGSVGElement>> = props => {
         />
       </g>
 
-      <g transform="translate(205, 169)">
+      <g transform="translate(210, 75)">
         <text
           font-family="Arial, sans-serif"
           font-size="60"
@@ -41,7 +37,7 @@ export const MainLogo: FC<SVGProps<SVGSVGElement>> = props => {
         </text>
       </g>
 
-      <g transform="translate(251, 158) rotate(180)">
+      <g transform="translate(254, 64) rotate(180)">
         <text
           font-family="Arial, sans-serif"
           font-size="60"
@@ -49,9 +45,7 @@ export const MainLogo: FC<SVGProps<SVGSVGElement>> = props => {
           fill="#2a9d8f"
           text-anchor="middle"
           dominant-baseline="middle"
-          style={{
-            filter: "drop-shadow(1px 1px 1px #e76f51)",
-          }}
+          style="filter: drop-shadow(1px 1px 1px #e76f51);"
         >
           <tspan x="0" y="0">
             A
@@ -59,7 +53,7 @@ export const MainLogo: FC<SVGProps<SVGSVGElement>> = props => {
         </text>
       </g>
 
-      <g transform="translate(370, 169)">
+      <g transform="translate(369, 75)">
         <text
           font-family="Arial, sans-serif"
           font-size="60"
@@ -74,5 +68,3 @@ export const MainLogo: FC<SVGProps<SVGSVGElement>> = props => {
         </text>
       </g>
     </svg>
-  );
-};
