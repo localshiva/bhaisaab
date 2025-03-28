@@ -1,10 +1,10 @@
-import { matchesExactRoute, matchesRouteGroup } from './route-match';
+import { matchesExactRoute, matchesRouteGroup } from "./route-match";
 
 const PUBLIC_ROUTES = {
   exact: {
-    '/privacy-policy': true,
-    '/terms-of-service': true,
-    '/app-install-guide': true,
+    "/privacy-policy": true,
+    "/terms-of-service": true,
+    "/app-install-guide": true,
   },
   groups: {},
 };

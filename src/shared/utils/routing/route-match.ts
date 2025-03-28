@@ -16,10 +16,10 @@ export const matchesRouteGroup = (
   pathname: string,
   groups: Record<string, boolean>,
 ) => {
-  if (!pathname.startsWith('/')) return false;
+  if (!pathname.startsWith("/")) return false;
 
   // e.g /auth/login
-  const pathnameParts = pathname.split('/');
+  const pathnameParts = pathname.split("/");
 
   if (pathnameParts.length < 2) return false;
 

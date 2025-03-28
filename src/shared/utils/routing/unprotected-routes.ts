@@ -1,11 +1,11 @@
-import { matchesExactRoute, matchesRouteGroup } from './route-match';
+import { matchesExactRoute, matchesRouteGroup } from "./route-match";
 
 const UNPROTECTED_ROUTES = {
   exact: {
-    '/': true,
+    "/": true,
   },
   groups: {
-    '/auth': true,
+    "/auth": true,
   },
 };
 

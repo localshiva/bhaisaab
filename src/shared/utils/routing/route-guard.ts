@@ -1,5 +1,5 @@
-import { isPublicRoute } from './public-routes';
-import { isUnprotectedRoute } from './unprotected-routes';
+import { isPublicRoute } from "./public-routes";
+import { isUnprotectedRoute } from "./unprotected-routes";
 
 export function getRedirectUrl(
   pathname: string,
@@ -7,7 +7,7 @@ export function getRedirectUrl(
 ): string | null {
   // Redirect authenticated users away from unprotected routes (like login)
   if (isAuthenticated && isUnprotectedRoute(pathname)) {
-    return '/dashboard';
+    return "/dashboard";
   }
 
   // Redirect unauthenticated users to login for any non-public, non-unprotected route
@@ -17,7 +17,7 @@ export function getRedirectUrl(
     !isPublicRoute(pathname) &&
     !isUnprotectedRoute(pathname)
   ) {
-    return '/auth/login';
+    return "/auth/login";
   }
 
   return null;
