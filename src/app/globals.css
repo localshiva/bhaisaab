@@ -67,8 +67,9 @@
   --color-burnt-sienna-900: #fae2dc;
 
   /* Font */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-varela: var(--font-varela);
+  --font-nunito-sans: var(--font-nunito-sans);
+  --font-mulish: var(--font-mulish);
 }
 
 body {
