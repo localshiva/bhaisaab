@@ -30,7 +30,7 @@ export default function ThemeSwitcher() {
   );
 
   return (
-    <div className="inline-flex items-center rounded-lg border border-border bg-background p-1 space-x-1 shadow-sm">
+    <div className="inline-flex items-center rounded-lg bg-background p-1 space-x-1 shadow-sm">
       {themes.map(theme => renderThemeButton(theme))}
     </div>
   );
