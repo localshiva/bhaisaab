@@ -40,7 +40,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${varela.variable} ${mulish.variable} ${nunitoSans.variable} antialiased dark:bg-charcoal-200 bg-charcoal-900`}
+          className={`${varela.variable} ${mulish.variable} ${nunitoSans.variable} antialiased`}
         >
           {children}
         </body>
