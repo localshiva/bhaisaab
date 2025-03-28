@@ -1,6 +1,6 @@
 # Bhaisaab
 
-Bhaisaab is a web application to track family expense and gather information about the amount available each month. It is built using Next.js, Tailwind CSS, and TypeScript.
+Bhaisaab is a web application to track family expense and gather information about the amount available each month using a Google Sheet. It is built using Next.js, Tailwind CSS, and TypeScript.
 
 Google Sheets API is used to fetch data from Google Sheets. This app will not have any backend code.
 
