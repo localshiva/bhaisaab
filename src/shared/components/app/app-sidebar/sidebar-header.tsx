@@ -1,8 +1,7 @@
+import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { APP_NAME } from "@bhaisaab/shared/constants/app";
 import { PanelLeftOpen, PanelRight, PanelRightOpen } from "lucide-react";
 import { FC } from "react";
-
-import { Typography } from "../core/typography";
 
 interface SidebarHeaderProps {
   isCollapsed: boolean;
