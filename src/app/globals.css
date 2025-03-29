@@ -95,6 +95,14 @@
   }
 }
 
+@utility container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: var(--padding);
+}
+
 :root {
   --radius: 0.5rem;
 }

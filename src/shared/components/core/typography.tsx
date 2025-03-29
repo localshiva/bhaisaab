@@ -73,8 +73,8 @@ const typographyVariants = cva("text-black dark:text-white", {
     textColor: {
       // Base colors
       primary: "text-charcoal-500 dark:text-white",
-      secondary: "text-charcoal-600 dark:text-charcoal-300",
-      muted: "text-charcoal-400 dark:text-charcoal-500",
+      secondary: "text-charcoal-300 dark:text-charcoal-800",
+      muted: "text-charcoal-400 dark:text-charcoal-900",
 
       // Brand colors
       accent: "text-persian-green-500 dark:text-persian-green-400",
@@ -84,7 +84,7 @@ const typographyVariants = cva("text-black dark:text-white", {
       success: "text-persian-green-600 dark:text-persian-green-300",
 
       // Interactive colors
-      link: "text-persian-green-600 hover:text-persian-green-700 dark:text-persian-green-400 dark:hover:text-persian-green-300",
+      link: "text-persian-green-600 hover:text-persian-green-700 dark:text-persian-green-600 dark:hover:text-persian-green-500 hover:underline",
 
       // Stats/metrics colors
       positive: "text-persian-green-600 dark:text-persian-green-300",

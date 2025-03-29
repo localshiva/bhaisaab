@@ -12,7 +12,7 @@ const buttonVariants = cva(
           "bg-charcoal-500 text-white shadow-xs hover:bg-charcoal-600 dark:bg-charcoal-400 dark:text-white dark:hover:bg-charcoal-300 focus-visible:ring-charcoal-300/50",
 
         primary:
-          "bg-persian-green-500 text-white shadow-xs hover:bg-persian-green-600 dark:bg-persian-green-400 dark:text-white dark:hover:bg-persian-green-300 focus-visible:ring-persian-green-300/50",
+          "bg-persian-green-500 dark:bg-persian-green-400 text-white shadow-xs hover:bg-persian-green-600  dark:text-white dark:hover:bg-persian-green-300 focus-visible:ring-persian-green-300/50",
 
         secondary:
           "bg-saffron-500 text-charcoal-200 shadow-xs hover:bg-saffron-600 dark:bg-saffron-400 dark:text-charcoal-800 dark:hover:bg-saffron-300 focus-visible:ring-saffron-300/50",
@@ -24,7 +24,7 @@ const buttonVariants = cva(
           "bg-burnt-sienna-500 text-white shadow-xs hover:bg-burnt-sienna-600 dark:bg-burnt-sienna-400 dark:text-white dark:hover:bg-burnt-sienna-300 focus-visible:ring-burnt-sienna-300/50",
 
         outline:
-          "border border-charcoal-300 bg-transparent text-charcoal-200 shadow-xs hover:bg-charcoal-100 hover:text-charcoal-900 dark:border-charcoal-600 dark:text-charcoal-200 dark:hover:bg-charcoal-800 dark:hover:text-white focus-visible:ring-charcoal-300/50",
+          "border border-charcoal-300 bg-transparent dark:text-white text-charcoal-200 shadow-xs hover:bg-charcoal-100 hover:text-charcoal-900 dark:border-charcoal-600  dark:hover:bg-charcoal-800 dark:hover:text-white focus-visible:ring-charcoal-300/50",
 
         ghost:
           "text-charcoal-800 hover:bg-charcoal-100 hover:text-charcoal-900 dark:text-charcoal-200 dark:hover:bg-charcoal-800 dark:hover:text-white",
@@ -34,7 +34,7 @@ const buttonVariants = cva(
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        lg: "w-full h-10 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-9",
       },
     },

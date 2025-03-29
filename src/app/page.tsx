@@ -1,5 +1,7 @@
-import { Login } from "@bhaisaab/shared/pages/auth/login";
-
-export default function LoginPage() {
-  return <Login />;
+export default function Home() {
+  return (
+    <div>
+      <h1>Home</h1>
+    </div>
+  );
 }
