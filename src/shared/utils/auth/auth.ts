@@ -19,12 +19,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
     },
-    session({ session, user }) {
+    session({ session }) {
       const scope = getCurrentScope();
 
       scope.setUser({
-        id: user.id,
-        email: user.email,
+        id: session.user.id,
+        email: session.user.email,
       });
 
       return session;
