@@ -86,11 +86,6 @@ const typographyVariants = cva("", {
       // Interactive
       link: "text-primary hover:underline",
     },
-    alignment: {
-      left: "text-left",
-      center: "text-center",
-      right: "text-right",
-    },
     transform: {
       uppercase: "uppercase",
       lowercase: "lowercase",
@@ -107,7 +102,6 @@ const typographyVariants = cva("", {
     variant: "body",
     weight: "normal",
     textColor: "default",
-    alignment: "left",
     transform: "normal",
   },
 });
@@ -127,7 +121,6 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
       variant,
       weight,
       textColor,
-      alignment,
       transform,
       decoration,
       as,
@@ -147,7 +140,6 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
             variant,
             weight,
             textColor,
-            alignment,
             transform,
             decoration,
           }),

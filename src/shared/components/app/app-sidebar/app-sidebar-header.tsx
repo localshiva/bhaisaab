@@ -1,4 +1,5 @@
 import {
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarTrigger,
 } from "@bhaisaab/shared/components/core/sidebar";
@@ -10,7 +11,9 @@ export const AppSidebarHeader = () => {
     <SidebarHeader className="overflow-hidden">
       <div className="flex items-center">
         <SidebarTrigger />
-        <Typography variant="h4">{APP_NAME}</Typography>
+        <SidebarGroupLabel>
+          <Typography variant="h6">{APP_NAME}</Typography>
+        </SidebarGroupLabel>
       </div>
     </SidebarHeader>
   );

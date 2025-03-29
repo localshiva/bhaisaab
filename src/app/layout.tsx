@@ -129,7 +129,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${varela.variable} ${mulish.variable} ${nunitoSans.variable} antialiased dark:bg-charcoal-200 bg-charcoal-900`}
+        className={`${varela.variable} ${mulish.variable} ${nunitoSans.variable} antialiased bg-background`}
         suppressHydrationWarning
       >
         <PublicClientProviders nonce={nonce}>

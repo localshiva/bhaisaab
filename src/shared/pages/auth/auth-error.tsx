@@ -16,7 +16,7 @@ export const AuthErrorContainer: FC<AuthErrorContainerProps> = ({
   errorDescription,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+    <div className="container items-center justify-center">
       <div className="w-full max-w-md p-6 space-y-6 bg-card rounded-lg shadow-lg dark:bg-card">
         <div className="flex flex-col items-center space-y-4">
           <div className="rounded-full bg-destructive/10 p-3 dark:bg-destructive/20">

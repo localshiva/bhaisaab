@@ -32,7 +32,7 @@ export default async function LoginPage({
   const error = searchParamResult.error;
 
   return (
-    <form action={handleSignIn}>
+    <form action={handleSignIn} className="w-full">
       <Login error={error} />
     </form>
   );
