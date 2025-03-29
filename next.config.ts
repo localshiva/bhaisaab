@@ -1,9 +1,18 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import withSerwistInit from "@serwist/next";
+import { NextConfig } from "next";
 
-// For type checking during development
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "authjs.dev",
+        pathname: "/img/**",
+      },
+    ],
+  },
+};
 
 const withSerwist = withSerwistInit({
   // Note: This is only an example. If you use Pages Router,

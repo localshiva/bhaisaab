@@ -54,6 +54,7 @@ export function setSecurityHeaders(request: NextRequest) {
     "Permissions-Policy",
     "accelerometer=(),camera=(),geolocation=(),gyroscope=(),magnetometer=(),microphone=(),payment=(),usb=()",
   );
+  response.headers.delete("Content-Security-Policy");
   response.headers.set(
     "Content-Security-Policy",
     contentSecurityPolicyHeaderValue,

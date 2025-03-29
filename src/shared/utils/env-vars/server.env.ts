@@ -3,8 +3,7 @@ import { z } from "zod";
 
 const serverSchema = z.object({
   // Next Auth
-  NEXTAUTH_SECRET: z.string().min(1),
-  NEXTAUTH_URL: z.string().url(),
+  AUTH_SECRET: z.string().min(1),
 
   // Google OAuth
   AUTH_GOOGLE_ID: z.string().min(1),
@@ -21,8 +20,7 @@ const serverSchema = z.object({
 // Server-side env
 export const serverEnv = serverSchema.parse({
   // Next Auth
-  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  AUTH_SECRET: process.env.AUTH_SECRET,
 
   // Google OAuth
   AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
