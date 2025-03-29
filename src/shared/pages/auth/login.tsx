@@ -1,4 +1,3 @@
-// @bhaisaab/shared/pages/auth/login.tsx
 "use client";
 
 import { Button } from "@bhaisaab/shared/components/core/button";
@@ -26,13 +25,13 @@ export const Login: FC<LoginProps> = ({ error }) => {
 
   return (
     <div className="container justify-center items-center">
-      <div className="w-full max-w-md overflow-hidden rounded-xl bg-white shadow-xl dark:bg-charcoal-300">
+      <div className="w-full max-w-md overflow-hidden rounded-lg bg-card shadow-lg dark:bg-card">
         {/* Colorful header band */}
         <div className="flex h-2">
-          <div className="w-1/4 bg-persian-green-500"></div>
-          <div className="w-1/4 bg-saffron-500"></div>
-          <div className="w-1/4 bg-sandy-brown-500"></div>
-          <div className="w-1/4 bg-burnt-sienna-500"></div>
+          <div className="w-1/4 bg-chart-1"></div>
+          <div className="w-1/4 bg-chart-2"></div>
+          <div className="w-1/4 bg-chart-3"></div>
+          <div className="w-1/4 bg-chart-4"></div>
         </div>
 
         <div className="p-8">
@@ -40,13 +39,18 @@ export const Login: FC<LoginProps> = ({ error }) => {
             <Typography variant="h2" textColor="primary" weight="bold">
               {APP_NAME}
             </Typography>
-            <Typography variant="body" textColor="secondary">
+            <Typography variant="body" textColor="muted">
               Sign in to manage your finances
             </Typography>
           </div>
 
           <div className="space-y-6">
-            <Button variant="primary" size="lg" type="submit">
+            <Button
+              variant="default"
+              size="lg"
+              type="submit"
+              className="w-full"
+            >
               <>
                 <svg
                   viewBox="0 0 24 24"
@@ -77,15 +81,15 @@ export const Login: FC<LoginProps> = ({ error }) => {
               </>
             </Button>
 
-            <div className="rounded-md bg-saffron-50 p-3 dark:bg-saffron-900/20">
-              <Typography variant="small" textColor="highlight">
+            <div className="rounded-md bg-chart-4/10 p-3 dark:bg-chart-4/20">
+              <Typography variant="small" textColor="warning">
                 Only authorized emails can access this application
               </Typography>
             </div>
           </div>
 
-          <div className="mt-8 border-t border-gray-200 pt-6 text-center dark:border-charcoal-400">
-            <span className="flex items-center gap-1">
+          <div className="mt-8 border-t border-border pt-6 text-center">
+            <span className="flex items-center justify-center gap-1">
               <Typography variant="small" textColor="muted">
                 Need help?
               </Typography>

@@ -32,34 +32,33 @@ export function getDefaultTextElement(element?: string | null) {
   }
 }
 
-const typographyVariants = cva("text-black dark:text-white", {
+const typographyVariants = cva("", {
   variants: {
     variant: {
-      // Headers using Varela font
-      h1: "font-varela text-4xl sm:text-5xl leading-tight tracking-tight",
-      h2: "font-varela text-3xl sm:text-4xl leading-tight tracking-tight",
-      h3: "font-varela text-2xl sm:text-3xl leading-tight",
-      h4: "font-varela text-xl sm:text-2xl leading-tight",
-      h5: "font-varela text-lg sm:text-xl leading-tight",
-      h6: "font-varela text-base sm:text-lg leading-tight",
+      // Headers
+      h1: "text-4xl sm:text-5xl leading-tight tracking-tight",
+      h2: "text-3xl sm:text-4xl leading-tight tracking-tight",
+      h3: "text-2xl sm:text-3xl leading-tight",
+      h4: "text-xl sm:text-2xl leading-tight",
+      h5: "text-lg sm:text-xl leading-tight",
+      h6: "text-base sm:text-lg leading-tight",
 
       // Special display text variants
-      display:
-        "font-varela text-5xl sm:text-6xl md:text-7xl leading-none tracking-tighter",
-      title: "font-varela text-3xl font-bold tracking-tight leading-none",
-      subtitle: "font-nunito-sans text-xl leading-snug",
+      display: "text-5xl sm:text-6xl md:text-7xl leading-none tracking-tighter",
+      title: "text-3xl font-bold tracking-tight leading-none",
+      subtitle: "text-xl leading-snug",
 
-      // Body text variants using Mulish
-      lead: "font-nunito-sans text-xl leading-relaxed",
-      body: "font-mulish text-base leading-normal",
-      bodyLarge: "font-mulish text-lg leading-relaxed",
-      bodySmall: "font-mulish text-sm leading-normal",
+      // Body text variants
+      lead: "text-xl leading-relaxed",
+      body: "text-base leading-normal",
+      bodyLarge: "text-lg leading-relaxed",
+      bodySmall: "text-sm leading-normal",
 
       // UI specific variants
-      caption: "font-mulish text-sm leading-tight",
-      small: "font-mulish text-xs leading-tight",
-      label: "font-nunito-sans text-sm uppercase tracking-wider",
-      stat: "font-nunito-sans text-3xl sm:text-4xl font-bold",
+      caption: "text-sm leading-tight",
+      small: "text-xs leading-tight",
+      label: "text-sm uppercase tracking-wider",
+      stat: "text-3xl sm:text-4xl font-bold",
     },
     weight: {
       thin: "font-thin",
@@ -71,25 +70,21 @@ const typographyVariants = cva("text-black dark:text-white", {
       extrabold: "font-extrabold",
     },
     textColor: {
-      // Base colors
-      primary: "text-charcoal-500 dark:text-white",
-      secondary: "text-charcoal-300 dark:text-charcoal-800",
-      muted: "text-charcoal-400 dark:text-charcoal-900",
+      // Theme colors
+      default: "text-foreground",
+      muted: "text-muted-foreground",
+      accent: "text-accent-foreground",
+      primary: "text-primary",
+      secondary: "text-secondary",
 
-      // Brand colors
-      accent: "text-persian-green-500 dark:text-persian-green-400",
-      highlight: "text-saffron-500 dark:text-saffron-400",
-      warning: "text-sandy-brown-500 dark:text-sandy-brown-400",
-      danger: "text-burnt-sienna-500 dark:text-burnt-sienna-400",
-      success: "text-persian-green-600 dark:text-persian-green-300",
+      // Status colors
+      destructive: "text-destructive",
+      success: "text-chart-1",
+      warning: "text-chart-4",
+      info: "text-chart-3",
 
-      // Interactive colors
-      link: "text-persian-green-600 hover:text-persian-green-700 dark:text-persian-green-600 dark:hover:text-persian-green-500 hover:underline",
-
-      // Stats/metrics colors
-      positive: "text-persian-green-600 dark:text-persian-green-300",
-      negative: "text-burnt-sienna-500 dark:text-burnt-sienna-400",
-      neutral: "text-saffron-500 dark:text-saffron-400",
+      // Interactive
+      link: "text-primary hover:underline",
     },
     alignment: {
       left: "text-left",
@@ -111,7 +106,7 @@ const typographyVariants = cva("text-black dark:text-white", {
   defaultVariants: {
     variant: "body",
     weight: "normal",
-    textColor: "primary",
+    textColor: "default",
     alignment: "left",
     transform: "normal",
   },
@@ -146,6 +141,7 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
 
     return (
       <Comp
+        data-slot="typography"
         className={cn(
           typographyVariants({
             variant,

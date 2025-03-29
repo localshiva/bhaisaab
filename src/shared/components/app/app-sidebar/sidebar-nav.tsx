@@ -1,75 +1,84 @@
-import { cn } from "@bhaisaab/shared/utils/shadcn";
-import { Banknote, BarChart3, Receipt } from "lucide-react";
+import {
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@bhaisaab/shared/components/core/sidebar";
+import { Typography } from "@bhaisaab/shared/components/core/typography";
+import { Banknote, BarChart3, Plus, Receipt } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useCallback } from "react";
 
-import { Typography } from "../../core/typography";
+// import { usePathname } from "next/navigation";
 
-interface SidebarNavProps {
-  isCollapsed: boolean;
+interface INavItem {
+  title: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  url: string;
 }
 
 const navItems = [
   {
-    name: "Monthly Report",
-    icon: <BarChart3 size={22} />,
-    href: "/dashboard/monthly",
+    title: "Monthly Report",
+    icon: BarChart3,
+    url: "/dashboard/monthly",
   },
   {
-    name: "Loan Report",
-    icon: <Receipt size={22} />,
-    href: "/dashboard/loans",
+    title: "Loan Report",
+    icon: Receipt,
+    url: "/dashboard/loans",
   },
   {
-    name: "FD Report",
-    icon: <Banknote size={22} />,
-    href: "/dashboard/deposits",
+    title: "FD Report",
+    icon: Banknote,
+    url: "/dashboard/deposits",
   },
 ];
 
-export default function SidebarNav({ isCollapsed }: SidebarNavProps) {
-  const pathname = usePathname();
+export default function SidebarNav() {
+  // const pathname = usePathname();
+
+  const renderItem = useCallback((item: INavItem) => {
+    const { title, url, icon: Icon } = item;
+
+    return (
+      <SidebarMenuItem key={title}>
+        <SidebarMenuButton asChild>
+          <Link href={url}>
+            <Icon />
+            <span>
+              <Typography variant={"label"}>{title}</Typography>
+            </span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  }, []);
 
   return (
-    <nav className="flex-1">
-      {navItems.map(item => (
-        <Link key={item.href} href={item.href}>
-          <div
-            className={cn(
-              "flex items-center h-12",
-              pathname === item.href
-                ? "bg-persian-green-500/20"
-                : "hover:bg-charcoal-800/50 dark:hover:bg-charcoal-200/30",
-            )}
-          >
-            <div className="w-16 flex justify-center">
-              <div
-                className={cn(
-                  "text-gray-300",
-                  pathname === item.href ? "text-persian-green-500" : "",
-                )}
-              >
-                {item.icon}
-              </div>
-            </div>
+    <SidebarContent>
+      {/* Nav links */}
+      <SidebarGroup>
+        <SidebarGroupLabel>
+          <Typography textColor="muted" variant={"small"}>
+            Reports
+          </Typography>
+        </SidebarGroupLabel>
 
-            {/* Text only shows when expanded */}
-            {!isCollapsed && (
-              <Typography
-                variant="body"
-                className={cn(
-                  "pl-1",
-                  pathname === item.href
-                    ? "text-persian-green-500"
-                    : "text-gray-300",
-                )}
-              >
-                {item.name}
-              </Typography>
-            )}
-          </div>
-        </Link>
-      ))}
-    </nav>
+        <SidebarGroupAction title="Add Project">
+          <Plus /> <span className="sr-only">Add Project</span>
+        </SidebarGroupAction>
+
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {navItems.map(navItem => renderItem(navItem))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </SidebarContent>
   );
 }

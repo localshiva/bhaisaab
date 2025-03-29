@@ -7,7 +7,6 @@ import { serverEnv } from "../env-vars/server.env";
 export const authDetails = Google({});
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  debug: serverEnv.isDev,
   providers: [Google],
   callbacks: {
     signIn({ user }) {
