@@ -126,14 +126,6 @@ const eslintConfig = [
             format: ["camelCase"],
             leadingUnderscore: "allow",
           },
-
-          // Boolean variables should start with is/has/should/can/will
-          {
-            selector: ["variable"],
-            types: ["boolean"],
-            format: ["PascalCase"],
-            prefix: ["is", "has", "should", "can", "will", "was", "does"],
-          },
         ],
       },
     },
