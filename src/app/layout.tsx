@@ -128,6 +128,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${varela.variable} ${mulish.variable} ${nunitoSans.variable} antialiased`}
+        suppressHydrationWarning
       >
         <PublicClientProviders nonce={nonce}>{children}</PublicClientProviders>
       </body>

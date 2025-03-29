@@ -38,7 +38,6 @@ const config = {
       ],
     ],
     "scope-empty": [2, "never"],
-    "subject-case": [2, "always", CASE],
     "type-case": [2, "always", CASE],
     "scope-case": [2, "always", CASE],
     "subject-empty": [2, "never"],
