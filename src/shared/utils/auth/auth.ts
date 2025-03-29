@@ -1,3 +1,4 @@
+import { getCurrentScope } from "@sentry/nextjs";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
@@ -17,6 +18,16 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     authorized: ({ auth }) => {
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
+    },
+    session({ session, user }) {
+      const scope = getCurrentScope();
+
+      scope.setUser({
+        id: user.id,
+        email: user.email,
+      });
+
+      return session;
     },
   },
   pages: {
