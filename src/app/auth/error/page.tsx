@@ -33,7 +33,10 @@ export default function ErrorPage() {
 
       break;
     }
-    // No default
+    default: {
+      errorMessage = "An unknown error occurred.";
+      errorDescription = "Please try again or contact support.";
+    }
   }
 
   return (
