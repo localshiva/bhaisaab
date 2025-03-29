@@ -1,6 +1,6 @@
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { APP_NAME } from "@bhaisaab/shared/constants/app";
-import { PanelLeftOpen, PanelRight, PanelRightOpen } from "lucide-react";
+import { PanelLeft, PanelLeftOpen, PanelRightOpen } from "lucide-react";
 import { FC } from "react";
 
 interface SidebarHeaderProps {
@@ -22,7 +22,7 @@ export const SidebarHeader: FC<SidebarHeaderProps> = ({
         {/* Claude logo-like element, fixed position */}
         {isCollapsed ? (
           <>
-            <PanelRight size={32} className="text-white group-hover:hidden" />
+            <PanelLeft size={32} className="text-white group-hover:hidden" />
             <PanelLeftOpen
               size={32}
               className="text-white hidden group-hover:block"
