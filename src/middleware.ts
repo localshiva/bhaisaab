@@ -20,11 +20,11 @@ export default auth(req => {
   ];
 
   // Auth routes that should only be accessible when NOT logged in
-  const authRoutes = ["/auth/login", "/api/auth/signin", "/auth/error"];
+  const authRoutes = ["/auth/login", "/auth/error"];
 
   // If user is authenticated and trying to access auth routes, redirect to dashboard
   if (req.auth && authRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   // If user is not authenticated
