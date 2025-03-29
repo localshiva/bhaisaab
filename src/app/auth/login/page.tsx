@@ -1,6 +1,6 @@
 // app/auth/login/page.tsx
 import { Login } from "@bhaisaab/shared/pages/auth/login";
-import { auth, signIn } from "@bhaisaab/shared/utils/auth/auth";
+import { signIn } from "@bhaisaab/shared/utils/auth/auth";
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 
@@ -28,14 +28,8 @@ export default async function LoginPage({
     error?: string;
   }>;
 }) {
-  // Check if user is already authenticated
-  const session = await auth();
   const searchParamResult = await searchParams;
   const error = searchParamResult.error;
-
-  if (session) {
-    return redirect("/");
-  }
 
   return (
     <form action={handleSignIn}>
