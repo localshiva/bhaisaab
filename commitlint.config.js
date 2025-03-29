@@ -36,6 +36,7 @@ const config = {
         "store",
         "service",
         "auth",
+        "ui",
       ],
     ],
     "scope-empty": [2, "never"],
