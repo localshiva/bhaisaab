@@ -2,6 +2,7 @@ import "./globals.css";
 
 import { APP_DESCRIPTION, APP_NAME } from "@bhaisaab/shared/constants/app";
 import { PublicClientProviders } from "@bhaisaab/shared/providers/public-client-providers";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import { Mulish, Nunito_Sans, Varela } from "next/font/google";
 import { headers } from "next/headers";
@@ -131,6 +132,7 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <PublicClientProviders nonce={nonce}>{children}</PublicClientProviders>
+        <SpeedInsights />
       </body>
     </html>
   );
