@@ -17,8 +17,8 @@ export function generateCSP(nonce: string) {
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: ${isProduction ? "" : "'unsafe-eval'"};
     script-src-elem 'self' 'nonce-${nonce}' https: ${isProduction ? "" : "'unsafe-eval'"};
     style-src 'self' 'unsafe-inline';
-    img-src 'self' data: https://i.ytimg.com https://authjs.dev blob:;
     font-src 'self';
+    img-src 'self' data: https://i.ytimg.com https://authjs.dev;
     connect-src 'self' https://i.ytimg.com ${localhostUrls} https://authjs.dev https://accounts.google.com;
     worker-src 'self' blob:;
     manifest-src 'self';
