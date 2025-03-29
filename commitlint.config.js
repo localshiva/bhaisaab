@@ -35,6 +35,7 @@ const config = {
         "provider",
         "store",
         "service",
+        "auth",
       ],
     ],
     "scope-empty": [2, "never"],

@@ -43,14 +43,6 @@ const eslintConfig = [
             allow: [],
           },
         ],
-        "@typescript-eslint/strict-boolean-expressions": [
-          "error",
-          {
-            allowString: false,
-            allowNumber: false,
-            allowNullableObject: false,
-          },
-        ],
         "@typescript-eslint/naming-convention": [
           "error",
           {

@@ -1,13 +1,14 @@
-"use client";
-
-import ThemeSwitcher from "../components/app/theme-switcher";
+import { signIn } from "@bhaisaab/shared/utils/auth/auth";
 
 export const Login = () => {
   return (
-    <div className="flex flex-col gap-4 p-8">
-      <div className="w-full flex justify-end">
-        <ThemeSwitcher />
-      </div>
-    </div>
+    <form
+      action={async () => {
+        "use server";
+        await signIn();
+      }}
+    >
+      <button type="submit">Sign in</button>
+    </form>
   );
 };
