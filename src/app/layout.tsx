@@ -1,6 +1,5 @@
 import "./globals.css";
 
-import { SidebarProvider } from "@bhaisaab/shared/components/core/sidebar";
 import { Toaster } from "@bhaisaab/shared/components/core/sonner";
 import { APP_DESCRIPTION, APP_NAME } from "@bhaisaab/shared/constants/app";
 import { PublicClientProviders } from "@bhaisaab/shared/providers/public-client-providers";
@@ -132,9 +131,7 @@ export default async function RootLayout({
         className={`${varela.variable} ${mulish.variable} ${nunitoSans.variable} antialiased bg-background`}
         suppressHydrationWarning
       >
-        <PublicClientProviders nonce={nonce}>
-          <SidebarProvider>{children}</SidebarProvider>
-        </PublicClientProviders>
+        <PublicClientProviders nonce={nonce}>{children}</PublicClientProviders>
         <Toaster />
       </body>
     </html>

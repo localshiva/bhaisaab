@@ -4,7 +4,6 @@ import { AppSidebarHeader } from "@bhaisaab/shared/components/app/app-sidebar/ap
 import {
   Sidebar,
   SidebarRail,
-  SidebarTrigger,
   useSidebar,
 } from "@bhaisaab/shared/components/core/sidebar";
 import { User } from "next-auth";
@@ -21,7 +20,7 @@ export const AppSidebar = ({ user }: AppSidebarProps) => {
 
   return (
     <>
-      {isMobile && <SidebarTrigger />}
+      {isMobile && <AppSidebarHeader />}
 
       <Sidebar collapsible="icon">
         <AppSidebarHeader />

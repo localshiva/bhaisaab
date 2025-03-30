@@ -1,12 +1,5 @@
-import { AppSidebar } from "@bhaisaab/shared/components/app/app-sidebar/app-sidebar";
-import { auth } from "@bhaisaab/shared/utils/auth/auth";
+import { redirect } from "next/navigation";
 
-export default async function DashboardPage() {
-  const session = await auth();
-
-  return (
-    <main>
-      <AppSidebar user={session?.user} />
-    </main>
-  );
+export default function HomePage() {
+  redirect("/dashboard");
 }
