@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeSwitcher } from "@bhaisaab/shared/components/app/theme-switcher";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { APP_NAME } from "@bhaisaab/shared/constants/app";
@@ -25,6 +26,7 @@ export const Login: FC<LoginProps> = ({ error }) => {
 
   return (
     <div className="container justify-center items-center">
+      <ThemeSwitcher className="justify-center" />
       <div className="w-full max-w-md overflow-hidden rounded-lg bg-card shadow-lg dark:bg-card">
         {/* Colorful header band */}
         <div className="flex h-2">

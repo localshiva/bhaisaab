@@ -1,37 +1,43 @@
 "use client";
 
+import { Button } from "@bhaisaab/shared/components/core/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@bhaisaab/shared/components/core/tooltip";
+import { cn } from "@bhaisaab/shared/utils/shadcn";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useCallback } from "react";
-
-import { Button } from "../core/button";
 
 const themes = [
-  { value: "light", icon: Sun, title: "Light theme" },
-  { value: "system", icon: Monitor, title: "System theme" },
-  { value: "dark", icon: Moon, title: "Dark theme" },
+  { value: "light", icon: Sun, label: "Light" },
+  { value: "system", icon: Monitor, label: "System" },
+  { value: "dark", icon: Moon, label: "Dark" },
 ];
 
-export default function ThemeSwitcher() {
-  const { setTheme } = useTheme();
-
-  const renderThemeButton = useCallback(
-    ({ value, icon: Icon, title }: (typeof themes)[number]) => (
-      <Button
-        key={title}
-        onClick={() => setTheme(value)}
-        title={title}
-        aria-label={title}
-      >
-        <Icon className="h-4 w-4" />
-      </Button>
-    ),
-    [setTheme],
-  );
+export function ThemeSwitcher({ className }: { className?: string }) {
+  const { theme, setTheme } = useTheme();
 
   return (
-    <div className="inline-flex items-center rounded-lg bg-background p-1 space-x-1 shadow-sm">
-      {themes.map(theme => renderThemeButton(theme))}
+    <div className={cn("flex items-center gap-4 py-3 rounded-md", className)}>
+      {themes.map(({ value, icon: Icon, label }) => (
+        <Tooltip key={value}>
+          <TooltipTrigger asChild>
+            <Button
+              size="icon"
+              variant={theme === value ? "default" : "ghost"}
+              className="size-7"
+              onClick={() => setTheme(value)}
+              aria-label={`Switch to ${label} theme`}
+            >
+              <Icon className="size-4" />
+              <span className="sr-only">{label}</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{label} theme</TooltipContent>
+        </Tooltip>
+      ))}
     </div>
   );
 }

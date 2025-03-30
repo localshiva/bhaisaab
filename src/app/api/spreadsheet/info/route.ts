@@ -27,7 +27,7 @@ export async function GET() {
         error:
           error instanceof Error ? error.message : "Unknown error occurred",
       },
-      { status: 500 },
+      { status: (error as { status: number })?.status ?? 500 },
     );
   }
 }

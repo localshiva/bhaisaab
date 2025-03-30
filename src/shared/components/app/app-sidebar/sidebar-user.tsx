@@ -1,7 +1,9 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@bhaisaab/shared/components/core/dropdown-menu";
 import {
@@ -14,6 +16,8 @@ import { ChevronUp, Loader2, User2 } from "lucide-react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useToggle } from "react-use";
+
+import { ThemeSwitcher } from "../theme-switcher";
 
 interface SidebarUserProps {
   user?: User;
@@ -57,12 +61,18 @@ export default function SidebarUser({ user }: SidebarUserProps) {
                 side="top"
                 className="w-[var(--radix-popper-anchor-width)]"
               >
-                <DropdownMenuItem>
-                  <span>Account</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={onSignOut}>
-                  <span>Sign out</span>
-                </DropdownMenuItem>
+                <ThemeSwitcher className="justify-center" />
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <span>Account</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={onSignOut}>
+                    <span>Sign out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
