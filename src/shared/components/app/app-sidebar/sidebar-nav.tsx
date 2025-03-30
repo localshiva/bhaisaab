@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@bhaisaab/shared/components/core/sidebar";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import { Banknote, BarChart3, Plus, Receipt } from "lucide-react";
+import { Banknote, BarChart3, Home, Plus, Receipt } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
 
@@ -22,6 +22,11 @@ interface INavItem {
 }
 
 const navItems = [
+  {
+    title: "Dashboard",
+    icon: Home,
+    url: "/dashboard",
+  },
   {
     title: "Monthly Report",
     icon: BarChart3,

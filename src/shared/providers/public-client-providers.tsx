@@ -1,5 +1,6 @@
 "use client";
 import { SidebarProvider } from "@bhaisaab/shared/components/core/sidebar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
 
@@ -10,6 +11,9 @@ interface PublicClientProvidersProps {
   nonce: string | null;
 }
 
+// Create a client
+const queryClient = new QueryClient();
+
 export function PublicClientProviders({
   children,
   nonce,
@@ -17,20 +21,22 @@ export function PublicClientProviders({
   const isMobile = useIsMobile();
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      enableColorScheme
-      nonce={nonce ?? ""}
-    >
-      <SidebarProvider
-        className={cn({
-          "flex-col": isMobile,
-        })}
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        enableColorScheme
+        nonce={nonce ?? ""}
       >
-        {children}
-      </SidebarProvider>
-    </ThemeProvider>
+        <SidebarProvider
+          className={cn({
+            "flex-col": isMobile,
+          })}
+        >
+          {children}
+        </SidebarProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
