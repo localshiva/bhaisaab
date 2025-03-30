@@ -12,6 +12,7 @@ const clientSchema = z.object({
 
 // Server-side env
 export const clientEnv = clientSchema.parse({
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   // Env
   isProduction: process.env.NODE_ENV === "production",
   isDev: process.env.NODE_ENV === "development",

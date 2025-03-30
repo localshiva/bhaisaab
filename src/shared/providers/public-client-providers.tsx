@@ -1,6 +1,7 @@
 "use client";
 import { SidebarProvider } from "@bhaisaab/shared/components/core/sidebar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
 
@@ -22,21 +23,23 @@ export function PublicClientProviders({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        enableColorScheme
-        nonce={nonce ?? ""}
-      >
-        <SidebarProvider
-          className={cn({
-            "flex-col": isMobile,
-          })}
+      <SessionProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          enableColorScheme
+          nonce={nonce ?? ""}
         >
-          {children}
-        </SidebarProvider>
-      </ThemeProvider>
+          <SidebarProvider
+            className={cn({
+              "flex-col": isMobile,
+            })}
+          >
+            {children}
+          </SidebarProvider>
+        </ThemeProvider>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }

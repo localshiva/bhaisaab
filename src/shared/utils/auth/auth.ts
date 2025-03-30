@@ -19,7 +19,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       return allowedEmails.includes(user.email ?? "");
     },
-    authorized: ({ auth }) => {
+    authorized({ auth }) {
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
     },

@@ -11,7 +11,7 @@ export default async function AuthenticatedLayout({
   return (
     <>
       <AppSidebar user={user} />
-      <main>{children}</main>
+      <main className="w-full">{children}</main>
     </>
   );
 }
