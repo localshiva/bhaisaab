@@ -4,27 +4,44 @@ import { NextResponse } from "next/server";
 import { auth } from "./shared/utils/auth/auth";
 import { setSecurityHeaders } from "./shared/utils/auth/content-security-policy";
 
+const API_AUTH_SIGNIN_PATH = "/api/auth";
+
+// Fully public routes that anyone can access regardless of auth status
+const publicRoutes = ["/privacy-policy", "/terms-and-conditions", "/contact"];
+
+// Auth routes that should only be accessible when NOT logged in
+const authRoutes = ["/auth/login", "/auth/error", API_AUTH_SIGNIN_PATH];
+
 export default auth(req => {
   // First apply security headers
   const response = setSecurityHeaders(req);
 
   const { pathname } = req.nextUrl;
 
-  // Fully public routes that anyone can access regardless of auth status
-  const publicRoutes = [
-    "/privacy-policy",
-    "/terms-and-conditions",
-    "/contact",
-    // Coming from sentry to avoid ad-blockers
-    "/monitoring",
-  ];
-
-  // Auth routes that should only be accessible when NOT logged in
-  const authRoutes = ["/auth/login", "/auth/error"];
-
   // If user is authenticated and trying to access auth routes, redirect to dashboard
   if (req.auth && authRoutes.some(route => pathname.startsWith(route))) {
     return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  // Handle API routes specifically
+  if (pathname.startsWith("/api/")) {
+    // If not authenticated and trying to access protected API, return 401
+    if (!req.auth && !pathname.startsWith(API_AUTH_SIGNIN_PATH)) {
+      return new NextResponse(
+        JSON.stringify({
+          error: "Unauthorized",
+          message:
+            "You are not authorized to access this resource. Please log in.",
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
+
+    // Authenticated API request - allow
+    return response;
   }
 
   // If user is not authenticated

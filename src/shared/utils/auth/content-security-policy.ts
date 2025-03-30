@@ -19,7 +19,7 @@ export function generateCSP(nonce: string) {
     style-src 'self' 'unsafe-inline';
     font-src 'self';
     img-src 'self' data: https://i.ytimg.com https://authjs.dev;
-    connect-src 'self' https://i.ytimg.com ${localhostUrls} https://authjs.dev https://accounts.google.com;
+    connect-src 'self' https://i.ytimg.com ${localhostUrls} https://authjs.dev https://accounts.google.com https://o4509055583846400.ingest.de.sentry.io;
     worker-src 'self' blob:;
     manifest-src 'self';
     object-src 'none';
