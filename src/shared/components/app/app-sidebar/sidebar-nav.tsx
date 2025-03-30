@@ -11,9 +11,8 @@ import {
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { Banknote, BarChart3, Home, Plus, Receipt } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback } from "react";
-
-// import { usePathname } from "next/navigation";
 
 interface INavItem {
   title: string;
@@ -26,6 +25,11 @@ const navItems = [
     title: "Dashboard",
     icon: Home,
     url: "/dashboard",
+  },
+  {
+    title: "Monthly Returns",
+    icon: BarChart3,
+    url: "/dashboard/monthly-returns",
   },
   {
     title: "Monthly Report",
@@ -45,24 +49,27 @@ const navItems = [
 ];
 
 export default function SidebarNav() {
-  // const pathname = usePathname();
+  const pathname = usePathname();
 
-  const renderItem = useCallback((item: INavItem) => {
-    const { title, url, icon: Icon } = item;
+  const renderItem = useCallback(
+    (item: INavItem) => {
+      const { title, url, icon: Icon } = item;
 
-    return (
-      <SidebarMenuItem key={title}>
-        <SidebarMenuButton asChild>
-          <Link href={url}>
-            <Icon />
-            <span>
-              <Typography variant={"label"}>{title}</Typography>
-            </span>
-          </Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    );
-  }, []);
+      return (
+        <SidebarMenuItem key={title}>
+          <SidebarMenuButton asChild isActive={url === pathname}>
+            <Link href={url}>
+              <Icon />
+              <span>
+                <Typography variant={"label"}>{title}</Typography>
+              </span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      );
+    },
+    [pathname],
+  );
 
   return (
     <SidebarContent>
