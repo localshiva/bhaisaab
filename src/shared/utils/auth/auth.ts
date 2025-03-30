@@ -1,9 +1,9 @@
+import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
 import { getCurrentScope } from "@sentry/nextjs";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
 import { serverEnv } from "../env-vars/server.env";
-import { googleServiceConfig } from "../spreadsheet/spreadsheet-config";
 
 const googleProviderConfig = {
   authorization: { ...googleServiceConfig.authorization },
@@ -26,8 +26,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     jwt({ token, account }) {
       return {
         ...token,
-        accessToken: account?.access_token,
-        refreshToken: account?.refresh_token,
+        access_token: account?.access_token,
+        refresh_token: account?.refresh_token,
+        id_token: account?.id_token,
+        scope: account?.scope,
+        expires_at: account?.expires_at,
+        token_type: account?.token_type,
       };
     },
     session({ session, token }) {
@@ -38,8 +42,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         email: session.user.email,
       });
 
-      session.accessToken = token.accessToken;
-      session.refreshToken = token.refreshToken;
+      session.access_token = token.access_token;
+      session.refresh_token = token.refresh_token;
+      session.id_token = token.id_token;
+      session.scope = token.scope;
+      session.token_type = token.token_type;
+      session.expires_at = token.expires_at;
 
       return session;
     },
