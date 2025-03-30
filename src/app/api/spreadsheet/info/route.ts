@@ -1,4 +1,4 @@
-import { getSpreadsheetInfo } from "@bhaisaab/shared/services/spreadsheet/spreadsheet-details";
+import { getSpreadsheetInfo } from "@bhaisaab/shared/services/spreadsheet/spreadsheet-info";
 import { NextResponse } from "next/server";
 
 /**
