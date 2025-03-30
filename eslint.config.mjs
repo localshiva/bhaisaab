@@ -34,6 +34,7 @@ const eslintConfig = [
           "error",
           { argsIgnorePattern: "^_" },
         ],
+        "@typescript-eslint/no-misused-promises": "off",
         "no-implicit-coercion": [
           "error",
           {

@@ -10,44 +10,62 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@bhaisaab/shared/components/core/sidebar";
-import { ChevronUp, User2 } from "lucide-react";
+import { ChevronUp, Loader2, User2 } from "lucide-react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
+import { useToggle } from "react-use";
 
 interface SidebarUserProps {
   user?: User;
 }
 
-const onSignOut = () => {
-  void signOut({
-    redirectTo: "/auth/login",
-  });
-};
-
 export default function SidebarUser({ user }: SidebarUserProps) {
+  const [isSigningOut, toggleIsSigningOut] = useToggle(false);
+
+  const onSignOut = async () => {
+    toggleIsSigningOut();
+
+    try {
+      await signOut({
+        redirectTo: "/auth/login",
+      });
+    } catch (error) {
+      reportError(error);
+    } finally {
+      toggleIsSigningOut();
+    }
+  };
+
   return (
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton>
-                <User2 /> {user?.name ?? "User"}
-                <ChevronUp className="ml-auto" />
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="top"
-              className="w-[var(--radix-popper-anchor-width)]"
-            >
-              <DropdownMenuItem>
-                <span>Account</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onSignOut}>
-                <span>Sign out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isSigningOut ? (
+            <SidebarMenuButton disabled>
+              <Loader2 className="animate-spin mr-2" size={16} />
+              Signing out...
+            </SidebarMenuButton>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  <User2 /> {user?.name ?? "User"}
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="w-[var(--radix-popper-anchor-width)]"
+              >
+                <DropdownMenuItem>
+                  <span>Account</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onSignOut}>
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarFooter>
