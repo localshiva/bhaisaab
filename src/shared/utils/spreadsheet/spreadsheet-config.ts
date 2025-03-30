@@ -19,10 +19,6 @@ export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
   oauth2Client.setCredentials({
     access_token: session.access_token,
     refresh_token: session.refresh_token,
-    id_token: session.id_token,
-    token_type: session.token_type,
-    scope: session.scope,
-    expiry_date: session.expires_at,
   });
 
   // Create and return Sheets client

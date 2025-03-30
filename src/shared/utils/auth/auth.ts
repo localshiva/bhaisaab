@@ -9,8 +9,6 @@ const googleProviderConfig = {
   authorization: { ...googleServiceConfig.authorization },
 };
 
-export const authDetails = Google(googleProviderConfig);
-
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [Google(googleProviderConfig)],
   callbacks: {
@@ -24,15 +22,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return !!auth;
     },
     jwt({ token, account }) {
-      return {
-        ...token,
-        access_token: account?.access_token,
-        refresh_token: account?.refresh_token,
-        id_token: account?.id_token,
-        scope: account?.scope,
-        expires_at: account?.expires_at,
-        token_type: account?.token_type,
-      };
+      if (account) {
+        token.access_token = account.access_token;
+        token.refresh_token = account.refresh_token;
+      }
+
+      return token;
     },
     session({ session, token }) {
       const scope = getCurrentScope();
@@ -44,10 +39,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       session.access_token = token.access_token;
       session.refresh_token = token.refresh_token;
-      session.id_token = token.id_token;
-      session.scope = token.scope;
-      session.token_type = token.token_type;
-      session.expires_at = token.expires_at;
 
       return session;
     },
