@@ -26,6 +26,7 @@ export const serverEnv = serverSchema.parse({
   // Google OAuth
   AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
   AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+  GOOGLE_SPREADSHEET_ID: process.env.GOOGLE_SPREADSHEET_ID,
 
   // Env
   isProduction: process.env.NODE_ENV === "production",

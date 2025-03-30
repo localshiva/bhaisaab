@@ -1,8 +1,8 @@
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import { getUserSession } from "@bhaisaab/shared/utils/auth/auth";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { FC } from "react";
 
 interface ErrorPageContainerProps {
@@ -11,11 +11,11 @@ interface ErrorPageContainerProps {
   href?: string;
 }
 
-export const ErrorPageContainer: FC<ErrorPageContainerProps> = async ({
+export const ErrorPageContainer: FC<ErrorPageContainerProps> = ({
   errorMessage,
   errorDescription,
 }) => {
-  const session = await getUserSession();
+  const { data: session } = useSession();
 
   return (
     <div className="container items-center justify-center">
