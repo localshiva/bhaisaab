@@ -8,6 +8,7 @@ const serverSchema = z.object({
   // Google OAuth
   AUTH_GOOGLE_ID: z.string().min(1),
   AUTH_GOOGLE_SECRET: z.string().min(1),
+  GOOGLE_SPREADSHEET_ID: z.string().min(1),
 
   // Env
   isProduction: z.boolean(),

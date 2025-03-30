@@ -1,16 +1,16 @@
 import { AppSidebar } from "@bhaisaab/shared/components/app/app-sidebar/app-sidebar";
-import { auth } from "@bhaisaab/shared/utils/auth/auth";
+import { getUserCredentials } from "@bhaisaab/shared/utils/auth/auth";
 
 export default async function AuthenticatedLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  const user = await getUserCredentials();
 
   return (
     <>
-      <AppSidebar user={session?.user} />
+      <AppSidebar user={user} />
       <main>{children}</main>
     </>
   );

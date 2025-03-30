@@ -3,23 +3,16 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
 import { serverEnv } from "../env-vars/server.env";
+import { googleServiceConfig } from "../spreadsheet/spreadsheet-config";
 
-export const authDetails = Google({});
+const googleProviderConfig = {
+  authorization: { ...googleServiceConfig.authorization },
+};
+
+export const authDetails = Google(googleProviderConfig);
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  providers: [
-    Google({
-      authorization: {
-        params: {
-          scope:
-            "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive",
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
-    }),
-  ],
+  providers: [Google(googleProviderConfig)],
   callbacks: {
     signIn({ user }) {
       const allowedEmails = serverEnv.ALLOWED_EMAILS;
@@ -46,3 +39,24 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     error: "/auth/error",
   },
 });
+
+/**
+ * Helper to get authenticated user's credentials
+ */
+export async function getUserCredentials() {
+  const session = await auth();
+  if (!session?.user?.email) {
+    throw new Error("User is not authenticated");
+  }
+
+  return {
+    userId: session.user.id,
+    email: session.user.email,
+  };
+}
+
+export async function getUserSession() {
+  const session = await auth();
+
+  return session;
+}

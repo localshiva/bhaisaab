@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthErrorContainer } from "@bhaisaab/shared/pages/auth/auth-error";
+import { ErrorPageContainer } from "@bhaisaab/shared/pages/error";
 import { useSearchParams } from "next/navigation";
 
 export default function ErrorPage() {
@@ -40,7 +40,7 @@ export default function ErrorPage() {
   }
 
   return (
-    <AuthErrorContainer
+    <ErrorPageContainer
       errorMessage={errorMessage}
       errorDescription={errorDescription}
     />
