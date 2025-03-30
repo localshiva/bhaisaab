@@ -18,11 +18,6 @@ export default auth(req => {
 
   const { pathname } = req.nextUrl;
 
-  // If user is authenticated and trying to access auth routes, redirect to dashboard
-  if (req.auth && authRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
   // Handle API routes specifically
   if (pathname.startsWith("/api/")) {
     // If not authenticated and trying to access protected API, return 401
@@ -42,6 +37,11 @@ export default auth(req => {
 
     // Authenticated API request - allow
     return response;
+  }
+
+  // If user is authenticated and trying to access auth routes, redirect to dashboard
+  if (req.auth && authRoutes.some(route => pathname.startsWith(route))) {
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   // If user is not authenticated
