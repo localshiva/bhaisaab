@@ -23,13 +23,23 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
     },
-    session({ session }) {
+    jwt({ token, account }) {
+      return {
+        ...token,
+        accessToken: account?.access_token,
+        refreshToken: account?.refresh_token,
+      };
+    },
+    session({ session, token }) {
       const scope = getCurrentScope();
 
       scope.setUser({
         id: session.user.id,
         email: session.user.email,
       });
+
+      session.accessToken = token.accessToken;
+      session.refreshToken = token.refreshToken;
 
       return session;
     },
