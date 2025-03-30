@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { auth } from "./shared/utils/auth/auth";
 import { setSecurityHeaders } from "./shared/utils/auth/content-security-policy";
 
-const API_AUTH_SIGNIN_PATH = "/api/auth";
+const API_AUTH_SIGNIN_PATH = "/api/auth/signin";
 
 // Fully public routes that anyone can access regardless of auth status
 const publicRoutes = ["/privacy-policy", "/terms-and-conditions", "/contact"];

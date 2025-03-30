@@ -37,21 +37,21 @@ export async function fetchSpreadsheetData(
  * Gets information about the spreadsheet including sheet names
  */
 export async function getSpreadsheetInfo(): Promise<sheets_v4.Schema$Spreadsheet> {
-  try {
-    // Create the Google Sheets client
-    const sheetsClient = await createSheetsClient();
+  // Create the Google Sheets client
+  const sheetsClient = await createSheetsClient();
 
-    // Get the configured spreadsheet ID
-    const { spreadsheetId } = googleServiceConfig;
+  // Get the configured spreadsheet ID
+  const { spreadsheetId } = googleServiceConfig;
 
-    // Fetch the spreadsheet metadata
-    const response = await sheetsClient.spreadsheets.get({
-      spreadsheetId,
-    });
+  // Fetch the spreadsheet metadata
+  const response = await sheetsClient.spreadsheets.get({
+    spreadsheetId,
+    fields: "properties.title,sheets.properties(sheetId,title)",
+  });
 
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching spreadsheet info:", error);
-    throw error;
+  if (!response.data) {
+    throw new Error("No spreadsheet data returned");
   }
+
+  return response.data;
 }
