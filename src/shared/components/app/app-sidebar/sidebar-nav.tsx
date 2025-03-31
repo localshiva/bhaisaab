@@ -9,7 +9,14 @@ import {
   SidebarMenuItem,
 } from "@bhaisaab/shared/components/core/sidebar";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import { Banknote, BarChart3, Home, Plus, Receipt } from "lucide-react";
+import {
+  Banknote,
+  BanknoteArrowUp,
+  BarChart3,
+  Home,
+  Plus,
+  Receipt,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
@@ -28,7 +35,7 @@ const navItems = [
   },
   {
     title: "Monthly Returns",
-    icon: BarChart3,
+    icon: BanknoteArrowUp,
     url: "/dashboard/monthly-returns",
   },
   {
