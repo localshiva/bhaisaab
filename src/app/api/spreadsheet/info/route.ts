@@ -1,4 +1,5 @@
 import { getSpreadsheetInfo } from "@bhaisaab/shared/services/spreadsheet/spreadsheet-info";
+import { getErrorMessage } from "@bhaisaab/shared/utils/error";
 import { NextResponse } from "next/server";
 
 /**
@@ -18,14 +19,13 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("API error:", error);
+    console.error("API error:", getErrorMessage(error));
 
     // Return appropriate error response
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
+        error: getErrorMessage(error),
       },
       { status: (error as { status: number })?.status ?? 500 },
     );

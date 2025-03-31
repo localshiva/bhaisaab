@@ -23,5 +23,8 @@ export function useMonthlyReturns() {
       );
       return data;
     },
+    meta: {
+      toast: true,
+    },
   });
 }

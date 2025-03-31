@@ -28,5 +28,8 @@ export function useSpreadsheetInfo() {
         await httpClient.get<ISpreadsheetInfoResponse>("/spreadsheet/info");
       return data;
     },
+    meta: {
+      toast: true,
+    },
   });
 }
