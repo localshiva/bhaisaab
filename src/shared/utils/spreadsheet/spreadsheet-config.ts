@@ -15,7 +15,10 @@ export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
   }
 
   // Create OAuth2 client with access token
-  const oauth2Client = new google.auth.OAuth2();
+  const oauth2Client = new google.auth.OAuth2({
+    clientId: process.env.AUTH_GOOGLE_ID,
+    clientSecret: process.env.AUTH_GOOGLE_SECRET,
+  });
   oauth2Client.setCredentials({
     access_token: session.access_token,
     refresh_token: session.refresh_token,

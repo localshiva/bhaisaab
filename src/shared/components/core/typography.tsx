@@ -36,29 +36,30 @@ const typographyVariants = cva("", {
   variants: {
     variant: {
       // Headers
-      h1: "text-4xl sm:text-5xl leading-tight tracking-tight",
-      h2: "text-3xl sm:text-4xl leading-tight tracking-tight",
-      h3: "text-2xl sm:text-3xl leading-tight",
-      h4: "text-xl sm:text-2xl leading-tight",
-      h5: "text-lg sm:text-xl leading-tight",
-      h6: "text-base sm:text-lg leading-tight",
+      h1: "text-4xl sm:text-5xl leading-tight tracking-tight font-nunito-sans",
+      h2: "text-3xl sm:text-4xl leading-tight tracking-tight font-nunito-sans",
+      h3: "text-2xl sm:text-3xl leading-tight font-nunito-sans",
+      h4: "text-xl sm:text-2xl leading-tight font-nunito-sans",
+      h5: "text-lg sm:text-xl leading-tight font-nunito-sans",
+      h6: "text-base sm:text-lg leading-tight font-nunito-sans",
 
       // Special display text variants
-      display: "text-5xl sm:text-6xl md:text-7xl leading-none tracking-tighter",
-      title: "text-3xl font-bold tracking-tight leading-none",
-      subtitle: "text-xl leading-snug",
+      display:
+        "text-5xl sm:text-6xl md:text-7xl leading-none tracking-tighter font-mulish",
+      title: "text-3xl font-bold tracking-tight leading-none font-mulish",
+      subtitle: "text-xl leading-snug font-mulish",
 
       // Body text variants
-      lead: "text-xl leading-relaxed",
-      body: "text-base leading-normal",
-      bodyLarge: "text-lg leading-relaxed",
-      bodySmall: "text-sm leading-normal",
+      lead: "text-xl leading-relaxed font-varela",
+      body: "text-base leading-normal font-varela",
+      bodyLarge: "text-lg leading-relaxed font-varela",
+      bodySmall: "text-sm leading-normal font-varela",
 
       // UI specific variants
-      caption: "text-sm leading-tight",
-      small: "text-xs leading-tight",
-      label: "text-sm uppercase tracking-wider",
-      stat: "text-3xl sm:text-4xl font-bold",
+      caption: "text-sm leading-tight font-mulish",
+      small: "text-xs leading-tight font-mulish",
+      label: "text-sm uppercase tracking-wider font-mulish",
+      stat: "text-3xl sm:text-4xl font-bold font-mulish",
     },
     weight: {
       thin: "font-thin",

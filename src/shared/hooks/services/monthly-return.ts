@@ -15,13 +15,13 @@ interface IMonthlyReturnsResponse {
 export const monthlyReturnsQueryKey = ["monthlyReturns"];
 
 export function useMonthlyReturns() {
-  return useQuery<IMonthlyReturnsResponse>({
+  return useQuery({
     queryKey: monthlyReturnsQueryKey,
     queryFn: async () => {
       const { data } = await httpClient.get<IMonthlyReturnsResponse>(
         "/spreadsheet/monthly-returns",
       );
-      return data;
+      return data.data;
     },
     meta: {
       toast: true,

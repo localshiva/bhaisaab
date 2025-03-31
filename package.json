@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev -p 3001",
-    "dev:turbo": "next dev --turbopack",
+    "dev:turbo": "SERWIST_SUPPRESS_TURBOPACK_WARNING=1 next dev --turbopack --port 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -26,7 +26,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "googleapis": "^148.0.0",
-    "lucide-react": "^0.484.0",
+    "lucide-react": "^0.486.0",
     "next": "15.2.4",
     "next-auth": "5.0.0-beta.25",
     "next-themes": "^0.4.6",
