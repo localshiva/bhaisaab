@@ -1,5 +1,6 @@
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { IMonthlyReturnsRow } from "@bhaisaab/shared/hooks/services/monthly-return";
+import { getTotalIncome } from "@bhaisaab/shared/utils/income";
 import { FC, useMemo } from "react";
 
 import { MRSummaryItem } from "./mr-summary-item";
@@ -10,16 +11,7 @@ interface Props {
 
 export const MRSummaryCard: FC<Props> = ({ rows }) => {
   const totalIncome = useMemo(() => {
-    let sum = 0;
-
-    for (const row of rows) {
-      sum += Number(row[2]);
-    }
-
-    return {
-      sum,
-      sources: rows.length,
-    };
+    return getTotalIncome(rows);
   }, [rows]);
 
   const totalSalary = useMemo(() => {

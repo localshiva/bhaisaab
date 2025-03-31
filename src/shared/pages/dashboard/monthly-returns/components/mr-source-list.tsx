@@ -1,13 +1,18 @@
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { IMonthlyReturnsRow } from "@bhaisaab/shared/hooks/services/monthly-return";
+import { getTotalIncome } from "@bhaisaab/shared/utils/income";
 import { BanknoteArrowUp } from "lucide-react";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 interface MRSourceListProps {
   rows: IMonthlyReturnsRow[];
 }
 
 export const MRSourceList: FC<MRSourceListProps> = ({ rows }) => {
+  const totalIncome = useMemo(() => {
+    return getTotalIncome(rows);
+  }, [rows]);
+
   return (
     <div className="bg-card rounded-lg border shadow-sm p-4 sm:p-6">
       <Typography variant={"h5"} weight={"semibold"} className="mb-3">
@@ -24,18 +29,33 @@ export const MRSourceList: FC<MRSourceListProps> = ({ rows }) => {
               <BanknoteArrowUp size={20} className={"text-green-600"} />
 
               <div>
-                <p className="font-medium text-sm sm:text-base text-foreground">
+                <Typography variant={"body"} weight={"medium"}>
                   {row[1]}
-                </p>
-                <p className="text-xs text-muted-foreground">{row[0]}</p>
+                </Typography>
+                <Typography variant={"small"} textColor={"muted"}>
+                  {row[0]}
+                </Typography>
               </div>
             </div>
 
-            <span className="font-semibold text-sm sm:text-base text-foreground">
+            <Typography variant={"body"} weight={"semibold"}>
               ₹{Number.parseInt(row[2], 10).toLocaleString()}
-            </span>
+            </Typography>
           </div>
         ))}
+
+        {/* Total Income */}
+        <div className="flex items-center justify-between pt-2">
+          <Typography variant={"body"} weight={"bold"}>
+            Total{" "}
+            <Typography as="span" textColor={"muted"}>
+              ({totalIncome.sources} sources)
+            </Typography>
+          </Typography>
+          <Typography variant="body" weight={"bold"}>
+            ₹{totalIncome.sum}
+          </Typography>
+        </div>
       </div>
     </div>
   );

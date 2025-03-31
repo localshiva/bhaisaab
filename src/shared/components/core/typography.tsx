@@ -51,7 +51,7 @@ const typographyVariants = cva("", {
 
       // Body text variants
       lead: "text-xl leading-relaxed font-varela",
-      body: "text-base leading-normal font-varela",
+      body: "text-sm sm:text-base leading-normal font-varela",
       bodyLarge: "text-lg leading-relaxed font-varela",
       bodySmall: "text-sm leading-normal font-varela",
 
