@@ -1,5 +1,8 @@
 import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
-import { AddSourceRequest } from "@bhaisaab/shared/constants/validation/monthly-returns";
+import {
+  AddSourceRequest,
+  DeleteSourceRequest,
+} from "@bhaisaab/shared/constants/validation/monthly-returns";
 import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
 
 export const SHEET_NAME = "Monthly Returns";
@@ -78,6 +81,74 @@ export async function addMonthlyIncomeSource(
     return true;
   } catch (error) {
     console.error("Error adding source:", error);
+    throw error;
+  }
+}
+
+/**
+ * Deletes a source from the monthly returns sheet by row ID
+ *
+ * @param deleteData Data identifying which source to delete
+ * @returns Boolean indicating success
+ */
+export async function deleteMonthlyIncomeSource(
+  deleteData: DeleteSourceRequest,
+): Promise<boolean> {
+  try {
+    const sheetsClient = await createSheetsClient();
+    const { spreadsheetId } = googleServiceConfig;
+
+    // Get the sheet ID needed for the deleteRows request
+    const spreadsheetInfo = await sheetsClient.spreadsheets.get({
+      spreadsheetId,
+      ranges: [SHEET_NAME], // This filters to just this sheet
+      fields: "sheets.properties(sheetId,title)",
+    });
+
+    const sheetId = spreadsheetInfo.data.sheets?.[0]?.properties?.sheetId;
+
+    if (sheetId === undefined) {
+      throw new Error(`Sheet ${SHEET_NAME} not found`);
+    }
+
+    // We need to get the actual values to verify we're deleting the right row
+    const response = await sheetsClient.spreadsheets.values.get({
+      spreadsheetId,
+      range: `${SHEET_NAME}!A${deleteData.id + 1}:C${deleteData.id + 1}`,
+    });
+
+    const rowValue = response.data.values?.[0];
+
+    if (!rowValue) {
+      throw new Error("Row not found");
+    }
+
+    if (rowValue[1] !== deleteData.source) {
+      throw new Error("Income Source does not match");
+    }
+
+    // Don't empty but instead delete the entire row
+    await sheetsClient.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [
+          {
+            deleteDimension: {
+              range: {
+                sheetId,
+                dimension: "ROWS",
+                startIndex: deleteData.id,
+                endIndex: deleteData.id + 1,
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error deleting source:", error);
     throw error;
   }
 }

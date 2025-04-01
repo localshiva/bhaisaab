@@ -19,3 +19,17 @@ export const AddSourceSchema = z.object({
 
 // Type inference from the Zod schema
 export type AddSourceRequest = z.infer<typeof AddSourceSchema>;
+
+// Add this to your existing file where AddSourceSchema is defined
+export const DeleteSourceSchema = z.object(
+  {
+    id: z.number().min(0, "Row ID is required"),
+    source: z.string().min(1, "Source is required"),
+  },
+  {
+    required_error: "Source information is required",
+  },
+);
+
+// Type inference from the Zod schema
+export type DeleteSourceRequest = z.infer<typeof DeleteSourceSchema>;

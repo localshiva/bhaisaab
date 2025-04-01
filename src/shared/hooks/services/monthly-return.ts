@@ -1,4 +1,7 @@
-import { AddSourceRequest } from "@bhaisaab/shared/constants/validation/monthly-returns";
+import {
+  AddSourceRequest,
+  DeleteSourceRequest,
+} from "@bhaisaab/shared/constants/validation/monthly-returns";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -15,6 +18,7 @@ interface IMonthlyReturnsResponse {
 
 export const monthlyReturnsQueryKey = ["monthlyReturns"];
 
+// Query key for fetching monthly returns data
 export function useMonthlyReturns() {
   return useQuery({
     queryKey: monthlyReturnsQueryKey,
@@ -30,6 +34,7 @@ export function useMonthlyReturns() {
   });
 }
 
+// Response type for add source mutation
 interface IAddSourceResponse {
   success: boolean;
   message: string;
@@ -37,6 +42,7 @@ interface IAddSourceResponse {
   details?: Record<string, unknown>;
 }
 
+// Hook for adding a new source to monthly returns
 export function useAddMonthlyIncomeSource() {
   const queryClient = useQueryClient();
 
@@ -59,6 +65,45 @@ export function useAddMonthlyIncomeSource() {
 
   return {
     addIncomeSource: mutation.mutate,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+  };
+}
+
+// Response type for delete source mutation
+interface IDeleteSourceResponse {
+  success: boolean;
+  message: string;
+  error?: string;
+}
+
+export function useDeleteMonthlySource() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<
+    IDeleteSourceResponse,
+    Error,
+    DeleteSourceRequest
+  >({
+    mutationFn: async ({ id, source }: DeleteSourceRequest) => {
+      const { data } = await httpClient.delete<IDeleteSourceResponse>(
+        "/spreadsheet/monthly-returns",
+        { data: { id, source } },
+      );
+      return data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch monthly returns query after successful deletion
+      void queryClient.invalidateQueries({ queryKey: monthlyReturnsQueryKey });
+    },
+    meta: {
+      toast: true,
+    },
+  });
+
+  return {
+    deleteSource: mutation.mutate,
     isLoading: mutation.isPending,
     isError: mutation.isError,
     error: mutation.error,

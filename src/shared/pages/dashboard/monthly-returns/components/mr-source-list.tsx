@@ -1,8 +1,9 @@
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { IMonthlyReturnsRow } from "@bhaisaab/shared/hooks/services/monthly-return";
 import { getTotalIncome } from "@bhaisaab/shared/utils/income";
-import { BanknoteArrowUp } from "lucide-react";
 import { FC, useMemo } from "react";
+
+import { MRSourceListItem } from "./mr-source-list-item";
 
 interface MRSourceListProps {
   rows: IMonthlyReturnsRow[];
@@ -20,28 +21,14 @@ export const MRSourceList: FC<MRSourceListProps> = ({ rows }) => {
       </Typography>
 
       <div className="space-y-3">
-        {rows.map(row => (
-          <div
-            key={row[1]}
-            className="flex items-center justify-between border-b pb-3 border-border"
-          >
-            <div className="flex items-center gap-2 sm:gap-3">
-              <BanknoteArrowUp size={20} className={"text-green-600"} />
-
-              <div>
-                <Typography variant={"body"} weight={"medium"}>
-                  {row[1]}
-                </Typography>
-                <Typography variant={"small"} textColor={"muted"}>
-                  {row[0]}
-                </Typography>
-              </div>
-            </div>
-
-            <Typography variant={"body"} weight={"semibold"}>
-              ₹{Number.parseInt(row[2], 10).toLocaleString()}
-            </Typography>
-          </div>
+        {rows.map((row, index) => (
+          <MRSourceListItem
+            key={`${row[1]}-${index}`}
+            index={index + 1} // Convert to 1-based for API
+            type={row[0]}
+            source={row[1]}
+            amount={row[2]}
+          />
         ))}
 
         {/* Total Income */}

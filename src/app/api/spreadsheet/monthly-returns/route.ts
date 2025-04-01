@@ -1,6 +1,10 @@
-import { AddSourceSchema } from "@bhaisaab/shared/constants/validation/monthly-returns";
+import {
+  AddSourceSchema,
+  DeleteSourceSchema,
+} from "@bhaisaab/shared/constants/validation/monthly-returns";
 import {
   addMonthlyIncomeSource,
+  deleteMonthlyIncomeSource,
   getAllMonthlyReturns,
 } from "@bhaisaab/shared/services/spreadsheet/monthly-returns";
 import { NextRequest, NextResponse } from "next/server";
@@ -72,6 +76,50 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success,
       message: success ? "Source added successfully" : "Failed to add source",
+    });
+  } catch (error) {
+    // Return appropriate error response
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      },
+      { status: 500 },
+    );
+  }
+}
+
+/**
+ * DELETE handler for removing a source from monthly returns
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    // Parse and validate request body
+    const body = (await request.json()) as unknown;
+
+    // Validate against schema
+    const result = DeleteSourceSchema.safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "The delete request data you provided is invalid",
+          details: result.error.format(),
+        },
+        { status: 400 },
+      );
+    }
+
+    // Call service to delete the source
+    const success = await deleteMonthlyIncomeSource(result.data);
+
+    return NextResponse.json({
+      success,
+      message: success
+        ? "Source deleted successfully"
+        : "Failed to delete source",
     });
   } catch (error) {
     // Return appropriate error response
