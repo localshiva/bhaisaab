@@ -1,9 +1,8 @@
 "use client";
-import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useMonthlyReturns } from "@bhaisaab/shared/hooks/services/monthly-return";
-import { Plus } from "lucide-react";
 
+import { MRAddSource } from "./components/mr-add-source";
 import { MRSourceList } from "./components/mr-source-list";
 import { MRSummaryCard } from "./components/mr-summary-card";
 
@@ -25,10 +24,7 @@ export default function MonthlyReturns() {
           Monthly Returns
         </Typography>
 
-        <Button variant="outline">
-          <Plus />
-          <span>Add new</span>
-        </Button>
+        <MRAddSource />
       </div>
 
       {/* Main summary card */}

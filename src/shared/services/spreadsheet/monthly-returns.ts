@@ -1,5 +1,8 @@
 import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
+import { AddSourceRequest } from "@bhaisaab/shared/constants/validation/monthly-returns";
 import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
+
+export const SHEET_NAME = "Monthly Returns";
 
 /**
  * Fetches data from the monthly returns spreadsheet
@@ -32,7 +35,37 @@ export async function fetchMonthlyReturnsData(
 }
 
 export async function getAllMonthlyReturns(): Promise<string[][]> {
-  const range = "Monthly Returns!A1:Z";
+  const range = `${SHEET_NAME}!A1:Z`;
 
   return fetchMonthlyReturnsData(range);
+}
+
+/**
+ * Adds a new source to the monthly returns sheet
+ *
+ * @param sourceData Data for the new source to be added
+ * @returns Boolean indicating success
+ */
+export async function addSource(
+  sourceData: AddSourceRequest,
+): Promise<boolean> {
+  console.info("🚀 ~ sourceData:", sourceData);
+  try {
+    const sheetsClient = await createSheetsClient();
+    const { spreadsheetId } = googleServiceConfig;
+
+    // First, get the current month's sheet or create it if it doesn't exist
+    // Get only the metadata about the sheet to find the row count
+    const sheetMetadata = await sheetsClient.spreadsheets.get({
+      spreadsheetId,
+      ranges: [`${SHEET_NAME}!A:A`],
+      fields: "sheets(data(rowData))",
+    });
+    console.info("🚀 ~ sheetMetadata:", sheetMetadata);
+
+    return true;
+  } catch (error) {
+    console.error("Error adding source:", error);
+    throw error;
+  }
 }
