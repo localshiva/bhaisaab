@@ -1,3 +1,4 @@
+// @bhaisaab/pages/spreadsheet/monthly-returns/add-source.tsx
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
@@ -21,20 +22,21 @@ import {
   AddSourceRequest,
   AddSourceSchema,
 } from "@bhaisaab/shared/constants/validation/monthly-returns";
+import { useAddMonthlyIncomeSource } from "@bhaisaab/shared/hooks/services/monthly-return";
 import { cn } from "@bhaisaab/shared/utils/shadcn";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useToggle } from "react-use";
 
 export const MRAddSource = () => {
   const [isOpen, toggleOpen] = useToggle(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addIncomeSource, isLoading } = useAddMonthlyIncomeSource();
 
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<AddSourceRequest>({
     resolver: zodResolver(AddSourceSchema),
@@ -46,17 +48,17 @@ export const MRAddSource = () => {
   });
 
   const onSubmit = (data: AddSourceRequest) => {
-    setIsSubmitting(true);
-    try {
-      // Here you would add your API call to add the source
-      // await addSource(data);
-      console.info("Form submitted successfully:", data);
-    } catch (error) {
-      // Handle API error
-      console.error("Failed to add source:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    addIncomeSource(data, {
+      onSuccess: () => {
+        // Close dialog and reset form on success
+        toggleOpen(false);
+        reset();
+      },
+      onError: err => {
+        console.error("Failed to add source:", err);
+        // Error handling is done by the hook and toast notifications
+      },
+    });
   };
 
   return (
@@ -194,12 +196,12 @@ export const MRAddSource = () => {
               type="button"
               variant="outline"
               onClick={toggleOpen}
-              disabled={isSubmitting}
+              disabled={isLoading}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Adding..." : "Add Source"}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Adding..." : "Add Source"}
             </Button>
           </DialogFooter>
         </form>

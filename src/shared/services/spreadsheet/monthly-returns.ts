@@ -46,7 +46,7 @@ export async function getAllMonthlyReturns(): Promise<string[][]> {
  * @param sourceData Data for the new source to be added
  * @returns Boolean indicating success
  */
-export async function addSource(
+export async function addMonthlyIncomeSource(
   sourceData: AddSourceRequest,
 ): Promise<boolean> {
   console.info("🚀 ~ sourceData:", sourceData);
@@ -56,12 +56,24 @@ export async function addSource(
 
     // First, get the current month's sheet or create it if it doesn't exist
     // Get only the metadata about the sheet to find the row count
-    const sheetMetadata = await sheetsClient.spreadsheets.get({
+    const valuesResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
-      ranges: [`${SHEET_NAME}!A:A`],
-      fields: "sheets(data(rowData))",
+      range: `${SHEET_NAME}!A:A`,
+      valueRenderOption: "UNFORMATTED_VALUE",
     });
-    console.info("🚀 ~ sheetMetadata:", sheetMetadata);
+
+    const nextRowAfterLast = valuesResponse.data.values?.length
+      ? valuesResponse.data.values.length + 1
+      : 0;
+
+    await sheetsClient.spreadsheets.values.update({
+      spreadsheetId,
+      range: `${SHEET_NAME}!A${nextRowAfterLast}:C${nextRowAfterLast}`,
+      valueInputOption: "USER_ENTERED",
+      requestBody: {
+        values: [[sourceData.type, sourceData.source, sourceData.amount]],
+      },
+    });
 
     return true;
   } catch (error) {
