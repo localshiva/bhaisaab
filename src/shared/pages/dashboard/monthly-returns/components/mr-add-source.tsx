@@ -33,12 +33,7 @@ export const MRAddSource = () => {
   const [isOpen, toggleOpen] = useToggle(false);
   const { addIncomeSource, isLoading } = useAddMonthlyIncomeSource();
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<AddSourceRequest>({
+  const { control, handleSubmit, reset } = useForm<AddSourceRequest>({
     resolver: zodResolver(AddSourceSchema),
     defaultValues: {
       type: undefined,
@@ -84,110 +79,127 @@ export const MRAddSource = () => {
           <div className="grid gap-4 py-4">
             {/* Type */}
             <div className="grid gap-2">
-              <Label
-                htmlFor="type"
-                className={errors.type ? "text-destructive" : ""}
-              >
-                Type
-              </Label>
               <Controller
                 name="type"
                 control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger
-                      id="type"
-                      className={cn("w-full", {
-                        "border-destructive ring-destructive/20": errors.type,
-                      })}
+                render={({ field, formState: { errors } }) => (
+                  <>
+                    <Label
+                      htmlFor="type"
+                      className={errors.type ? "text-destructive" : ""}
                     >
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Salary">Salary</SelectItem>
-                      <SelectItem value="Rent">Rent</SelectItem>
-                    </SelectContent>
-                  </Select>
+                      Type
+                    </Label>
+
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger
+                        id="type"
+                        className={cn("w-full", {
+                          "border-destructive ring-destructive/20": errors.type,
+                        })}
+                      >
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Salary">Salary</SelectItem>
+                        <SelectItem value="Rent">Rent</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    {errors.type && (
+                      <p className="text-destructive text-sm">
+                        {errors.type.message}
+                      </p>
+                    )}
+                  </>
                 )}
               />
-              {errors.type && (
-                <p className="text-destructive text-sm">
-                  {errors.type.message}
-                </p>
-              )}
             </div>
 
             {/* Income Source */}
             <div className="grid gap-2">
-              <Label
-                htmlFor="source"
-                className={errors.source ? "text-destructive" : ""}
-              >
-                Income Source
-              </Label>
               <Controller
                 name="source"
                 control={control}
-                render={({ field }) => (
-                  <Input
-                    id="source"
-                    placeholder="Enter source name"
-                    className={
-                      errors.source
-                        ? "border-destructive ring-destructive/20"
-                        : ""
-                    }
-                    {...field}
-                  />
+                render={({ field, formState: { errors } }) => (
+                  <>
+                    <Label
+                      htmlFor="source"
+                      className={errors.source ? "text-destructive" : ""}
+                    >
+                      Income Source
+                    </Label>
+
+                    <Input
+                      id="source"
+                      placeholder="Enter source name"
+                      className={
+                        errors.source
+                          ? "border-destructive ring-destructive/20"
+                          : ""
+                      }
+                      {...field}
+                    />
+
+                    {errors.source && (
+                      <p className="text-destructive text-sm">
+                        {errors.source.message}
+                      </p>
+                    )}
+                  </>
                 )}
               />
-              {errors.source && (
-                <p className="text-destructive text-sm">
-                  {errors.source.message}
-                </p>
-              )}
             </div>
 
             {/* Amount */}
             <div className="grid gap-2">
-              <Label
-                htmlFor="amount"
-                className={errors.amount ? "text-destructive" : ""}
-              >
-                Amount
-              </Label>
               <Controller
                 name="amount"
                 control={control}
-                render={({ field: { onChange, value, ...field } }) => (
-                  <Input
-                    id="amount"
-                    type="number"
-                    min="0"
-                    step="1"
-                    placeholder="Enter amount"
-                    className={
-                      errors.amount
-                        ? "border-destructive ring-destructive/20"
-                        : ""
-                    }
-                    onChange={e => {
-                      // Ensure we always have a non-negative number
-                      const inputValue = e.target.value;
-                      const numValue =
-                        inputValue === "" ? 0 : Math.max(0, Number(inputValue));
-                      onChange(numValue);
-                    }}
-                    value={value}
-                    {...field}
-                  />
+                render={({
+                  field: { onChange, value, ...field },
+                  formState: { errors },
+                }) => (
+                  <>
+                    <Label
+                      htmlFor="amount"
+                      className={errors.amount ? "text-destructive" : ""}
+                    >
+                      Amount
+                    </Label>
+
+                    <Input
+                      id="amount"
+                      type="number"
+                      min="0"
+                      step="1"
+                      placeholder="Enter amount"
+                      className={
+                        errors.amount
+                          ? "border-destructive ring-destructive/20"
+                          : ""
+                      }
+                      onChange={e => {
+                        // Ensure we always have a non-negative number
+                        const inputValue = e.target.value;
+                        const numValue =
+                          inputValue === ""
+                            ? 0
+                            : Math.max(0, Number(inputValue));
+                        onChange(numValue);
+                      }}
+                      value={value}
+                      {...field}
+                    />
+
+                    {errors.amount && (
+                      <p className="text-destructive text-sm">
+                        {errors.amount.message}
+                      </p>
+                    )}
+                  </>
                 )}
               />
-              {errors.amount && (
-                <p className="text-destructive text-sm">
-                  {errors.amount.message}
-                </p>
-              )}
             </div>
           </div>
 
