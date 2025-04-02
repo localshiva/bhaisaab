@@ -7,6 +7,7 @@ import {
   deleteMonthlyIncomeSource,
   getAllMonthlyReturns,
 } from "@bhaisaab/shared/services/spreadsheet/monthly-returns";
+import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -32,17 +33,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("API error fetching monthly returns:", error);
-
-    // Return appropriate error response
-    return NextResponse.json(
-      {
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      },
-      { status: 500 },
-    );
+    return getServerError(error);
   }
 }
 
@@ -73,20 +64,24 @@ export async function POST(request: NextRequest) {
     // Call service to add the source
     const success = await addMonthlyIncomeSource(result.data);
 
+    if (!success) {
+      // status and error message
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Failed to add source",
+        },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json({
       success,
-      message: success ? "Source added successfully" : "Failed to add source",
+      message: "Source added successfully",
     });
   } catch (error) {
     // Return appropriate error response
-    return NextResponse.json(
-      {
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      },
-      { status: 500 },
-    );
+    return getServerError(error);
   }
 }
 
@@ -115,21 +110,22 @@ export async function DELETE(request: NextRequest) {
     // Call service to delete the source
     const success = await deleteMonthlyIncomeSource(result.data);
 
+    if (!success) {
+      // status and error message
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Failed to delete source",
+        },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json({
       success,
-      message: success
-        ? "Source deleted successfully"
-        : "Failed to delete source",
+      message: "Source deleted successfully",
     });
   } catch (error) {
-    // Return appropriate error response
-    return NextResponse.json(
-      {
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      },
-      { status: 500 },
-    );
+    return getServerError(error);
   }
 }

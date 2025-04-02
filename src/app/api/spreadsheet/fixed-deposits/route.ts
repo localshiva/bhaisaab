@@ -2,6 +2,7 @@
 import { CreateFixedDepositSchema } from "@bhaisaab/shared/constants/validation/fixed-deposits";
 import { createFixedDeposit } from "@bhaisaab/shared/services/spreadsheet/fixed-deposits/create-fixed-deposit";
 import { listFixedDeposits } from "@bhaisaab/shared/services/spreadsheet/fixed-deposits/list-fixed-deposits";
+import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -27,17 +28,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("API error fetching fixed deposits:", error);
-
-    // Return appropriate error response
-    return NextResponse.json(
-      {
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      },
-      { status: 500 },
-    );
+    return getServerError(error);
   }
 }
 
@@ -73,16 +64,6 @@ export async function POST(request: NextRequest) {
         : "Failed to create fixed deposit",
     });
   } catch (error) {
-    console.error("API error creating fixed deposit:", error);
-
-    // Return appropriate error response
-    return NextResponse.json(
-      {
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      },
-      { status: 500 },
-    );
+    return getServerError(error);
   }
 }
