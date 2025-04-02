@@ -1,4 +1,3 @@
-// @bhaisaab/shared/services/spreadsheet/fixed-deposits/create.ts
 import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
 import { CreateFixedDepositRequest } from "@bhaisaab/shared/constants/validation/fixed-deposits";
 import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
@@ -30,24 +29,7 @@ export async function createFixedDeposit(
       ? valuesResponse.data.values.length + 1
       : 2; // Start from row 2 as headers already exist
 
-    // Add the new fixed deposit row with only the 4 required columns
-    await sheetsClient.spreadsheets.values.update({
-      spreadsheetId,
-      range: `${FD_SHEET_NAME}!A${nextRowAfterLast}:D${nextRowAfterLast}`,
-      valueInputOption: "USER_ENTERED",
-      requestBody: {
-        values: [
-          [
-            depositData.amount,
-            depositData.interestRate,
-            depositData.depositDate,
-            depositData.maturityDate,
-          ],
-        ],
-      },
-    });
-
-    // Get the sheet ID for formatting
+    // Get the sheet ID for operations
     const spreadsheetInfo = await sheetsClient.spreadsheets.get({
       spreadsheetId,
       ranges: [FD_SHEET_NAME],
@@ -59,11 +41,48 @@ export async function createFixedDeposit(
       throw new Error(`Sheet ${FD_SHEET_NAME} not found`);
     }
 
-    // Format the entire row with background color
+    // Combine all operations into a single batchUpdate call
     await sheetsClient.spreadsheets.batchUpdate({
       spreadsheetId,
       requestBody: {
         requests: [
+          // Update the values
+          {
+            updateCells: {
+              rows: [
+                {
+                  values: [
+                    { userEnteredValue: { numberValue: depositData.amount } },
+                    {
+                      userEnteredValue: {
+                        numberValue: depositData.interestRate,
+                      },
+                    },
+                    {
+                      userEnteredValue: {
+                        formulaValue: `=DATEVALUE("${depositData.depositDate}")`,
+                      },
+                    },
+                    {
+                      userEnteredValue: {
+                        formulaValue: `=DATEVALUE("${depositData.maturityDate}")`,
+                      },
+                    },
+                  ],
+                },
+              ],
+              fields:
+                "userEnteredValue.numberValue,userEnteredValue.stringValue,userEnteredValue.formulaValue",
+              range: {
+                sheetId,
+                startRowIndex: nextRowAfterLast - 1,
+                endRowIndex: nextRowAfterLast,
+                startColumnIndex: 0,
+                endColumnIndex: 4,
+              },
+            },
+          },
+          // Format cell background
           {
             repeatCell: {
               range: {
@@ -85,15 +104,7 @@ export async function createFixedDeposit(
               fields: "userEnteredFormat(backgroundColor)",
             },
           },
-        ],
-      },
-    });
-
-    // Protect the sheet range separately
-    await sheetsClient.spreadsheets.batchUpdate({
-      spreadsheetId,
-      requestBody: {
-        requests: [
+          // Add protection
           {
             addProtectedRange: {
               protectedRange: {
@@ -104,8 +115,15 @@ export async function createFixedDeposit(
                   startColumnIndex: 0,
                   endColumnIndex: 4,
                 },
-                description: "Protected fixed deposit entry",
+                description:
+                  "Non-editable fixed deposit entry (can be deleted)",
                 warningOnly: false,
+                editors: {
+                  // No editors means no one can edit, not even owner
+                  users: [],
+                  groups: [],
+                  domainUsersCanEdit: false,
+                },
               },
             },
           },
