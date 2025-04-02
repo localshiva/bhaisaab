@@ -4,7 +4,7 @@ import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useFixedDeposits } from "@bhaisaab/shared/hooks/services/fixed-deposits";
 import { Banknote, ListPlus, Loader2 } from "lucide-react";
 
-import { FDCreateForm } from "./components/fd-create-term";
+import { FDCreateForm } from "./components/fd-create-form";
 import { FDListItem } from "./components/fd-list-item";
 
 export default function FixedDeposits() {

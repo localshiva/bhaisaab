@@ -17,6 +17,8 @@ import {
 } from "@bhaisaab/shared/constants/validation/fixed-deposits";
 import { useCreateFixedDeposit } from "@bhaisaab/shared/hooks/services/fixed-deposits";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addYears } from "date-fns/addYears";
+import { format } from "date-fns/format";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { useToggle } from "react-use";
@@ -35,12 +37,8 @@ export const FDCreateForm = () => {
     defaultValues: {
       amount: 0,
       interestRate: 0,
-      depositDate: new Date().toISOString().split("T")[0], // Today in YYYY-MM-DD format
-      maturityDate: new Date(
-        new Date().setFullYear(new Date().getFullYear() + 1),
-      )
-        .toISOString()
-        .split("T")[0], // One year from today
+      depositDate: format(new Date(), "yyyy-MM-dd"),
+      maturityDate: format(addYears(new Date(), 1), "yyyy-MM-dd"),
     },
   });
 
@@ -97,11 +95,7 @@ export const FDCreateForm = () => {
                     min="1"
                     step="1"
                     placeholder="Enter amount"
-                    className={
-                      errors.amount
-                        ? "border-destructive ring-destructive/20"
-                        : ""
-                    }
+                    aria-invalid={!!errors.amount}
                     onChange={e => {
                       // Ensure we always have a positive number
                       const inputValue = e.target.value;
@@ -139,11 +133,7 @@ export const FDCreateForm = () => {
                     min="0.01"
                     step="0.01"
                     placeholder="Enter interest rate"
-                    className={
-                      errors.interestRate
-                        ? "border-destructive ring-destructive/20"
-                        : ""
-                    }
+                    aria-invalid={!!errors.interestRate}
                     onChange={e => {
                       const inputValue = e.target.value;
                       const numValue =
@@ -179,11 +169,7 @@ export const FDCreateForm = () => {
                   <Input
                     id="depositDate"
                     type="date"
-                    className={
-                      errors.depositDate
-                        ? "border-destructive ring-destructive/20"
-                        : ""
-                    }
+                    aria-invalid={errors.depositDate ? "true" : "false"}
                     {...field}
                   />
                 )}
@@ -210,11 +196,7 @@ export const FDCreateForm = () => {
                   <Input
                     id="maturityDate"
                     type="date"
-                    className={
-                      errors.maturityDate
-                        ? "border-destructive ring-destructive/20"
-                        : ""
-                    }
+                    aria-invalid={errors.maturityDate ? "true" : "false"}
                     {...field}
                   />
                 )}
