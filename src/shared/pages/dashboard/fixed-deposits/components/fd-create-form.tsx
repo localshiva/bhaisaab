@@ -27,12 +27,7 @@ export const FDCreateForm = () => {
   const [isOpen, toggleOpen] = useToggle(false);
   const { createFixedDeposit, isLoading } = useCreateFixedDeposit();
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<CreateFixedDepositRequest>({
+  const { control, handleSubmit, reset } = useForm<CreateFixedDepositRequest>({
     resolver: zodResolver(CreateFixedDepositSchema),
     defaultValues: {
       amount: 0,
@@ -79,133 +74,188 @@ export const FDCreateForm = () => {
           <div className="grid gap-4 py-4">
             {/* Amount */}
             <div className="grid gap-2">
-              <Label
-                htmlFor="amount"
-                className={errors.amount ? "text-destructive" : ""}
-              >
-                Deposit Amount
-              </Label>
               <Controller
                 name="amount"
                 control={control}
-                render={({ field: { onChange, value, ...field } }) => (
-                  <Input
-                    id="amount"
-                    type="number"
-                    min="1"
-                    step="1"
-                    placeholder="Enter amount"
-                    aria-invalid={!!errors.amount}
-                    onChange={e => {
-                      // Ensure we always have a positive number
-                      const inputValue = e.target.value;
-                      const numValue =
-                        inputValue === "" ? 0 : Math.max(1, Number(inputValue));
-                      onChange(numValue);
-                    }}
-                    value={value || ""}
-                    {...field}
-                  />
+                render={({
+                  field: { onChange, value, ...field },
+                  formState: { errors },
+                }) => (
+                  <>
+                    <Label
+                      htmlFor="amount"
+                      className={errors.amount ? "text-destructive" : ""}
+                    >
+                      Deposit Amount
+                    </Label>
+
+                    <Input
+                      id="amount"
+                      type="number"
+                      min="1"
+                      step="1"
+                      placeholder="Enter amount"
+                      aria-invalid={!!errors.amount}
+                      onChange={e => {
+                        // Ensure we always have a positive number
+                        const inputValue = e.target.value;
+                        const numValue =
+                          inputValue === ""
+                            ? 0
+                            : Math.max(1, Number(inputValue));
+                        onChange(numValue);
+                      }}
+                      value={value || ""}
+                      {...field}
+                    />
+
+                    {errors.amount && (
+                      <p className="text-destructive text-sm">
+                        {errors.amount.message}
+                      </p>
+                    )}
+                  </>
                 )}
               />
-              {errors.amount && (
-                <p className="text-destructive text-sm">
-                  {errors.amount.message}
-                </p>
-              )}
             </div>
 
             {/* Interest Rate */}
             <div className="grid gap-2">
-              <Label
-                htmlFor="interestRate"
-                className={errors.interestRate ? "text-destructive" : ""}
-              >
-                Interest Rate (%)
-              </Label>
               <Controller
                 name="interestRate"
                 control={control}
-                render={({ field: { onChange, value, ...field } }) => (
-                  <Input
-                    id="interestRate"
-                    type="number"
-                    min="0.01"
-                    step="0.01"
-                    placeholder="Enter interest rate"
-                    aria-invalid={!!errors.interestRate}
-                    onChange={e => {
-                      const inputValue = e.target.value;
-                      const numValue =
-                        inputValue === ""
-                          ? 0
-                          : Math.min(100, Math.max(0.01, Number(inputValue)));
-                      onChange(numValue);
-                    }}
-                    value={value || ""}
-                    {...field}
-                  />
+                render={({
+                  field: { onChange, value, ...field },
+                  formState: { errors },
+                }) => (
+                  <>
+                    <Label
+                      htmlFor="interestRate"
+                      className={errors.interestRate ? "text-destructive" : ""}
+                    >
+                      Interest Rate (%)
+                    </Label>
+                    <Input
+                      id="interestRate"
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      placeholder="Enter interest rate"
+                      aria-invalid={!!errors.interestRate}
+                      onChange={e => {
+                        const inputValue = e.target.value;
+                        const numValue =
+                          inputValue === ""
+                            ? 0
+                            : Math.min(100, Math.max(0.01, Number(inputValue)));
+                        onChange(numValue);
+                      }}
+                      value={value || ""}
+                      {...field}
+                    />
+                    {errors.interestRate && (
+                      <p className="text-destructive text-sm">
+                        {errors.interestRate.message}
+                      </p>
+                    )}
+                  </>
                 )}
               />
-              {errors.interestRate && (
-                <p className="text-destructive text-sm">
-                  {errors.interestRate.message}
-                </p>
-              )}
             </div>
 
             {/* Deposit Date */}
             <div className="grid gap-2">
-              <Label
-                htmlFor="depositDate"
-                className={errors.depositDate ? "text-destructive" : ""}
-              >
-                Deposit Date
-              </Label>
               <Controller
                 name="depositDate"
                 control={control}
-                render={({ field }) => (
-                  <Input
-                    id="depositDate"
-                    type="date"
-                    aria-invalid={errors.depositDate ? "true" : "false"}
-                    {...field}
-                  />
+                render={({ field, formState: { errors } }) => (
+                  <>
+                    <Label
+                      htmlFor="depositDate"
+                      className={errors.depositDate ? "text-destructive" : ""}
+                    >
+                      Deposit Date
+                    </Label>
+
+                    <Input
+                      id="depositDate"
+                      type="date"
+                      aria-invalid={errors.depositDate ? "true" : "false"}
+                      {...field}
+                    />
+
+                    {errors.depositDate && (
+                      <p className="text-destructive text-sm">
+                        {errors.depositDate.message}
+                      </p>
+                    )}
+                  </>
                 )}
               />
-              {errors.depositDate && (
-                <p className="text-destructive text-sm">
-                  {errors.depositDate.message}
-                </p>
-              )}
             </div>
 
             {/* Maturity Date */}
             <div className="grid gap-2">
-              <Label
-                htmlFor="maturityDate"
-                className={errors.maturityDate ? "text-destructive" : ""}
-              >
-                Maturity Date
-              </Label>
               <Controller
                 name="maturityDate"
                 control={control}
-                render={({ field }) => (
-                  <Input
-                    id="maturityDate"
-                    type="date"
-                    aria-invalid={errors.maturityDate ? "true" : "false"}
-                    {...field}
-                  />
+                render={({ field, formState: { errors } }) => (
+                  <>
+                    <Label
+                      htmlFor="maturityDate"
+                      className={errors.maturityDate ? "text-destructive" : ""}
+                    >
+                      Maturity Date
+                    </Label>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <Label
+                          htmlFor="maturityYears"
+                          className="text-sm mb-1 block"
+                        >
+                          Years
+                        </Label>
+                        <Input
+                          id="maturityYears"
+                          type="number"
+                          min="0"
+                          max="30"
+                          defaultValue="1"
+                        />
+                      </div>
+                      <div>
+                        <Label
+                          htmlFor="maturityMonths"
+                          className="text-sm mb-1 block"
+                        >
+                          Months
+                        </Label>
+                        <Input
+                          id="maturityMonths"
+                          type="number"
+                          min="0"
+                          max="11"
+                          defaultValue="0"
+                        />
+                      </div>
+                    </div>
+
+                    <Input
+                      id="maturityDate"
+                      type="date"
+                      aria-invalid={errors.maturityDate ? "true" : "false"}
+                      {...field}
+                    />
+
+                    {errors.maturityDate && (
+                      <p className="text-destructive text-sm">
+                        {errors.maturityDate.message}
+                      </p>
+                    )}
+                  </>
                 )}
               />
-              {errors.maturityDate && (
-                <p className="text-destructive text-sm">
-                  {errors.maturityDate.message}
-                </p>
-              )}
             </div>
           </div>
 
