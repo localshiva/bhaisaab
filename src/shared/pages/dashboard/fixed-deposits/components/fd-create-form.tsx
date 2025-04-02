@@ -17,8 +17,10 @@ import {
 } from "@bhaisaab/shared/constants/validation/fixed-deposits";
 import { useCreateFixedDeposit } from "@bhaisaab/shared/hooks/services/fixed-deposits";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addMonths } from "date-fns/addMonths";
 import { addYears } from "date-fns/addYears";
 import { format } from "date-fns/format";
+import { intervalToDuration } from "date-fns/intervalToDuration";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { useToggle } from "react-use";
@@ -27,15 +29,16 @@ export const FDCreateForm = () => {
   const [isOpen, toggleOpen] = useToggle(false);
   const { createFixedDeposit, isLoading } = useCreateFixedDeposit();
 
-  const { control, handleSubmit, reset } = useForm<CreateFixedDepositRequest>({
-    resolver: zodResolver(CreateFixedDepositSchema),
-    defaultValues: {
-      amount: 0,
-      interestRate: 0,
-      depositDate: format(new Date(), "yyyy-MM-dd"),
-      maturityDate: format(addYears(new Date(), 1), "yyyy-MM-dd"),
-    },
-  });
+  const { control, handleSubmit, reset, setValue, getValues } =
+    useForm<CreateFixedDepositRequest>({
+      resolver: zodResolver(CreateFixedDepositSchema),
+      defaultValues: {
+        amount: 0,
+        interestRate: 0,
+        depositDate: format(new Date(), "yyyy-MM-dd"),
+        maturityDate: format(addYears(new Date(), 1), "yyyy-MM-dd"),
+      },
+    });
 
   const onSubmit = (data: CreateFixedDepositRequest) => {
     createFixedDeposit(data, {
@@ -168,7 +171,10 @@ export const FDCreateForm = () => {
               <Controller
                 name="depositDate"
                 control={control}
-                render={({ field, formState: { errors } }) => (
+                render={({
+                  field: { onChange, ...restField },
+                  formState: { errors },
+                }) => (
                   <>
                     <Label
                       htmlFor="depositDate"
@@ -180,8 +186,23 @@ export const FDCreateForm = () => {
                     <Input
                       id="depositDate"
                       type="date"
+                      readOnly={false}
+                      onClick={e => e.currentTarget.showPicker()}
                       aria-invalid={errors.depositDate ? "true" : "false"}
-                      {...field}
+                      onChange={e => {
+                        // First, update the deposit date field
+                        onChange(e);
+
+                        // Update the maturity date field
+                        setValue(
+                          "maturityDate",
+                          format(
+                            addYears(new Date(e.target.value), 1),
+                            "yyyy-MM-dd",
+                          ),
+                        );
+                      }}
+                      {...restField}
                     />
 
                     {errors.depositDate && (
@@ -199,62 +220,96 @@ export const FDCreateForm = () => {
               <Controller
                 name="maturityDate"
                 control={control}
-                render={({ field, formState: { errors } }) => (
-                  <>
-                    <Label
-                      htmlFor="maturityDate"
-                      className={errors.maturityDate ? "text-destructive" : ""}
-                    >
-                      Maturity Date
-                    </Label>
+                render={({ field, formState: { errors } }) => {
+                  const depositDate = getValues("depositDate");
+                  const interval = intervalToDuration({
+                    start: new Date(depositDate),
+                    end: new Date(field.value),
+                  });
 
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <Label
-                          htmlFor="maturityYears"
-                          className="text-sm mb-1 block"
-                        >
-                          Years
-                        </Label>
-                        <Input
-                          id="maturityYears"
-                          type="number"
-                          min="0"
-                          max="30"
-                          defaultValue="1"
-                        />
+                  return (
+                    <>
+                      <Label
+                        htmlFor="maturityDate"
+                        className={
+                          errors.maturityDate ? "text-destructive" : ""
+                        }
+                      >
+                        Maturity Date
+                      </Label>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <Label
+                            htmlFor="maturityYears"
+                            className="text-sm mb-1 block"
+                          >
+                            Years
+                          </Label>
+                          <Input
+                            id="maturityYears"
+                            type="number"
+                            min="0"
+                            max="20"
+                            value={interval.years ?? 0}
+                            onChange={e => {
+                              const years = Number(e.target.value || 0);
+                              const months = interval.months ?? 0;
+
+                              let newDate = addYears(
+                                new Date(depositDate),
+                                years,
+                              );
+                              newDate = addMonths(newDate, months);
+
+                              field.onChange(format(newDate, "yyyy-MM-dd"));
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <Label
+                            htmlFor="maturityMonths"
+                            className="text-sm mb-1 block"
+                          >
+                            Months
+                          </Label>
+                          <Input
+                            id="maturityMonths"
+                            type="number"
+                            min="0"
+                            max="11"
+                            value={interval.months ?? 0}
+                            onChange={e => {
+                              const months = Number(e.target.value ?? 0);
+                              const years = interval.years ?? 0;
+
+                              let newDate = addYears(
+                                new Date(depositDate),
+                                years,
+                              );
+                              newDate = addMonths(newDate, months);
+
+                              field.onChange(format(newDate, "yyyy-MM-dd"));
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <Label
-                          htmlFor="maturityMonths"
-                          className="text-sm mb-1 block"
-                        >
-                          Months
-                        </Label>
-                        <Input
-                          id="maturityMonths"
-                          type="number"
-                          min="0"
-                          max="11"
-                          defaultValue="0"
-                        />
-                      </div>
-                    </div>
 
-                    <Input
-                      id="maturityDate"
-                      type="date"
-                      aria-invalid={errors.maturityDate ? "true" : "false"}
-                      {...field}
-                    />
-
-                    {errors.maturityDate && (
-                      <p className="text-destructive text-sm">
-                        {errors.maturityDate.message}
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Matures on{" "}
+                        {format(new Date(field.value), "MMM d, yyyy")}
                       </p>
-                    )}
-                  </>
-                )}
+
+                      <Input id="maturityDate" type="hidden" {...field} />
+
+                      {errors.maturityDate && (
+                        <p className="text-destructive text-sm">
+                          {errors.maturityDate.message}
+                        </p>
+                      )}
+                    </>
+                  );
+                }}
               />
             </div>
           </div>
