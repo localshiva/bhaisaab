@@ -56,6 +56,7 @@ export default function FixedDeposits() {
 
             return (
               <FDListItem
+                id={index + 1}
                 key={`fd-${index}`}
                 amount={row[amountIndex]}
                 interestRate={row[interestRateIndex]}

@@ -34,7 +34,7 @@ export const getErrorMessage = (
 };
 
 export const getServerError = (error: unknown) => {
-  console.error("API error creating fixed deposit:", error);
+  console.error("API error:", error);
 
   // Return appropriate error response
   return NextResponse.json(

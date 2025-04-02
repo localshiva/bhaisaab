@@ -1,6 +1,7 @@
 "use client";
 import { SidebarProvider } from "@bhaisaab/shared/components/core/sidebar";
 import {
+  MutationCache,
   QueryCache,
   QueryClient,
   QueryClientProvider,
@@ -23,6 +24,13 @@ const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
       if (query?.meta?.toast) {
+        toast.error(getErrorMessage(error));
+      }
+    },
+  }),
+  mutationCache: new MutationCache({
+    onError: (error, _variables, _context, mutation) => {
+      if (mutation?.meta?.toast) {
         toast.error(getErrorMessage(error));
       }
     },

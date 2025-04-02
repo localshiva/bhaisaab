@@ -1,17 +1,27 @@
-// @bhaisaab/shared/pages/dashboard/fixed-deposits/components/fd-list-item.tsx
+import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Badge } from "@bhaisaab/shared/components/core/badge";
+import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import {
   calculateMonthlyInterest,
   calculateTotalInterest,
   isMatured,
+  useDeleteFixedDeposit,
 } from "@bhaisaab/shared/hooks/services/fixed-deposits";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { cn } from "@bhaisaab/shared/utils/shadcn";
-import { CalendarClock, CalendarIcon, Percent, Wallet } from "lucide-react";
+import {
+  CalendarClock,
+  CalendarIcon,
+  Loader2,
+  Percent,
+  Trash2,
+  Wallet,
+} from "lucide-react";
 import { FC, memo } from "react";
 
 interface FDListItemProps {
+  id: number; // Added ID for delete functionality
   amount: string;
   interestRate: string;
   depositDate: string;
@@ -19,7 +29,8 @@ interface FDListItemProps {
 }
 
 export const FDListItem: FC<FDListItemProps> = memo(
-  ({ amount, interestRate, depositDate, maturityDate }) => {
+  ({ id, amount, interestRate, depositDate, maturityDate }) => {
+    const { deleteFixedDeposit, isDeleting } = useDeleteFixedDeposit();
     // Convert string values to numbers
     const numAmount = Number.parseFloat(amount);
     const numInterestRate = Number.parseFloat(interestRate);
@@ -49,6 +60,11 @@ export const FDListItem: FC<FDListItemProps> = memo(
       ),
     );
 
+    // Handle delete action
+    const handleDelete = () => {
+      deleteFixedDeposit(id);
+    };
+
     return (
       <div
         className={`border rounded-lg overflow-hidden shadow-sm bg-card hover:shadow-md transition-shadow flex flex-col ${matured ? "border-amber-300/30" : "border-green-300/30"}`}
@@ -77,12 +93,35 @@ export const FDListItem: FC<FDListItemProps> = memo(
                 {formatCurrency(numAmount)}
               </Typography>
             </div>
-            <Badge
-              variant={"outline"}
-              className={`rounded-full px-3 py-1 ${matured ? "bg-amber-500/15 text-amber-700 hover:bg-amber-500/20 border-amber-200" : "bg-green-500/15 text-green-700 hover:bg-green-500/20 border-green-200"}`}
-            >
-              {matured ? "Matured" : "Active"}
-            </Badge>
+            <div className="flex items-center gap-2">
+              {/* Delete Dialog */}
+              <ConfirmAlertDialog
+                message={`Are you sure you want to delete this fixed deposit of
+                      ${formatCurrency(numAmount)}? This action cannot be undone.`}
+                actionLabel="Delete"
+                onConfirm={handleDelete}
+                buttonContent={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:text-destructive"
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="size-4" />
+                    )}
+                  </Button>
+                }
+              />
+
+              <Badge
+                variant={"outline"}
+                className={`rounded-full px-3 py-1 ${matured ? "bg-amber-500/15 text-amber-700 hover:bg-amber-500/20 border-amber-200" : "bg-green-500/15 text-green-700 hover:bg-green-500/20 border-green-200"}`}
+              >
+                {matured ? "Matured" : "Active"}
+              </Badge>
+            </div>
           </div>
 
           {/* Interest rate and monthly interest side by side */}
