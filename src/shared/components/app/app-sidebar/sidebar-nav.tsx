@@ -51,7 +51,7 @@ const navItems = [
   {
     title: "FD Report",
     icon: Banknote,
-    url: "/dashboard/deposits",
+    url: "/dashboard/fixed-deposits",
   },
 ];
 
