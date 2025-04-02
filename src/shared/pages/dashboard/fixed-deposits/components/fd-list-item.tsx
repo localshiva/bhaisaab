@@ -94,6 +94,13 @@ export const FDListItem: FC<FDListItemProps> = memo(
               </Typography>
             </div>
             <div className="flex items-center gap-2">
+              <Badge
+                variant={"outline"}
+                className={`rounded-full px-3 py-1 ${matured ? "bg-amber-500/15 text-amber-700 hover:bg-amber-500/20 border-amber-200" : "bg-green-500/15 text-green-700 hover:bg-green-500/20 border-green-200"}`}
+              >
+                {matured ? "Matured" : "Active"}
+              </Badge>
+
               {/* Delete Dialog */}
               <ConfirmAlertDialog
                 message={`Are you sure you want to delete this fixed deposit of
@@ -114,13 +121,6 @@ export const FDListItem: FC<FDListItemProps> = memo(
                   </Button>
                 }
               />
-
-              <Badge
-                variant={"outline"}
-                className={`rounded-full px-3 py-1 ${matured ? "bg-amber-500/15 text-amber-700 hover:bg-amber-500/20 border-amber-200" : "bg-green-500/15 text-green-700 hover:bg-green-500/20 border-green-200"}`}
-              >
-                {matured ? "Matured" : "Active"}
-              </Badge>
             </div>
           </div>
 
