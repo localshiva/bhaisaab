@@ -5,6 +5,8 @@ import {
 } from "@bhaisaab/shared/constants/validation/monthly-returns";
 import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
 
+import { deleteSingleRow } from "./delete-single-row";
+
 export const SHEET_NAME = "Monthly Returns";
 
 /**
@@ -107,7 +109,7 @@ export async function deleteMonthlyIncomeSource(
 
     const sheetId = spreadsheetInfo.data.sheets?.[0]?.properties?.sheetId;
 
-    if (sheetId === undefined) {
+    if (sheetId === undefined || sheetId === null) {
       throw new Error(`Sheet ${SHEET_NAME} not found`);
     }
 
@@ -128,23 +130,7 @@ export async function deleteMonthlyIncomeSource(
     }
 
     // Don't empty but instead delete the entire row
-    await sheetsClient.spreadsheets.batchUpdate({
-      spreadsheetId,
-      requestBody: {
-        requests: [
-          {
-            deleteDimension: {
-              range: {
-                sheetId,
-                dimension: "ROWS",
-                startIndex: deleteData.id,
-                endIndex: deleteData.id + 1,
-              },
-            },
-          },
-        ],
-      },
-    });
+    await deleteSingleRow(sheetsClient, spreadsheetId, sheetId, deleteData.id);
 
     return true;
   } catch (error) {

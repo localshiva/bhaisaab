@@ -19,6 +19,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { FC, memo } from "react";
+import { toast } from "sonner";
 
 interface FDListItemProps {
   id: number; // Added ID for delete functionality
@@ -62,7 +63,11 @@ export const FDListItem: FC<FDListItemProps> = memo(
 
     // Handle delete action
     const handleDelete = () => {
-      deleteFixedDeposit(id);
+      if (typeof id === "number") {
+        deleteFixedDeposit(id);
+      } else {
+        toast.error("Fixed deposit ID should be a row number");
+      }
     };
 
     return (

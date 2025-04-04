@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export async function DELETE(
   _: NextRequest,
-  context: { params: Promise<{ id: number }> },
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await context.params;
@@ -24,8 +24,21 @@ export async function DELETE(
       );
     }
 
+    const rowId = Number(id);
+
+    if (typeof rowId !== "number") {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Fixed deposit ID should be a row number",
+        },
+        { status: 400 },
+      );
+    }
+
     // Call service to delete the fixed deposit
-    await deleteFixedDeposit(id);
+    // id is a string when we recieve it from param, so convert to number
+    await deleteFixedDeposit(rowId);
 
     // Return success regardless of whether the record existed
     return NextResponse.json({
