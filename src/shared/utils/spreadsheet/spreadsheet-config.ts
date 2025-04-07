@@ -15,11 +15,21 @@ export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
     throw new Error("User not authenticated or missing access token");
   }
 
+  // Check for refresh error - force user to re-login
+  if (session.error === "RefreshAccessTokenError") {
+    // Redirect to sign in or throw error to be caught by your API route
+    const error = new Error("Session expired - please sign in again");
+    (error as { status?: number }).status = 401;
+
+    throw error;
+  }
+
   // Create OAuth2 client with access token
   const oauth2Client = new google.auth.OAuth2({
     clientId: process.env.AUTH_GOOGLE_ID,
     clientSecret: process.env.AUTH_GOOGLE_SECRET,
   });
+
   oauth2Client.setCredentials({
     access_token: session.access_token,
     refresh_token: session.refresh_token,

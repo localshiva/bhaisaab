@@ -24,7 +24,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@sentry/nextjs": "^9.10.0",
-    "@serwist/next": "^9.0.12",
+    "@serwist/next": "^9.0.13",
     "@tanstack/react-query": "^5.71.1",
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
@@ -64,7 +64,7 @@
     "eslint-plugin-unicorn": "^58.0.0",
     "husky": "^9.1.7",
     "prettier": "^3.5.3",
-    "serwist": "^9.0.12",
+    "serwist": "^9.0.13",
     "tailwindcss": "^4",
     "typescript": "^5",
     "typescript-eslint": "^8.28.0"

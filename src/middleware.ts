@@ -16,6 +16,10 @@ export default auth(req => {
   // First apply security headers
   const response = setSecurityHeaders(req);
 
+  if (req.auth?.error === "RefreshAccessTokenError") {
+    return NextResponse.redirect(new URL("/api/auth/signout", req.url));
+  }
+
   const { pathname } = req.nextUrl;
 
   // Handle API routes specifically

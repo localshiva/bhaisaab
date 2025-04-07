@@ -6,7 +6,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { SessionProvider } from "next-auth/react";
+import { isAxiosError } from "axios";
+import { SessionProvider, signOut } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
 import { toast } from "sonner";
@@ -23,6 +24,16 @@ interface PublicClientProvidersProps {
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
+      if (
+        isAxiosError(error) &&
+        error.response?.status === 401 &&
+        getErrorMessage(error) === "Session expired - please sign in again"
+      ) {
+        void signOut({
+          redirectTo: "/auth/login",
+        });
+      }
+
       if (query?.meta?.toast) {
         toast.error(getErrorMessage(error));
       }

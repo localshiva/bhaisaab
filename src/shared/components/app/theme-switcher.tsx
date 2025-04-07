@@ -25,6 +25,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
         <Tooltip key={value}>
           <TooltipTrigger asChild>
             <Button
+              type="button"
               size="icon"
               variant={theme === value ? "default" : "ghost"}
               className="size-7"
