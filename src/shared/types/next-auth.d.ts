@@ -9,6 +9,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     access_token: Account["access_token"];
     refresh_token: Account["refresh_token"];
+    expires_at: Account["expires_at"];
   }
 }
 
@@ -17,5 +18,6 @@ declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     access_token: Account["access_token"];
     refresh_token: Account["refresh_token"];
+    expires_at: Account["expires_at"];
   }
 }

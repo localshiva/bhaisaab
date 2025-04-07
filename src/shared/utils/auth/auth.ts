@@ -25,6 +25,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (account) {
         token.access_token = account.access_token;
         token.refresh_token = account.refresh_token;
+        token.expires_at = account.expires_at;
       }
 
       return token;
@@ -39,6 +40,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       session.access_token = token.access_token;
       session.refresh_token = token.refresh_token;
+      session.expires_at = token.expires_at;
 
       return session;
     },
