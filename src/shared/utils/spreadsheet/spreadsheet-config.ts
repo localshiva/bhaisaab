@@ -23,7 +23,7 @@ export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
   oauth2Client.setCredentials({
     access_token: session.access_token,
     refresh_token: session.refresh_token,
-    expiry_date: session.expires_at ?? 0 * 1000,
+    expiry_date: (session.expires_at ?? 0) * 1000,
   });
 
   // Create and return Sheets client
