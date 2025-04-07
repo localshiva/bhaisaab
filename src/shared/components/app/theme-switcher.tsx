@@ -19,6 +19,9 @@ const themes = [
 export function ThemeSwitcher({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme();
 
+  // Avoid SSR issues
+  const effectiveTheme = globalThis.window === undefined ? "system" : theme;
+
   return (
     <div className={cn("flex items-center gap-4 py-3 rounded-md", className)}>
       {themes.map(({ value, icon: Icon, label }) => (
@@ -27,7 +30,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
             <Button
               type="button"
               size="icon"
-              variant={theme === value ? "default" : "ghost"}
+              variant={effectiveTheme === value ? "default" : "ghost"}
               className="size-7"
               onClick={() => setTheme(value)}
               aria-label={`Switch to ${label} theme`}
