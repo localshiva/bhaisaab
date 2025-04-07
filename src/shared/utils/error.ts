@@ -16,6 +16,18 @@ export const getErrorMessage = (
     return (axiosError?.response?.data as { error: string })?.error ?? "";
   }
 
+  if ((error as { data: { error_description: string } }).data) {
+    const googleError = error as {
+      data?: { error_description?: string; error?: string };
+    };
+
+    return (
+      googleError.data?.error_description ??
+      googleError.data?.error ??
+      defaultMessage
+    );
+  }
+
   if (error instanceof Error) {
     return error.message;
   }
@@ -34,7 +46,7 @@ export const getErrorMessage = (
 };
 
 export const getServerError = (error: unknown) => {
-  console.error("API error:", error);
+  console.error("API error:", getErrorMessage(error));
 
   // Return appropriate error response
   return NextResponse.json(
