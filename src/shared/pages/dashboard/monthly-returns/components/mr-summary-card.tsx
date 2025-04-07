@@ -1,9 +1,7 @@
-import { Typography } from "@bhaisaab/shared/components/core/typography";
+import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
 import { IMonthlyReturnsRow } from "@bhaisaab/shared/hooks/services/monthly-return";
 import { getTotalIncome } from "@bhaisaab/shared/utils/income";
 import { FC, useMemo } from "react";
-
-import { MRSummaryItem } from "./mr-summary-item";
 
 interface Props {
   rows: IMonthlyReturnsRow[];
@@ -44,34 +42,25 @@ export const MRSummaryCard: FC<Props> = ({ rows }) => {
     };
   }, [rows]);
 
-  return (
-    <div className="bg-card rounded-lg border shadow-sm p-6">
-      <Typography variant="h5" weight={"semibold"} textColor={"default"}>
-        Income Summary
-      </Typography>
+  const data = useMemo(() => {
+    return [
+      {
+        amount: totalIncome.sum,
+        subtitle: `${totalIncome.sources} sources`,
+        title: "Total Income",
+      },
+      {
+        amount: totalSalary.sum,
+        subtitle: `${totalSalary.sources} sources`,
+        title: "Total Salary",
+      },
+      {
+        amount: totalRent.sum,
+        subtitle: `${totalRent.sources} sources`,
+        title: "Total Rent",
+      },
+    ];
+  }, [totalIncome, totalRent, totalSalary]);
 
-      <div className="flex flex-wrap justify-between gap-x-4 gap-y-8 items-center p-3 bg-card/50 rounded-md border mt-4">
-        {/* Total Income */}
-        <MRSummaryItem
-          sum={totalIncome.sum}
-          sources={totalIncome.sources}
-          title="Total Income"
-        />
-
-        {/* Total Salary */}
-        <MRSummaryItem
-          sum={totalSalary.sum}
-          sources={totalSalary.sources}
-          title="Total Salary"
-        />
-
-        {/* Total Rent */}
-        <MRSummaryItem
-          sum={totalRent.sum}
-          sources={totalRent.sources}
-          title="Total Rent"
-        />
-      </div>
-    </div>
-  );
+  return <AmountSummaryCard rows={data} />;
 };

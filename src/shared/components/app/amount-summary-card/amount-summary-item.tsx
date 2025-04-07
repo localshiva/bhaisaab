@@ -1,13 +1,17 @@
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { FC } from "react";
 
-interface Props {
-  sum: number;
-  sources: number;
+export interface AmountSummaryItemProps {
+  amount: number;
+  subtitle?: string;
   title: string;
 }
 
-export const MRSummaryItem: FC<Props> = ({ sum, sources, title }) => {
+export const AmountSummaryItem: FC<AmountSummaryItemProps> = ({
+  amount,
+  subtitle,
+  title,
+}) => {
   return (
     <div>
       <Typography variant={"label"} textColor={"muted"}>
@@ -15,13 +19,15 @@ export const MRSummaryItem: FC<Props> = ({ sum, sources, title }) => {
       </Typography>
 
       <Typography variant={"h3"} weight={"bold"}>
-        ₹{sum}
+        ₹{amount}
       </Typography>
 
       {/* Number of months */}
-      <Typography variant={"caption"} textColor={"muted"}>
-        {sources} sources
-      </Typography>
+      {!!subtitle && (
+        <Typography variant={"caption"} textColor={"muted"}>
+          {subtitle}
+        </Typography>
+      )}
     </div>
   );
 };
