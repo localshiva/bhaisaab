@@ -1,1 +1,1 @@
-export const FD_SHEET_NAME = "Fixed Deposits";
+export const FD_SHEET_NAME = "FD Report";
