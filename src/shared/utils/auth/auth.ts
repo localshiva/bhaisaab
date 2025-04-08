@@ -33,6 +33,9 @@ const refreshToken = async (token: JWT): Promise<JWT> => {
       refresh_token: string;
     };
 
+    // Info log the refreshed tokens
+    console.info("🚀 ~ refreshedTokens ~", refreshedTokens);
+
     if (!response.ok) {
       throw new Error(JSON.stringify(refreshedTokens));
     }
@@ -71,6 +74,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           expires_at: account.expires_at,
         };
       }
+
+      // log the date and time when the token was expires
+      console.info(
+        "🚀 ~ Token expires at ~",
+        new Date((token.expires_at ?? 0) * 1000),
+      );
 
       // Return the previous token if it hasn't expired yet
       // Add a 10-second buffer to prevent edge cases
