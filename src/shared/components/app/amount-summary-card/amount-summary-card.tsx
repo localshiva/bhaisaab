@@ -7,13 +7,14 @@ import {
 
 export interface AmountSummaryCardProps {
   rows: AmountSummaryItemProps[];
+  title: string;
 }
 
-export const AmountSummaryCard = ({ rows }: AmountSummaryCardProps) => {
+export const AmountSummaryCard = ({ rows, title }: AmountSummaryCardProps) => {
   return (
     <div className="bg-card rounded-lg border shadow-sm p-6">
       <Typography variant="h5" weight={"semibold"} textColor={"default"}>
-        Income Summary
+        {title}
       </Typography>
 
       <div className="flex flex-wrap justify-between gap-x-4 gap-y-8 items-center p-3 bg-card/50 rounded-md border mt-4">
