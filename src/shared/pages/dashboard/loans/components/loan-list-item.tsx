@@ -6,6 +6,8 @@ import { cn } from "@bhaisaab/shared/utils/shadcn";
 import { AlertCircle, CheckCircle2, CreditCard } from "lucide-react";
 import { FC, memo } from "react";
 
+import { LoanActions } from "./loan-actions";
+
 interface LoanListItemProps {
   id: number;
   provider: string;
@@ -15,7 +17,7 @@ interface LoanListItemProps {
 }
 
 export const LoanListItem: FC<LoanListItemProps> = memo(
-  ({ provider, loanAmount, paidAmount, pendingAmount }) => {
+  ({ id, provider, loanAmount, paidAmount, pendingAmount }) => {
     // Convert string values to numbers
     const numLoanAmount = Number(loanAmount) || 0;
     const numPaidAmount = Number(paidAmount) || 0;
@@ -50,17 +52,26 @@ export const LoanListItem: FC<LoanListItemProps> = memo(
               </Typography>
             </div>
 
-            <Badge
-              variant={"outline"}
-              className={cn(
-                "rounded-full px-3 py-1",
-                isFullyPaid
-                  ? "bg-green-500/15 text-green-700 hover:bg-green-500/20 border-green-200"
-                  : "bg-blue-500/15 text-blue-700 hover:bg-blue-500/20 border-blue-200",
-              )}
-            >
-              {isFullyPaid ? "Paid" : "Active"}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge
+                variant={"outline"}
+                className={cn(
+                  "rounded-full px-3 py-1",
+                  isFullyPaid
+                    ? "bg-green-500/15 text-green-700 hover:bg-green-500/20 border-green-200"
+                    : "bg-blue-500/15 text-blue-700 hover:bg-blue-500/20 border-blue-200",
+                )}
+              >
+                {isFullyPaid ? "Paid" : "Active"}
+              </Badge>
+
+              <LoanActions
+                id={id}
+                provider={provider}
+                isFullyPaid={isFullyPaid}
+                pendingAmount={numPendingAmount}
+              />
+            </div>
           </div>
 
           {/* Loan details */}

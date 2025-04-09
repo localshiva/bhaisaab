@@ -1,5 +1,6 @@
 // @bhaisaab/shared/hooks/services/loans.ts
 import { AddLoanRequest } from "@bhaisaab/shared/constants/validation/loans";
+import { IAddLoanPaymentRequest } from "@bhaisaab/shared/services/spreadsheet/loan/add-loan-payment";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -67,6 +68,51 @@ export function useAddLoan() {
 
   return {
     addLoan: mutation.mutate,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+  };
+}
+
+/**
+ * Response type for add loan payment mutation
+ */
+interface IAddLoanPaymentResponse {
+  success: boolean;
+  message: string;
+  error?: string;
+  details?: Record<string, unknown>;
+}
+
+/**
+ * Hook for adding a payment to an existing loan
+ */
+export function useAddLoanPayment() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<
+    IAddLoanPaymentResponse,
+    Error,
+    IAddLoanPaymentRequest
+  >({
+    mutationFn: async (paymentData: IAddLoanPaymentRequest) => {
+      const { data } = await httpClient.post<IAddLoanPaymentResponse>(
+        "/spreadsheet/loans/payment",
+        paymentData,
+      );
+      return data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch loans query after successful mutation
+      void queryClient.invalidateQueries({ queryKey: loansQueryKey });
+    },
+    meta: {
+      toast: true,
+    },
+  });
+
+  return {
+    addPayment: mutation.mutate,
     isLoading: mutation.isPending,
     isError: mutation.isError,
     error: mutation.error,

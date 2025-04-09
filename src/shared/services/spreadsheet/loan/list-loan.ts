@@ -37,6 +37,6 @@ export async function fetchLoansData(range: string): Promise<string[][]> {
  * @returns Array of loan data rows
  */
 export async function getAllLoans(): Promise<string[][]> {
-  const range = `${LOAN_REPORT_SHEET_NAME}!A1:Z`;
+  const range = `${LOAN_REPORT_SHEET_NAME}!A1:D`;
   return fetchLoansData(range);
 }

@@ -1,4 +1,4 @@
-// @bhaisaab/pages/spreadsheet/loan-report/components/loan-add-form.tsx
+// @bhaisaab/pages/spreadsheet/loan-report/components/loan-payment-form.tsx
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
@@ -7,103 +7,82 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@bhaisaab/shared/components/core/dialog";
 import { Input } from "@bhaisaab/shared/components/core/input";
 import { Label } from "@bhaisaab/shared/components/core/label";
-import {
-  AddLoanRequest,
-  AddLoanSchema,
-} from "@bhaisaab/shared/constants/validation/loans";
-import { useAddLoan } from "@bhaisaab/shared/hooks/services/loan";
+import { useAddLoanPayment } from "@bhaisaab/shared/hooks/services/loan";
+import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useToggle } from "react-use";
+import { z } from "zod";
 
-export const AddLoanForm = () => {
-  const [isOpen, toggleOpen] = useToggle(false);
-  const { addLoan, isLoading } = useAddLoan();
+interface LoanPaymentFormProps {
+  rowIndex: number;
+  provider: string;
+  pendingAmount: number;
+  isOpen: boolean;
+  toggleOpen: (open: boolean) => void;
+}
 
-  const { control, handleSubmit, reset } = useForm<AddLoanRequest>({
-    resolver: zodResolver(AddLoanSchema),
+export const AddLoanPaymentSchema = z.object({
+  amount: z
+    .number()
+    .positive("Payment amount must be positive")
+    .min(100, "Payment amount must be at least 1"),
+});
+
+export type AddLoanPaymentRequest = z.infer<typeof AddLoanPaymentSchema>;
+
+export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
+  rowIndex,
+  provider,
+  pendingAmount,
+  isOpen,
+  toggleOpen,
+}) => {
+  const { addPayment, isLoading } = useAddLoanPayment();
+
+  const { control, handleSubmit, reset } = useForm<AddLoanPaymentRequest>({
+    resolver: zodResolver(AddLoanPaymentSchema),
     defaultValues: {
-      provider: "",
       amount: 0,
     },
   });
 
-  const onSubmit = (data: AddLoanRequest) => {
-    addLoan(data, {
-      onSuccess: () => {
-        // Close dialog and reset form on success
-        toggleOpen(false);
-        reset();
+  const onSubmit = (data: AddLoanPaymentRequest) => {
+    addPayment(
+      { rowIndex, amount: data.amount },
+      {
+        onSuccess: () => {
+          // Close dialog and reset form on success
+          toggleOpen(false);
+          reset();
+        },
+        onError: (err: Error) => {
+          console.error("Failed to add payment:", err);
+          // Error handling will be done by the hook and toast notifications
+        },
       },
-      onError: (err: Error) => {
-        console.error("Failed to add loan:", err);
-        // Error handling will be done by the hook and toast notifications
-      },
-    });
+    );
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={toggleOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">
-          <Plus className="size-4" />
-          <span>Add new</span>
-        </Button>
-      </DialogTrigger>
-
       <DialogContent className="sm:max-w-md">
         {/* Header */}
         <DialogHeader>
-          <DialogTitle>Add new loan</DialogTitle>
+          <DialogTitle>Add Payment for {provider}</DialogTitle>
           <DialogDescription>
-            Add a new loan to track payments and pending amounts.
+            Record a payment towards this loan. Pending amount:{" "}
+            {formatCurrency(pendingAmount)}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Form */}
           <div className="grid gap-4 py-4">
-            {/* Provider */}
-            <div className="grid gap-2">
-              <Controller
-                name="provider"
-                control={control}
-                render={({ field, formState: { errors } }) => (
-                  <>
-                    <Label
-                      htmlFor="provider"
-                      className={errors.provider ? "text-destructive" : ""}
-                    >
-                      Loan Provider
-                    </Label>
-
-                    <Input
-                      id="provider"
-                      placeholder="Enter provider name"
-                      className={
-                        errors.provider
-                          ? "border-destructive ring-destructive/20"
-                          : ""
-                      }
-                      {...field}
-                    />
-
-                    {errors.provider && (
-                      <p className="text-destructive text-sm">
-                        {errors.provider.message}
-                      </p>
-                    )}
-                  </>
-                )}
-              />
-            </div>
-
-            {/* Loan Amount */}
+            {/* Payment Amount */}
             <div className="grid gap-2">
               <Controller
                 name="amount"
@@ -117,14 +96,15 @@ export const AddLoanForm = () => {
                       htmlFor="amount"
                       className={errors.amount ? "text-destructive" : ""}
                     >
-                      Loan Amount
+                      Payment Amount
                     </Label>
 
                     <Input
                       id="amount"
                       type="number"
                       min={100}
-                      placeholder="Enter loan amount"
+                      max={pendingAmount}
+                      placeholder="Enter payment amount"
                       className={
                         errors.amount
                           ? "border-destructive ring-destructive/20"
@@ -136,7 +116,10 @@ export const AddLoanForm = () => {
                         const numValue =
                           inputValue === ""
                             ? 0
-                            : Math.max(1, Number(inputValue));
+                            : Math.min(
+                                pendingAmount,
+                                Math.max(1, Number(inputValue)),
+                              );
                         onChange(numValue);
                       }}
                       value={value || ""}
@@ -164,7 +147,7 @@ export const AddLoanForm = () => {
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Adding..." : "Add Loan"}
+              {isLoading ? "Processing..." : "Add Payment"}
             </Button>
           </DialogFooter>
         </form>
