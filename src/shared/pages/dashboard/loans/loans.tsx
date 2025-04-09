@@ -3,6 +3,7 @@ import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useLoans } from "@bhaisaab/shared/hooks/services/loan";
 
 import { AddLoanForm } from "./components/add-loan-form";
+import { LoanList } from "./components/loan-list";
 import { LoanSummaryCard } from "./components/loan-summary-card";
 
 export default function Loans() {
@@ -29,6 +30,9 @@ export default function Loans() {
 
       {/* Main summary card */}
       <LoanSummaryCard rows={data.rows} />
+
+      {/* Display loan list */}
+      <LoanList rows={data.rows} />
     </div>
   );
 }
