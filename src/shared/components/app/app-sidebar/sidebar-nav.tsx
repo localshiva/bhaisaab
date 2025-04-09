@@ -1,7 +1,7 @@
 import {
   SidebarContent,
   SidebarGroup,
-  SidebarGroupAction,
+  // SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
@@ -14,7 +14,7 @@ import {
   BanknoteArrowUp,
   BarChart3,
   Home,
-  Plus,
+  // Plus,
   Receipt,
 } from "lucide-react";
 import Link from "next/link";
@@ -88,9 +88,9 @@ export default function SidebarNav() {
           </Typography>
         </SidebarGroupLabel>
 
-        <SidebarGroupAction title="Add Project">
+        {/* <SidebarGroupAction title="Add Project">
           <Plus /> <span className="sr-only">Add Project</span>
-        </SidebarGroupAction>
+        </SidebarGroupAction> */}
 
         <SidebarGroupContent>
           <SidebarMenu>
