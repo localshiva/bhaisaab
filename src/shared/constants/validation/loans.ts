@@ -29,3 +29,11 @@ export const AddLoanPaymentSchema = z.object({
 });
 
 export type AddLoanPaymentRequest = z.infer<typeof AddLoanPaymentSchema>;
+
+// Validation schema for loan deletion
+export const DeleteLoanSchema = z.object({
+  rowIndex: z
+    .number()
+    .int("Row index must be an integer")
+    .positive("Row index must be positive"),
+});

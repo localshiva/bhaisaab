@@ -8,7 +8,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@bhaisaab/shared/components/core/dropdown-menu";
-import { DollarSign, MoreVertical, Receipt, Trash2 } from "lucide-react";
+import { useDeleteLoan } from "@bhaisaab/shared/hooks/services/loan";
+import {
+  DollarSign,
+  Loader2,
+  MoreVertical,
+  Receipt,
+  Trash2,
+} from "lucide-react";
 import { FC, useState } from "react";
 import { useToggle } from "react-use";
 import { toast } from "sonner";
@@ -30,17 +37,36 @@ export const LoanActions: FC<LoanActionsProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [isOpen, toggleOpen] = useToggle(false);
+  const [isDeleteOpen, toggleDeleteOpen] = useToggle(false);
+  const { deleteLoan, isLoading: isDeleting } = useDeleteLoan();
 
   const handleViewPayments = () => {
-    // This would be replaced with your actual implementation
     toast.info("View payments feature coming soon");
     setOpen(false);
   };
 
-  const handleDelete = () => {
-    // This would be replaced with your actual implementation
-    toast.info("Delete loan feature coming soon");
+  const onDelete = () => {
+    toggleDeleteOpen();
     setOpen(false);
+  };
+
+  const handleDelete = () => {
+    // Important: The spreadsheet rows start at 1,
+    // but the header is at row 1, so we need to add 2 to the 0-based id
+    const rowIndex = id + 1;
+
+    deleteLoan(
+      { rowIndex },
+      {
+        onSuccess: () => {
+          toast.success(`Loan from ${provider} was deleted successfully`);
+        },
+        onError: error => {
+          console.error("Error deleting loan:", error);
+          // Error handling will be done by the hook and toast notifications
+        },
+      },
+    );
   };
 
   const handleAddPayment = () => {
@@ -48,12 +74,7 @@ export const LoanActions: FC<LoanActionsProps> = ({
     setOpen(false);
   };
 
-  // Important: The spreadsheet rows start at 1,
-  // but the header is at row 1, so we need to add 2 to the 0-based id
-  // First row = header (row 1)
-  // Data starts at row 2
-  // So for id=0, we need row 2
-  // For id=1, we need row 3, etc.
+  // The spreadsheet rows start at 1, header at row 1, so add 2 to the 0-based id
   const actualRowIndex = id + 2;
 
   return (
@@ -66,7 +87,7 @@ export const LoanActions: FC<LoanActionsProps> = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40">
-          {/* Add Payment Item - Uses the LoanPaymentForm instead of a direct click handler */}
+          {/* Add Payment Item */}
           {!isFullyPaid && (
             <DropdownMenuItem onSelect={handleAddPayment}>
               <DollarSign className="mr-2 h-4 w-4" />
@@ -91,29 +112,40 @@ export const LoanActions: FC<LoanActionsProps> = ({
 
           <DropdownMenuSeparator />
 
-          <ConfirmAlertDialog
-            message={`Are you sure you want to delete this loan from ${provider}? This action cannot be undone.`}
-            actionLabel="Delete"
-            onConfirm={handleDelete}
-            buttonContent={
-              <DropdownMenuItem
-                onClick={e => e.preventDefault()}
-                variant="destructive"
-              >
+          <DropdownMenuItem
+            onClick={onDelete}
+            variant="destructive"
+            disabled={isDeleting}
+          >
+            {isDeleting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <span>Deleting...</span>
+              </>
+            ) : (
+              <>
                 <Trash2 className="mr-2 h-4 w-4" />
                 <span>Delete</span>
-              </DropdownMenuItem>
-            }
-          />
+              </>
+            )}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
       <LoanPaymentForm
-        rowIndex={actualRowIndex} // Using the corrected row index
+        rowIndex={actualRowIndex}
         provider={provider}
         pendingAmount={pendingAmount}
         isOpen={isOpen}
         toggleOpen={toggleOpen}
+      />
+
+      <ConfirmAlertDialog
+        message={`Are you sure you want to delete this loan from ${provider}? This action cannot be undone.`}
+        actionLabel="Delete"
+        onConfirm={handleDelete}
+        isOpen={isDeleteOpen}
+        onOpenChange={toggleDeleteOpen}
       />
     </>
   );

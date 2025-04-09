@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 
 import {
   AlertDialog,
@@ -16,7 +16,9 @@ interface ConfirmAlertDialogProps {
   message: string;
   actionLabel?: string;
   onConfirm: () => void;
-  buttonContent: React.ReactNode;
+  buttonContent?: React.ReactNode;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const ConfirmAlertDialog: FC<ConfirmAlertDialogProps> = ({
@@ -24,10 +26,11 @@ export const ConfirmAlertDialog: FC<ConfirmAlertDialogProps> = ({
   actionLabel = "Confirm",
   onConfirm,
   buttonContent,
+  isOpen = false,
+  onOpenChange = () => null,
 }) => {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>{buttonContent}</AlertDialogTrigger>
+  const renderChildren = useCallback(
+    () => (
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Fixed Deposit</AlertDialogTitle>
@@ -43,6 +46,25 @@ export const ConfirmAlertDialog: FC<ConfirmAlertDialogProps> = ({
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
+    ),
+    [actionLabel, message, onConfirm],
+  );
+
+  if (!buttonContent) {
+    return (
+      <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+        <AlertDialogTrigger asChild>{buttonContent}</AlertDialogTrigger>
+
+        {renderChildren()}
+      </AlertDialog>
+    );
+  }
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>{buttonContent}</AlertDialogTrigger>
+
+      {renderChildren()}
     </AlertDialog>
   );
 };

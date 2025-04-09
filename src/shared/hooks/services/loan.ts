@@ -1,6 +1,7 @@
 // @bhaisaab/shared/hooks/services/loans.ts
 import { AddLoanRequest } from "@bhaisaab/shared/constants/validation/loans";
 import { IAddLoanPaymentRequest } from "@bhaisaab/shared/services/spreadsheet/loan/add-loan-payment";
+import { IDeleteLoanRequest } from "@bhaisaab/shared/services/spreadsheet/loan/delete-loan";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -113,6 +114,47 @@ export function useAddLoanPayment() {
 
   return {
     addPayment: mutation.mutate,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+  };
+}
+
+/**
+ * Response type for delete loan mutation
+ */
+interface IDeleteLoanResponse {
+  success: boolean;
+  message: string;
+  error?: string;
+  details?: Record<string, unknown>;
+}
+
+/**
+ * Hook for deleting a loan
+ */
+export function useDeleteLoan() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<IDeleteLoanResponse, Error, IDeleteLoanRequest>({
+    mutationFn: async (deleteData: IDeleteLoanRequest) => {
+      const { data } = await httpClient.delete<IDeleteLoanResponse>(
+        "/spreadsheet/loans",
+        { data: deleteData },
+      );
+      return data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch loans query after successful deletion
+      void queryClient.invalidateQueries({ queryKey: loansQueryKey });
+    },
+    meta: {
+      toast: true,
+    },
+  });
+
+  return {
+    deleteLoan: mutation.mutate,
     isLoading: mutation.isPending,
     isError: mutation.isError,
     error: mutation.error,
