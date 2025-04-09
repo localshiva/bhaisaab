@@ -1,6 +1,7 @@
 // @bhaisaab/shared/hooks/services/loans.ts
+import { AddLoanRequest } from "@bhaisaab/shared/constants/validation/loans";
 import httpClient from "@bhaisaab/shared/utils/http-client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export type ILoanRow = string[];
 
@@ -11,6 +12,14 @@ interface ILoansResponse {
     rows: ILoanRow[];
   };
   error?: string;
+}
+
+// Response type for add loan mutation
+interface IAddLoanResponse {
+  success: boolean;
+  message: string;
+  error?: string;
+  details?: Record<string, unknown>;
 }
 
 // Query key for loans
@@ -31,4 +40,35 @@ export function useLoans() {
       toast: true,
     },
   });
+}
+
+/**
+ * Hook for adding a new loan
+ */
+export function useAddLoan() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<IAddLoanResponse, Error, AddLoanRequest>({
+    mutationFn: async (loanData: AddLoanRequest) => {
+      const { data } = await httpClient.post<IAddLoanResponse>(
+        "/spreadsheet/loans",
+        loanData,
+      );
+      return data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch loans query after successful mutation
+      void queryClient.invalidateQueries({ queryKey: loansQueryKey });
+    },
+    meta: {
+      toast: true,
+    },
+  });
+
+  return {
+    addLoan: mutation.mutate,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+  };
 }

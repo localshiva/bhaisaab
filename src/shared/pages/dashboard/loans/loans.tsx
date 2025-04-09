@@ -2,6 +2,8 @@
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useLoans } from "@bhaisaab/shared/hooks/services/loan";
 
+import { AddLoanForm } from "./components/add-loan-form";
+
 export default function Loans() {
   const { isLoading, data } = useLoans();
 
@@ -19,6 +21,8 @@ export default function Loans() {
         <Typography variant={"h4"} weight={"semibold"}>
           Loans
         </Typography>
+
+        <AddLoanForm />
       </div>
     </div>
   );
