@@ -28,7 +28,7 @@ export async function addLoanPayment(
     // First, get the current row data to find the next empty cell for payment
     const rowResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
-      range: `${LOAN_REPORT_SHEET_NAME}!E${paymentData.rowIndex}:IV${paymentData.rowIndex}`,
+      range: `${LOAN_REPORT_SHEET_NAME}!E${paymentData.rowIndex}:ZZZ${paymentData.rowIndex}`,
       valueRenderOption: "UNFORMATTED_VALUE",
     });
 

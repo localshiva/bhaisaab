@@ -72,7 +72,7 @@ export async function addLoan(loanData: {
                     // Column C (Paid Amount)
                     {
                       userEnteredValue: {
-                        formulaValue: `=SUM(E${nextRowAfterLast}:IV${nextRowAfterLast})`,
+                        formulaValue: `=SUM(E${nextRowAfterLast}:ZZZ${nextRowAfterLast})`,
                       },
                     },
                     // Column D (Pending Amount)
