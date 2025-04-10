@@ -37,3 +37,13 @@ export const DeleteLoanSchema = z.object({
     .int("Row index must be an integer")
     .positive("Row index must be positive"),
 });
+
+// Validation schema for fetching loan payments
+export const LoanPaymentsSchema = z.object({
+  rowIndex: z
+    .number()
+    .int("Row index must be an integer")
+    .positive("Row index must be positive"),
+});
+
+export type LoanPaymentsRequest = z.infer<typeof LoanPaymentsSchema>;

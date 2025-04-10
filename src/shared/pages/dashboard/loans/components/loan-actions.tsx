@@ -21,6 +21,7 @@ import { useToggle } from "react-use";
 import { toast } from "sonner";
 
 import { LoanPaymentForm } from "./loan-payment-form";
+import { LoanPaymentsDialog } from "./loan-payments-dialog";
 
 interface LoanActionsProps {
   id: number;
@@ -40,8 +41,12 @@ export const LoanActions: FC<LoanActionsProps> = ({
   const [isDeleteOpen, toggleDeleteOpen] = useToggle(false);
   const { deleteLoan, isLoading: isDeleting } = useDeleteLoan();
 
+  // Then inside the LoanActions component, add a new state:
+  const [isPaymentsOpen, togglePaymentsOpen] = useToggle(false);
+
+  // Replace the handleViewPayments function with:
   const handleViewPayments = () => {
-    toast.info("View payments feature coming soon");
+    togglePaymentsOpen(true);
     setOpen(false);
   };
 
@@ -146,6 +151,13 @@ export const LoanActions: FC<LoanActionsProps> = ({
         onConfirm={handleDelete}
         isOpen={isDeleteOpen}
         onOpenChange={toggleDeleteOpen}
+      />
+
+      <LoanPaymentsDialog
+        rowIndex={actualRowIndex}
+        provider={provider}
+        isOpen={isPaymentsOpen}
+        toggleOpen={togglePaymentsOpen}
       />
     </>
   );

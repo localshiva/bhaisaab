@@ -39,9 +39,9 @@ const navItems = [
     url: "/dashboard/monthly-returns",
   },
   {
-    title: "Monthly Report",
+    title: "Monthly Expense",
     icon: BarChart3,
-    url: "/dashboard/monthly",
+    url: "/dashboard/monthly-expense",
   },
   {
     title: "Loan Report",
