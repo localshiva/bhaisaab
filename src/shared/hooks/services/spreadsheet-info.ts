@@ -1,4 +1,5 @@
 // @bhaisaab/shared/hooks/use-spreadsheet-info.ts
+import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useQuery } from "@tanstack/react-query";
 
@@ -12,20 +13,14 @@ interface ISpreadsheetInfo {
   sheets: ISheet[];
 }
 
-interface ISpreadsheetInfoResponse {
-  success: boolean;
-  data: ISpreadsheetInfo;
-  error?: string;
-}
-
 export const spreadsheetInfoQueryKey = ["spreadsheetInfo"];
 
 export function useSpreadsheetInfo() {
-  return useQuery<ISpreadsheetInfoResponse>({
+  return useQuery<IResponse<ISpreadsheetInfo>>({
     queryKey: [spreadsheetInfoQueryKey],
     queryFn: async () => {
       const { data } =
-        await httpClient.get<ISpreadsheetInfoResponse>("/spreadsheet/info");
+        await httpClient.get<IResponse<ISpreadsheetInfo>>("/spreadsheet/info");
       return data;
     },
     meta: {

@@ -1,25 +1,10 @@
 // @bhaisaab/shared/hooks/services/fixed-deposits.ts
 import { CreateFixedDepositRequest } from "@bhaisaab/shared/constants/validation/fixed-deposits";
+import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export type IFixedDepositRow = string[];
-
-interface IFixedDepositsResponse {
-  success: boolean;
-  data: {
-    headers: string[];
-    rows: IFixedDepositRow[];
-  };
-  error?: string;
-}
-
-interface ICreateFixedDepositResponse {
-  success: boolean;
-  message: string;
-  error?: string;
-  details?: Record<string, unknown>;
-}
 
 // Query key for fixed deposits
 export const fixedDepositsQueryKey = ["fixedDeposits"];
@@ -31,9 +16,12 @@ export function useFixedDeposits() {
   return useQuery({
     queryKey: fixedDepositsQueryKey,
     queryFn: async () => {
-      const { data } = await httpClient.get<IFixedDepositsResponse>(
-        "/spreadsheet/fixed-deposits",
-      );
+      const { data } = await httpClient.get<
+        IResponse<{
+          headers: string[];
+          rows: IFixedDepositRow[];
+        }>
+      >("/spreadsheet/fixed-deposits");
       return data.data;
     },
     meta: {
@@ -48,13 +36,9 @@ export function useFixedDeposits() {
 export function useCreateFixedDeposit() {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<
-    ICreateFixedDepositResponse,
-    Error,
-    CreateFixedDepositRequest
-  >({
+  const mutation = useMutation<IResponse, Error, CreateFixedDepositRequest>({
     mutationFn: async (depositData: CreateFixedDepositRequest) => {
-      const { data } = await httpClient.post<ICreateFixedDepositResponse>(
+      const { data } = await httpClient.post<IResponse>(
         "/spreadsheet/fixed-deposits",
         depositData,
       );

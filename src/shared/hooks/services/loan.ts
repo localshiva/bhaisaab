@@ -2,27 +2,11 @@
 import { AddLoanRequest } from "@bhaisaab/shared/constants/validation/loans";
 import { IAddLoanPaymentRequest } from "@bhaisaab/shared/services/spreadsheet/loan/add-loan-payment";
 import { IDeleteLoanRequest } from "@bhaisaab/shared/services/spreadsheet/loan/delete-loan";
+import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export type ILoanRow = string[];
-
-interface ILoansResponse {
-  success: boolean;
-  data: {
-    headers: string[];
-    rows: ILoanRow[];
-  };
-  error?: string;
-}
-
-// Response type for add loan mutation
-interface IAddLoanResponse {
-  success: boolean;
-  message: string;
-  error?: string;
-  details?: Record<string, unknown>;
-}
 
 // Query key for loans
 export const loansQueryKey = ["loans"];
@@ -34,8 +18,12 @@ export function useLoans() {
   return useQuery({
     queryKey: loansQueryKey,
     queryFn: async () => {
-      const { data } =
-        await httpClient.get<ILoansResponse>("/spreadsheet/loans");
+      const { data } = await httpClient.get<
+        IResponse<{
+          headers: string[];
+          rows: ILoanRow[];
+        }>
+      >("/spreadsheet/loans");
       return data.data;
     },
     meta: {
@@ -50,9 +38,9 @@ export function useLoans() {
 export function useAddLoan() {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<IAddLoanResponse, Error, AddLoanRequest>({
+  const mutation = useMutation<IResponse, Error, AddLoanRequest>({
     mutationFn: async (loanData: AddLoanRequest) => {
-      const { data } = await httpClient.post<IAddLoanResponse>(
+      const { data } = await httpClient.post<IResponse>(
         "/spreadsheet/loans",
         loanData,
       );
@@ -76,24 +64,14 @@ export function useAddLoan() {
 }
 
 /**
- * Response type for delete loan mutation
- */
-interface IDeleteLoanResponse {
-  success: boolean;
-  message: string;
-  error?: string;
-  details?: Record<string, unknown>;
-}
-
-/**
  * Hook for deleting a loan
  */
 export function useDeleteLoan() {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<IDeleteLoanResponse, Error, IDeleteLoanRequest>({
+  const mutation = useMutation<IResponse, Error, IDeleteLoanRequest>({
     mutationFn: async (deleteData: IDeleteLoanRequest) => {
-      const { data } = await httpClient.delete<IDeleteLoanResponse>(
+      const { data } = await httpClient.delete<IResponse>(
         "/spreadsheet/loans",
         { data: deleteData },
       );
@@ -126,15 +104,6 @@ export interface ILoanPayment {
   columnIndex: number;
 }
 
-/**
- * Response type for loan payments query
- */
-interface ILoanPaymentsResponse {
-  success: boolean;
-  data: ILoanPayment[];
-  error?: string;
-}
-
 // Query key generator for loan payments
 export const loanPaymentsQueryKey = (rowIndex: number) => [
   "loanPayments",
@@ -148,7 +117,7 @@ export function useLoanPayments(rowIndex: number) {
   return useQuery({
     queryKey: loanPaymentsQueryKey(rowIndex),
     queryFn: async () => {
-      const { data } = await httpClient.get<ILoanPaymentsResponse>(
+      const { data } = await httpClient.get<IResponse<ILoanPayment[]>>(
         `/spreadsheet/loans/payments?rowIndex=${rowIndex}`,
       );
       return data.data;
@@ -162,28 +131,14 @@ export function useLoanPayments(rowIndex: number) {
 }
 
 /**
- * Response type for add loan payment mutation
- */
-interface IAddLoanPaymentResponse {
-  success: boolean;
-  message: string;
-  error?: string;
-  details?: Record<string, unknown>;
-}
-
-/**
  * Hook for adding a payment to an existing loan
  */
 export function useAddLoanPayment() {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<
-    IAddLoanPaymentResponse,
-    Error,
-    IAddLoanPaymentRequest
-  >({
+  const mutation = useMutation<IResponse, Error, IAddLoanPaymentRequest>({
     mutationFn: async (paymentData: IAddLoanPaymentRequest) => {
-      const { data } = await httpClient.post<IAddLoanPaymentResponse>(
+      const { data } = await httpClient.post<IResponse>(
         "/spreadsheet/loans/payments",
         paymentData,
       );
