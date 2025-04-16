@@ -1,5 +1,5 @@
-import { AddMonthlyExpenseSchema } from "@bhaisaab/shared/constants/validation/monthly-expense";
-import { addMonthlyExpense } from "@bhaisaab/shared/services/spreadsheet/monthly-expense/add-expense";
+import { AddMonthlyExpenseSchema } from "@bhaisaab/shared/constants/validation/monthly-expenses";
+import { addMonthlyExpense } from "@bhaisaab/shared/services/spreadsheet/monthly-expenses/add-expense";
 import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 

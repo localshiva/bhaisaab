@@ -1,4 +1,4 @@
-// @bhaisaab/pages/spreadsheet/loan-report/components/loan-summary-card.tsx
+// @bhaisaab/pages/loans/components/loan-summary-card.tsx
 import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
 import { ILoanRow } from "@bhaisaab/shared/hooks/services/loan";
 import { FC, useMemo } from "react";

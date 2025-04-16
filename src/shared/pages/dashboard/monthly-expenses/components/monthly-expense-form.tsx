@@ -1,4 +1,4 @@
-// @bhaisaab/pages/loans/components/loan-payment-form.tsx
+// @bhaisaab/pages/monthly-expense/components/monthly-expense-form.tsx
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
@@ -10,57 +10,51 @@ import {
 } from "@bhaisaab/shared/components/core/dialog";
 import { Input } from "@bhaisaab/shared/components/core/input";
 import { Label } from "@bhaisaab/shared/components/core/label";
-import { useAddLoanPayment } from "@bhaisaab/shared/hooks/services/loan";
-import { formatCurrency } from "@bhaisaab/shared/utils/currency";
+import { Textarea } from "@bhaisaab/shared/components/core/textarea";
+import { AddMonthlyExpenseSchema } from "@bhaisaab/shared/constants/validation/monthly-expenses";
+import { useAddMonthlyExpense } from "@bhaisaab/shared/hooks/services/monthly-expenses";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
-interface LoanPaymentFormProps {
+interface MonthlyExpenseFormProps {
   rowIndex: number;
-  provider: string;
-  pendingAmount: number;
+  date: string;
   isOpen: boolean;
   toggleOpen: (open: boolean) => void;
 }
 
-export const AddLoanPaymentSchema = z.object({
-  amount: z
-    .number()
-    .positive("Payment amount must be positive")
-    .min(100, "Payment amount must be at least 1"),
-});
+type ExpenseFormData = z.infer<typeof AddMonthlyExpenseSchema>;
 
-export type AddLoanPaymentRequest = z.infer<typeof AddLoanPaymentSchema>;
-
-export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
+export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
   rowIndex,
-  provider,
-  pendingAmount,
+  date,
   isOpen,
   toggleOpen,
 }) => {
-  const { addPayment, isLoading } = useAddLoanPayment();
+  const { addPayment, isLoading } = useAddMonthlyExpense();
 
-  const { control, handleSubmit, reset } = useForm<AddLoanPaymentRequest>({
-    resolver: zodResolver(AddLoanPaymentSchema),
+  const { control, handleSubmit, reset } = useForm<ExpenseFormData>({
+    resolver: zodResolver(AddMonthlyExpenseSchema),
     defaultValues: {
+      rowIndex,
       amount: 0,
+      comment: "",
     },
   });
 
-  const onSubmit = (data: AddLoanPaymentRequest) => {
+  const onSubmit = (data: ExpenseFormData) => {
     addPayment(
-      { rowIndex, amount: data.amount },
+      { rowIndex: data.rowIndex, amount: data.amount, comment: data.comment },
       {
         onSuccess: () => {
           // Close dialog and reset form on success
           toggleOpen(false);
-          reset();
+          reset({ rowIndex, amount: 0, comment: "" });
         },
         onError: (err: Error) => {
-          console.error("Failed to add payment:", err);
+          console.error("Failed to add expense:", err);
           // Error handling will be done by the hook and toast notifications
         },
       },
@@ -72,17 +66,16 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
       <DialogContent className="sm:max-w-md">
         {/* Header */}
         <DialogHeader>
-          <DialogTitle>Add Payment for {provider}</DialogTitle>
+          <DialogTitle>Add Expense for {date}</DialogTitle>
           <DialogDescription>
-            Record a payment towards this loan. Pending amount:{" "}
-            {formatCurrency(pendingAmount)}
+            Record an expense for this month with optional details.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Form */}
           <div className="grid gap-4 py-4">
-            {/* Payment Amount */}
+            {/* Expense Amount */}
             <div className="grid gap-2">
               <Controller
                 name="amount"
@@ -96,15 +89,14 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
                       htmlFor="amount"
                       className={errors.amount ? "text-destructive" : ""}
                     >
-                      Payment Amount
+                      Expense Amount
                     </Label>
 
                     <Input
                       id="amount"
                       type="number"
-                      min={100}
-                      max={pendingAmount}
-                      placeholder="Enter payment amount"
+                      min={1}
+                      placeholder="Enter expense amount"
                       className={
                         errors.amount
                           ? "border-destructive ring-destructive/20"
@@ -116,10 +108,7 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
                         const numValue =
                           inputValue === ""
                             ? 0
-                            : Math.min(
-                                pendingAmount,
-                                Math.max(1, Number(inputValue)),
-                              );
+                            : Math.max(1, Number(inputValue));
                         onChange(numValue);
                       }}
                       value={value || ""}
@@ -129,6 +118,41 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
                     {errors.amount && (
                       <p className="text-destructive text-sm">
                         {errors.amount.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            {/* Comment */}
+            <div className="grid gap-2">
+              <Controller
+                name="comment"
+                control={control}
+                render={({ field, formState: { errors } }) => (
+                  <>
+                    <Label
+                      htmlFor="comment"
+                      className={errors.comment ? "text-destructive" : ""}
+                    >
+                      Comment (Optional)
+                    </Label>
+
+                    <Textarea
+                      id="comment"
+                      placeholder="E.g., Car maintenance at Lakozy"
+                      className={
+                        errors.comment
+                          ? "border-destructive ring-destructive/20"
+                          : ""
+                      }
+                      {...field}
+                    />
+
+                    {errors.comment && (
+                      <p className="text-destructive text-sm">
+                        {errors.comment.message}
                       </p>
                     )}
                   </>
@@ -147,7 +171,7 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Processing..." : "Add Payment"}
+              {isLoading ? "Processing..." : "Add Expense"}
             </Button>
           </DialogFooter>
         </form>

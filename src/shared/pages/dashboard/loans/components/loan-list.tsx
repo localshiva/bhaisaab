@@ -1,4 +1,4 @@
-// @bhaisaab/pages/spreadsheet/loan-report/components/loan-list.tsx
+// @bhaisaab/pages/loans/components/loan-list.tsx
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { ILoanRow } from "@bhaisaab/shared/hooks/services/loan";
 import { FC } from "react";

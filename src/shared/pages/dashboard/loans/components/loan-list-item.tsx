@@ -1,4 +1,4 @@
-// @bhaisaab/pages/spreadsheet/loan-report/components/loan-list-item.tsx
+// @bhaisaab/pages/loans/components/loan-list-item.tsx
 import { Badge } from "@bhaisaab/shared/components/core/badge";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";

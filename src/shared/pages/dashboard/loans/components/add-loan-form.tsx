@@ -1,4 +1,4 @@
-// @bhaisaab/pages/spreadsheet/loan-report/components/loan-add-form.tsx
+// @bhaisaab/pages/loans/components/add-loan-form.tsx
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
