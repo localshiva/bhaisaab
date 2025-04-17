@@ -3,6 +3,7 @@ import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useMonthlyExpenses } from "@bhaisaab/shared/hooks/services/monthly-expenses";
 import { format } from "date-fns/format";
 
+import { MonthlyExpenseSummaryCard } from "./components/monthly-expense-summary-card";
 import { MonthlyExpensesList } from "./components/monthly-expenses-list";
 
 export const MonthlyExpense = () => {
@@ -30,7 +31,8 @@ export const MonthlyExpense = () => {
         </Typography>
       </div>
 
-      {/* TODO: Main summary card */}
+      {/* Main summary card */}
+      <MonthlyExpenseSummaryCard rows={data.rows} />
 
       {/* Display monthly expenses list */}
       <MonthlyExpensesList rows={data.rows} />
