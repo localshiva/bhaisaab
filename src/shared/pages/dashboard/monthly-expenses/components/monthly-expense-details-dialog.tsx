@@ -25,6 +25,7 @@ import {
   useExpenseEdit,
   useMonthlyExpense,
 } from "@bhaisaab/shared/hooks/services/monthly-expenses";
+import { IMonthlyExpense } from "@bhaisaab/shared/services/spreadsheet/monthly-expenses/get-expenses";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { Check, Edit2, Trash2, X } from "lucide-react";
 import { FC, useCallback, useState } from "react";
@@ -34,6 +35,7 @@ interface MonthlyExpenseDetailsDialogProps {
   rowIndex: number;
   date: string;
   isOpen: boolean;
+  canAddExpenses: boolean;
   toggleOpen: (open: boolean) => void;
 }
 
@@ -45,7 +47,7 @@ interface IEditableExpense {
 
 export const MonthlyExpenseDetailsDialog: FC<
   MonthlyExpenseDetailsDialogProps
-> = ({ rowIndex, date, isOpen, toggleOpen }) => {
+> = ({ rowIndex, date, isOpen, toggleOpen, canAddExpenses }) => {
   const { data: expenses, isLoading } = useMonthlyExpense(rowIndex, isOpen);
   const { updateExpense, isLoading: isUpdating } = useExpenseEdit();
   const { deleteExpense, isLoading: isDeleting } = useExpenseDelete();
@@ -117,6 +119,132 @@ export const MonthlyExpenseDetailsDialog: FC<
     );
   };
 
+  const renderActionables = useCallback(
+    (expense: IMonthlyExpense, index: number) => {
+      if (editingExpense?.columnIndex === expense.columnIndex) {
+        return (
+          // Edit mode
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor={`amount-${index}`}>Amount</Label>
+              <Input
+                id={`amount-${index}`}
+                value={editAmount}
+                onChange={e => setEditAmount(e.target.value)}
+                type="number"
+                min="1"
+                disabled={isUpdating}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor={`comment-${index}`}>Comment (Optional)</Label>
+              <Textarea
+                id={`comment-${index}`}
+                value={editComment}
+                onChange={e => setEditComment(e.target.value)}
+                placeholder="Add a comment"
+                disabled={isUpdating}
+              />
+            </div>
+            <div className="flex justify-end gap-2 mt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCancelEdit}
+                disabled={isUpdating}
+              >
+                <X className="size-4 mr-1" />
+                Cancel
+              </Button>
+              <Button size="sm" onClick={handleSaveEdit} disabled={isUpdating}>
+                {isUpdating ? (
+                  "Saving..."
+                ) : (
+                  <>
+                    <Check className="size-4 mr-1" />
+                    Save
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        );
+      }
+
+      // View mode
+      return (
+        // View mode
+        <>
+          <div className="flex justify-between items-center mb-1">
+            <Typography variant="body" weight="semibold">
+              {formatCurrency(expense.amount)}
+            </Typography>
+            <div className="flex items-center gap-1">
+              <Typography variant="small" textColor="muted" className="mr-2">
+                Item #{index + 1}
+              </Typography>
+
+              {canAddExpenses ? (
+                <>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={() => handleEditClick(expense)}
+                        >
+                          <Edit2 className="size-3.5" />
+                          <span className="sr-only">Edit</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Edit expense</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 text-destructive hover:text-destructive"
+                          onClick={() => handleDeleteClick(expense)}
+                        >
+                          <Trash2 className="size-3.5" />
+                          <span className="sr-only">Delete</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Delete expense</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </>
+              ) : null}
+            </div>
+          </div>
+          {expense.comment && (
+            <Typography variant="small" textColor="muted">
+              {expense.comment}
+            </Typography>
+          )}
+        </>
+      );
+    },
+    [
+      canAddExpenses,
+      editAmount,
+      editComment,
+      editingExpense?.columnIndex,
+      handleSaveEdit,
+      isUpdating,
+    ],
+  );
+
   const renderContent = useCallback(() => {
     if (isLoading) {
       return (
@@ -135,120 +263,7 @@ export const MonthlyExpenseDetailsDialog: FC<
               key={`expense-${index}`}
               className="border rounded-lg p-3 bg-muted/10"
             >
-              {editingExpense?.columnIndex === expense.columnIndex ? (
-                // Edit mode
-                <div className="space-y-3">
-                  <div className="space-y-2">
-                    <Label htmlFor={`amount-${index}`}>Amount</Label>
-                    <Input
-                      id={`amount-${index}`}
-                      value={editAmount}
-                      onChange={e => setEditAmount(e.target.value)}
-                      type="number"
-                      min="1"
-                      disabled={isUpdating}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`comment-${index}`}>
-                      Comment (Optional)
-                    </Label>
-                    <Textarea
-                      id={`comment-${index}`}
-                      value={editComment}
-                      onChange={e => setEditComment(e.target.value)}
-                      placeholder="Add a comment"
-                      disabled={isUpdating}
-                    />
-                  </div>
-                  <div className="flex justify-end gap-2 mt-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleCancelEdit}
-                      disabled={isUpdating}
-                    >
-                      <X className="size-4 mr-1" />
-                      Cancel
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={handleSaveEdit}
-                      disabled={isUpdating}
-                    >
-                      {isUpdating ? (
-                        "Saving..."
-                      ) : (
-                        <>
-                          <Check className="size-4 mr-1" />
-                          Save
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                // View mode
-                <>
-                  <div className="flex justify-between items-center mb-1">
-                    <Typography variant="body" weight="semibold">
-                      {formatCurrency(expense.amount)}
-                    </Typography>
-                    <div className="flex items-center gap-1">
-                      <Typography
-                        variant="small"
-                        textColor="muted"
-                        className="mr-2"
-                      >
-                        Item #{index + 1}
-                      </Typography>
-
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7"
-                              onClick={() => handleEditClick(expense)}
-                            >
-                              <Edit2 className="size-3.5" />
-                              <span className="sr-only">Edit</span>
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Edit expense</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7 text-destructive hover:text-destructive"
-                              onClick={() => handleDeleteClick(expense)}
-                            >
-                              <Trash2 className="size-3.5" />
-                              <span className="sr-only">Delete</span>
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Delete expense</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </div>
-                  {expense.comment && (
-                    <Typography variant="small" textColor="muted">
-                      {expense.comment}
-                    </Typography>
-                  )}
-                </>
-              )}
+              {renderActionables(expense, index)}
             </div>
           ))}
         </div>
@@ -262,15 +277,7 @@ export const MonthlyExpenseDetailsDialog: FC<
         </Typography>
       </div>
     );
-  }, [
-    isLoading,
-    expenses,
-    editingExpense?.columnIndex,
-    editAmount,
-    isUpdating,
-    editComment,
-    handleSaveEdit,
-  ]);
+  }, [isLoading, expenses, renderActionables]);
 
   return (
     <>

@@ -86,6 +86,7 @@ export const MonthlyExpenseActions: FC<MonthlyExpenseActionsProps> = ({
         date={date}
         isOpen={isDetailsOpen}
         toggleOpen={toggleDetailsOpen}
+        canAddExpenses={canAddExpenses}
       />
     </>
   );
