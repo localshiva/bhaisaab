@@ -13,7 +13,6 @@ import {
   Banknote,
   BanknoteArrowUp,
   BarChart3,
-  Home,
   // Plus,
   Receipt,
 } from "lucide-react";
@@ -29,29 +28,24 @@ interface INavItem {
 
 const navItems = [
   {
-    title: "Dashboard",
-    icon: Home,
-    url: "/dashboard",
-  },
-  {
-    title: "Monthly Returns",
-    icon: BanknoteArrowUp,
-    url: "/dashboard/monthly-returns",
-  },
-  {
     title: "Monthly Expenses",
     icon: BarChart3,
-    url: "/dashboard/monthly-expenses",
-  },
-  {
-    title: "Loan Report",
-    icon: Receipt,
-    url: "/dashboard/loans",
+    url: "/monthly-expenses",
   },
   {
     title: "FD Report",
     icon: Banknote,
-    url: "/dashboard/fixed-deposits",
+    url: "/fixed-deposits",
+  },
+  {
+    title: "Loan Report",
+    icon: Receipt,
+    url: "/loans",
+  },
+  {
+    title: "Monthly Returns",
+    icon: BanknoteArrowUp,
+    url: "/monthly-returns",
   },
 ];
 
@@ -87,10 +81,6 @@ export default function SidebarNav() {
             Reports
           </Typography>
         </SidebarGroupLabel>
-
-        {/* <SidebarGroupAction title="Add Project">
-          <Plus /> <span className="sr-only">Add Project</span>
-        </SidebarGroupAction> */}
 
         <SidebarGroupContent>
           <SidebarMenu>

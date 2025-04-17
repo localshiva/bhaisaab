@@ -1,4 +1,5 @@
 "use client";
+import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useMonthlyExpenses } from "@bhaisaab/shared/hooks/services/monthly-expenses";
 import { format } from "date-fns/format";
@@ -10,11 +11,15 @@ export const MonthlyExpense = () => {
   const { isLoading, data } = useMonthlyExpenses();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <DataLoading />;
   }
 
   if (!data?.rows) {
-    return <div>No data found</div>;
+    return (
+      <div className="flex flex-col gap-4 max-w-6xl mx-auto p-4">
+        No data found
+      </div>
+    );
   }
 
   return (

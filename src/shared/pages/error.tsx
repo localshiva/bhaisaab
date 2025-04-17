@@ -37,7 +37,9 @@ export const ErrorPageContainer: FC<ErrorPageContainerProps> = ({
 
         <div className="flex justify-center pt-4">
           <Button variant="default" size="lg" className="w-full" asChild>
-            <Link href={session?.user?.email ? "/dashboard" : "/auth/login"}>
+            <Link
+              href={session?.user?.email ? "/monthly-expenses" : "/auth/login"}
+            >
               Return to {session?.user?.email ? "Dashboard" : "Login"}
             </Link>
           </Button>

@@ -1,8 +1,9 @@
 "use client";
 // @bhaisaab/shared/pages/dashboard/fixed-deposits/fixed-deposits.tsx
+import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useFixedDeposits } from "@bhaisaab/shared/hooks/services/fixed-deposits";
-import { Banknote, Loader2 } from "lucide-react";
+import { Banknote } from "lucide-react";
 
 import { FDCreateForm } from "./components/fd-create-form";
 import { FDEmptyList } from "./components/fd-empty-list";
@@ -13,12 +14,7 @@ export default function FixedDeposits() {
   const { isLoading, data } = useFixedDeposits();
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <Loader2 className="size-8 animate-spin text-primary mb-2" />
-        <Typography variant="body">Loading fixed deposits...</Typography>
-      </div>
-    );
+    return <DataLoading />;
   }
 
   const { rows = [] } = data ?? {};
