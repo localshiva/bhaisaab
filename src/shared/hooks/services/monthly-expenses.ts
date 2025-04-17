@@ -50,7 +50,7 @@ export function useMonthlyExpense(rowIndex: number) {
     queryKey: monthlyExpenseQueryKey(rowIndex),
     queryFn: async () => {
       const { data } = await httpClient.get<IResponse<IMonthlyExpense[]>>(
-        `/spreadsheet/monthly/expense?rowIndex=${rowIndex}`,
+        `/spreadsheet/monthly-expenses/expense?rowIndex=${rowIndex}`,
       );
       return data.data;
     },
