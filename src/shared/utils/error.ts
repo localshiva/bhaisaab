@@ -1,6 +1,8 @@
 import { AxiosError, isAxiosError } from "axios";
 import { NextResponse } from "next/server";
 
+const isLikelyHTML = (str: string) => /^<!doctype html>/i.test(str.trim());
+
 // Get error message based on the error type which could be Error or AxiosError
 export const getErrorMessage = (
   error: unknown,
@@ -8,12 +10,19 @@ export const getErrorMessage = (
 ): string => {
   if (isAxiosError(error)) {
     const axiosError = error as AxiosError;
-    // check if the error has status 500
+
+    const rawData = axiosError?.response?.data;
+
+    // 🛑 Check for HTML string
+    if (typeof rawData === "string" && isLikelyHTML(rawData)) {
+      return "Requested API route was not found.";
+    }
+
     if (axiosError?.response?.status === 500) {
       return "There was an error processing your request. Please try again.";
     }
 
-    return (axiosError?.response?.data as { error: string })?.error ?? "";
+    return (rawData as { error?: string })?.error ?? defaultMessage;
   }
 
   if ((error as { data: { error_description: string } }).data) {
