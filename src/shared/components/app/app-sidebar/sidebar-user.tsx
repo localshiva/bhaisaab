@@ -66,9 +66,6 @@ export default function SidebarUser({ user }: SidebarUserProps) {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <span>Account</span>
-                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={onSignOut}>
                     <span>Sign out</span>
                   </DropdownMenuItem>
