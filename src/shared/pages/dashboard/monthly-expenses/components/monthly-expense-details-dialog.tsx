@@ -48,7 +48,7 @@ export const MonthlyExpenseDetailsDialog: FC<
 > = ({ rowIndex, date, isOpen, toggleOpen }) => {
   const { data: expenses, isLoading } = useMonthlyExpense(rowIndex, isOpen);
   const { updateExpense, isLoading: isUpdating } = useExpenseEdit();
-  const { deleteExpense } = useExpenseDelete();
+  const { deleteExpense, isLoading: isDeleting } = useExpenseDelete();
 
   const [editingExpense, setEditingExpense] = useState<IEditableExpense | null>(
     null,
@@ -295,7 +295,7 @@ export const MonthlyExpenseDetailsDialog: FC<
         isOpen={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
         message="Are you sure you want to delete this expense? This action cannot be undone."
-        actionLabel="Delete"
+        actionLabel={isDeleting ? "Deleting..." : "Delete"}
         onConfirm={handleConfirmDelete}
       />
     </>
