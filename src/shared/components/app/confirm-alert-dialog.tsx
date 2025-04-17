@@ -53,8 +53,6 @@ export const ConfirmAlertDialog: FC<ConfirmAlertDialogProps> = ({
   if (!buttonContent) {
     return (
       <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-        <AlertDialogTrigger asChild>{buttonContent}</AlertDialogTrigger>
-
         {renderChildren()}
       </AlertDialog>
     );
