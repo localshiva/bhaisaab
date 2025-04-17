@@ -45,7 +45,7 @@ export const monthlyExpenseQueryKey = (rowIndex: number) => [
 /**
  * Hook for fetching monthly expenses
  */
-export function useMonthlyExpense(rowIndex: number) {
+export function useMonthlyExpense(rowIndex: number, enabled = true) {
   return useQuery({
     queryKey: monthlyExpenseQueryKey(rowIndex),
     queryFn: async () => {
@@ -55,7 +55,7 @@ export function useMonthlyExpense(rowIndex: number) {
       return data.data;
     },
     // Don't fetch if rowIndex is invalid
-    enabled: rowIndex > 0,
+    enabled: rowIndex > 0 && enabled,
     meta: {
       toast: true,
     },

@@ -24,7 +24,7 @@ interface MonthlyExpenseDetailsDialogProps {
 export const MonthlyExpenseDetailsDialog: FC<
   MonthlyExpenseDetailsDialogProps
 > = ({ rowIndex, date, isOpen, toggleOpen }) => {
-  const { data: expenses, isLoading } = useMonthlyExpense(rowIndex);
+  const { data: expenses, isLoading } = useMonthlyExpense(rowIndex, isOpen);
 
   const renderContent = useCallback(() => {
     if (isLoading) {
