@@ -23,8 +23,7 @@ export const Login: FC<LoginProps> = ({ error }) => {
 
       toast.error(errorMessage);
 
-      // eslint-disable-next-line no-alert
-      alert(JSON.stringify(process.env));
+      console.info(JSON.stringify(process.env));
     }
   }, [error]);
 
