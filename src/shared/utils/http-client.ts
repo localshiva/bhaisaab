@@ -1,10 +1,19 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-import { clientEnv } from "./env-vars/client.env";
+// Determine base URL dynamically
+const getBaseUrl = () => {
+  // For Vercel deployments (preview or production)
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/api`;
+  }
+
+  // For local development
+  return "http://localhost:3001/api";
+};
 
 // Default config for the axios instance
 const axiosConfig: AxiosRequestConfig = {
-  baseURL: clientEnv.NEXT_PUBLIC_API_URL,
+  baseURL: getBaseUrl(),
   responseType: "json",
   headers: {
     "Content-Type": "application/json",

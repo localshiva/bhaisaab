@@ -2,18 +2,12 @@
 import { z } from "zod";
 
 const clientSchema = z.object({
-  // Next API URL
-  NEXT_PUBLIC_API_URL: z.string().min(1),
-
-  // Env
   isProduction: z.boolean(),
   isDev: z.boolean(),
 });
 
-// Server-side env
+// Client-side env
 export const clientEnv = clientSchema.parse({
-  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-  // Env
   isProduction: process.env.NODE_ENV === "production",
   isDev: process.env.NODE_ENV === "development",
 });
