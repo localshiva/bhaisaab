@@ -65,5 +65,11 @@ export const FDSummaryCard: FC<FDSummaryCardProps> = ({ rows }) => {
     ];
   }, [rows]);
 
-  return <AmountSummaryCard title="Fixed Deposit Summary" rows={summaryData} />;
+  return (
+    <AmountSummaryCard
+      collapsedStateId="fd-summary-card"
+      title="Fixed Deposit Summary"
+      rows={summaryData}
+    />
+  );
 };

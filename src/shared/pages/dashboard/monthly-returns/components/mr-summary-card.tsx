@@ -62,5 +62,11 @@ export const MRSummaryCard: FC<Props> = ({ rows }) => {
     ];
   }, [totalIncome, totalRent, totalSalary]);
 
-  return <AmountSummaryCard title="Income Summary" rows={data} />;
+  return (
+    <AmountSummaryCard
+      title="Income Summary"
+      rows={data}
+      collapsedStateId="mr-summary-card"
+    />
+  );
 };

@@ -69,5 +69,11 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
     ];
   }, [rows]);
 
-  return <AmountSummaryCard title="Expense Summary" rows={summaryData} />;
+  return (
+    <AmountSummaryCard
+      title="Expense Summary"
+      rows={summaryData}
+      collapsedStateId="monthly-expense-summary-card"
+    />
+  );
 };

@@ -62,5 +62,11 @@ export const LoanSummaryCard: FC<LoanSummaryCardProps> = ({ rows }) => {
     ];
   }, [rows]);
 
-  return <AmountSummaryCard title="Loan Summary" rows={summaryData} />;
+  return (
+    <AmountSummaryCard
+      title="Loan Summary"
+      rows={summaryData}
+      collapsedStateId="loan-summary-card"
+    />
+  );
 };
