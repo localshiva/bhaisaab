@@ -3,8 +3,8 @@ import axios, { AxiosRequestConfig } from "axios";
 // Determine base URL dynamically
 const getBaseUrl = () => {
   // For Vercel deployments (preview or production)
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}/api`;
+  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api`;
   }
 
   // For local development
