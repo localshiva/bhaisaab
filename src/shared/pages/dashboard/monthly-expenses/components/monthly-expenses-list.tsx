@@ -28,8 +28,9 @@ export const MonthlyExpensesList: FC<MonthlyExpensesListProps> = ({ rows }) => {
             id={index}
             date={row[0]}
             inHand={row[1]}
-            totalExpense={row[2]}
-            remainder={row[3]}
+            additionalPayment={row[2]}
+            totalExpense={row[3]}
+            remainder={row[4]}
           />
         ))}
       </div>

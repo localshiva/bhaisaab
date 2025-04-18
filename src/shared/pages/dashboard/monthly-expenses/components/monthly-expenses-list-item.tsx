@@ -13,14 +13,16 @@ interface MonthlyExpenseListItemProps {
   id: number;
   date: string;
   inHand: string;
+  additionalPayment: string;
   totalExpense: string;
   remainder: string;
 }
 
 export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
-  ({ id, date, inHand, totalExpense, remainder }) => {
+  ({ id, date, inHand, totalExpense, additionalPayment, remainder }) => {
     // Convert string values to numbers
     const numInHand = Number(inHand) || 0;
+    const numAdditionalPayment = Number(additionalPayment) || 0;
     const numTotalExpense = Number(totalExpense) || 0;
     const numRemainder = Number(remainder) || 0;
 
@@ -87,6 +89,19 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               </Typography>
               <Typography variant="body" weight="semibold">
                 {formatCurrency(numInHand)}
+              </Typography>
+            </div>
+
+            <div className="flex justify-between">
+              <Typography variant="body" textColor="muted">
+                Additional Payment
+              </Typography>
+              <Typography
+                variant="body"
+                weight="semibold"
+                className="text-green-600"
+              >
+                {formatCurrency(numAdditionalPayment)}
               </Typography>
             </div>
 

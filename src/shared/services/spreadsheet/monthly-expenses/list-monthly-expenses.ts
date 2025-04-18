@@ -39,6 +39,6 @@ export async function fetchMonthlyExpensesData(
  * @returns Array of loan data rows
  */
 export async function getAllMonthlyExpenses(): Promise<string[][]> {
-  const range = `${MONTHLY_EXPENSE_SHEET_NAME}!A1:D`;
+  const range = `${MONTHLY_EXPENSE_SHEET_NAME}!A1:E`;
   return fetchMonthlyExpensesData(range);
 }
