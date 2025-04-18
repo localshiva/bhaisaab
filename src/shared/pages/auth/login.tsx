@@ -22,8 +22,6 @@ export const Login: FC<LoginProps> = ({ error }) => {
           : "An error occurred during sign in. Please try again.";
 
       toast.error(errorMessage);
-
-      console.info(JSON.stringify(process.env));
     }
   }, [error]);
 
