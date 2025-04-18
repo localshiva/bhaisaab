@@ -27,3 +27,13 @@ export type BaseMonthlyExpenseRequest = z.infer<
   typeof BaseMonthlyExpenseSchema
 >;
 export type AddMonthlyExpenseRequest = z.infer<typeof AddMonthlyExpenseSchema>;
+
+// Schema for adding an additional payment
+export const AddAdditionalPaymentSchema = z.object({
+  rowIndex: z.number().int().positive(),
+  amount: z.number().positive("Amount must be greater than 0"),
+});
+
+export type AddAdditionalPaymentRequest = z.infer<
+  typeof AddAdditionalPaymentSchema
+>;
