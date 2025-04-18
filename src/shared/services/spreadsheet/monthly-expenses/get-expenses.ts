@@ -33,10 +33,14 @@ export async function getMonthlyExpenses(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Fetch the row with expense data (starting from column E)
+    // Expenses now start from column F (index 5) after adding Additional Payment column
+    const EXPENSE_START_COLUMN = "F";
+    const EXPENSE_START_INDEX = 5;
+
+    // Fetch the row with expense data (starting from column F)
     const rowResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
-      range: `${MONTHLY_EXPENSE_SHEET_NAME}!E${requestData.rowIndex}:ZZZ${requestData.rowIndex}`,
+      range: `${MONTHLY_EXPENSE_SHEET_NAME}!${EXPENSE_START_COLUMN}${requestData.rowIndex}:ZZZ${requestData.rowIndex}`,
       valueRenderOption: "UNFORMATTED_VALUE",
     });
 
@@ -44,7 +48,7 @@ export async function getMonthlyExpenses(
     const notesResponse = await sheetsClient.spreadsheets.get({
       spreadsheetId,
       ranges: [
-        `${MONTHLY_EXPENSE_SHEET_NAME}!E${requestData.rowIndex}:ZZZ${requestData.rowIndex}`,
+        `${MONTHLY_EXPENSE_SHEET_NAME}!${EXPENSE_START_COLUMN}${requestData.rowIndex}:ZZZ${requestData.rowIndex}`,
       ],
       fields: "sheets.data.rowData.values.note",
     });
@@ -74,7 +78,7 @@ export async function getMonthlyExpenses(
         expenses.push({
           amount: Number(value),
           comment: notes[index],
-          columnIndex: index + 4, // +4 because we start from column E (index 4)
+          columnIndex: index + EXPENSE_START_INDEX, // +5 because we start from column F (index 5)
         });
       }
     }

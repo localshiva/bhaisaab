@@ -2,7 +2,7 @@
 import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
 import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
 
-import { MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
+import { columnIndexToLetter, MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
 
 /**
  * Interface for updating a monthly expense
@@ -27,8 +27,8 @@ export async function updateMonthlyExpense(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Convert column index to A1 notation (0 = A, 1 = B, etc.)
-    const columnLetter = String.fromCodePoint(65 + updateData.columnIndex); // 65 is ASCII for 'A'
+    // Use the columnIndexToLetter helper for consistent column handling
+    const columnLetter = columnIndexToLetter(updateData.columnIndex);
 
     // Update the cell with the new expense amount
     await sheetsClient.spreadsheets.values.update({
