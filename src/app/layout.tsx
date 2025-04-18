@@ -67,7 +67,6 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/logo/favicon.ico" },
       {
         url: "/logo/ios/16.png",
         sizes: "16x16",

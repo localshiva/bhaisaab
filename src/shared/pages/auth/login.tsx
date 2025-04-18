@@ -4,6 +4,7 @@ import { ThemeSwitcher } from "@bhaisaab/shared/components/app/theme-switcher";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { APP_NAME } from "@bhaisaab/shared/constants/app";
+import Image from "next/image";
 import { FC, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -25,7 +26,7 @@ export const Login: FC<LoginProps> = ({ error }) => {
   }, [error]);
 
   return (
-    <div className="container justify-center items-center">
+    <div className="container justify-center items-center p-4">
       <ThemeSwitcher className="justify-center" />
       <div className="w-full max-w-md overflow-hidden rounded-lg bg-card shadow-lg dark:bg-card">
         {/* Colorful header band */}
@@ -38,9 +39,22 @@ export const Login: FC<LoginProps> = ({ error }) => {
 
         <div className="p-8">
           <div className="mb-8 space-y-2 text-center">
-            <Typography variant="h2" textColor="primary" weight="bold">
-              {APP_NAME}
-            </Typography>
+            <div className="flex flex-col items-center justify-center">
+              <Image
+                src="/logo/wallet.svg"
+                alt="Bhaisaab Logo"
+                width={150}
+                height={150}
+              />
+              <Typography
+                variant="h2"
+                textColor="primary"
+                weight="bold"
+                className="font-mulish"
+              >
+                {APP_NAME}
+              </Typography>
+            </div>
             <Typography variant="body" textColor="muted">
               Sign in to manage your finances
             </Typography>
