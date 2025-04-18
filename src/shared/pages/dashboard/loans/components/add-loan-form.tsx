@@ -19,10 +19,11 @@ import { useAddLoan } from "@bhaisaab/shared/hooks/services/loan";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { useToggle } from "react-use";
+
+import { useAddLoanModalStore } from "../hooks/use-open-add-loan-form";
 
 export const AddLoanForm = () => {
-  const [isOpen, toggleOpen] = useToggle(false);
+  const { isAddLoanOpen, toggleAddLoan, closeAddLoan } = useAddLoanModalStore();
   const { addLoan, isLoading } = useAddLoan();
 
   const { control, handleSubmit, reset } = useForm<AddLoanRequest>({
@@ -37,7 +38,7 @@ export const AddLoanForm = () => {
     addLoan(data, {
       onSuccess: () => {
         // Close dialog and reset form on success
-        toggleOpen(false);
+        closeAddLoan();
         reset();
       },
       onError: (err: Error) => {
@@ -48,7 +49,7 @@ export const AddLoanForm = () => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={toggleOpen}>
+    <Dialog open={isAddLoanOpen} onOpenChange={toggleAddLoan}>
       <DialogTrigger asChild>
         <Button variant="outline">
           <Plus className="size-4" />
@@ -158,7 +159,7 @@ export const AddLoanForm = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => toggleOpen(false)}
+              onClick={closeAddLoan}
               disabled={isLoading}
             >
               Cancel
