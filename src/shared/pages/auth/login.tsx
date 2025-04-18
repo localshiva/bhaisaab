@@ -13,7 +13,6 @@ interface LoginProps {
 }
 
 export const Login: FC<LoginProps> = ({ error }) => {
-  console.info("===== process ======", process.env);
   // Show error toast if error parameter is provided
   useEffect(() => {
     if (error) {
@@ -23,6 +22,9 @@ export const Login: FC<LoginProps> = ({ error }) => {
           : "An error occurred during sign in. Please try again.";
 
       toast.error(errorMessage);
+
+      // eslint-disable-next-line no-alert
+      alert(JSON.stringify(process.env));
     }
   }, [error]);
 
