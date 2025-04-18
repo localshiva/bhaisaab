@@ -7,26 +7,26 @@ import {
   DropdownMenuTrigger,
 } from "@bhaisaab/shared/components/core/dropdown-menu";
 import { DollarSign, MoreVertical, Receipt } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import { useToggle } from "react-use";
 
-import { MonthlyExpenseDetailsDialog } from "./monthly-expense-details-dialog";
 import { MonthlyExpenseForm } from "./monthly-expense-form";
 
-interface MonthlyExpenseActionsProps {
+interface IMonthlyExpenseActionsProps {
   id: number;
   date: string;
   canAddExpenses: boolean;
 }
 
-export const MonthlyExpenseActions: FC<MonthlyExpenseActionsProps> = ({
+export const MonthlyExpenseActions: FC<IMonthlyExpenseActionsProps> = ({
   id,
   date,
   canAddExpenses,
 }) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isAddExpenseOpen, toggleAddExpenseOpen] = useToggle(false);
-  const [isDetailsOpen, toggleDetailsOpen] = useToggle(false);
 
   const handleAddExpense = () => {
     toggleAddExpenseOpen(true);
@@ -34,7 +34,13 @@ export const MonthlyExpenseActions: FC<MonthlyExpenseActionsProps> = ({
   };
 
   const handleViewDetails = () => {
-    toggleDetailsOpen(true);
+    // The spreadsheet rows start at 1, header at row 1, so add 2 to the 0-based id
+    const actualRowIndex = id + 2;
+
+    // Navigate to the details page with query params
+    const queryString = `?rowIndex=${actualRowIndex}&date=${encodeURIComponent(date)}&canAddExpenses=${canAddExpenses}`;
+    router.push(`/monthly-expenses/monthly-expense-details${queryString}`);
+
     setOpen(false);
   };
 
@@ -67,7 +73,7 @@ export const MonthlyExpenseActions: FC<MonthlyExpenseActionsProps> = ({
             </DropdownMenuItem>
           )}
 
-          <DropdownMenuItem onClick={handleViewDetails}>
+          <DropdownMenuItem onSelect={handleViewDetails}>
             <Receipt className="mr-2 h-4 w-4" />
             <span>View Details</span>
           </DropdownMenuItem>
@@ -79,14 +85,6 @@ export const MonthlyExpenseActions: FC<MonthlyExpenseActionsProps> = ({
         date={date}
         isOpen={isAddExpenseOpen}
         toggleOpen={toggleAddExpenseOpen}
-      />
-
-      <MonthlyExpenseDetailsDialog
-        rowIndex={actualRowIndex}
-        date={date}
-        isOpen={isDetailsOpen}
-        toggleOpen={toggleDetailsOpen}
-        canAddExpenses={canAddExpenses}
       />
     </>
   );
