@@ -13,6 +13,7 @@ interface LoginProps {
 }
 
 export const Login: FC<LoginProps> = ({ error }) => {
+  console.info("===== process ======", process.env);
   // Show error toast if error parameter is provided
   useEffect(() => {
     if (error) {
