@@ -23,10 +23,11 @@ import { format } from "date-fns/format";
 import { intervalToDuration } from "date-fns/intervalToDuration";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { useToggle } from "react-use";
+
+import { useAddFDStore } from "../hooks/use-add-fd-modal";
 
 export const FDCreateForm = () => {
-  const [isOpen, toggleOpen] = useToggle(false);
+  const { isAddFDOpen, toggleAddFD, closeAddFD } = useAddFDStore();
   const { createFixedDeposit, isLoading } = useCreateFixedDeposit();
 
   const { control, handleSubmit, reset, setValue, getValues } =
@@ -44,7 +45,7 @@ export const FDCreateForm = () => {
     createFixedDeposit(data, {
       onSuccess: () => {
         // Close dialog and reset form on success
-        toggleOpen(false);
+        closeAddFD();
         reset();
       },
       onError: err => {
@@ -55,7 +56,7 @@ export const FDCreateForm = () => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={toggleOpen}>
+    <Dialog open={isAddFDOpen} onOpenChange={toggleAddFD}>
       <DialogTrigger asChild>
         <Button variant="outline">
           <Plus className="size-4" />
@@ -319,7 +320,7 @@ export const FDCreateForm = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => toggleOpen(false)}
+              onClick={closeAddFD}
               disabled={isLoading}
             >
               Cancel

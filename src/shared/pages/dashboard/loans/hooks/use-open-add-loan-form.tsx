@@ -1,4 +1,4 @@
-// @bhaisaab/shared/stores/loan-form-store.ts
+// @bhaisaab/shared/pages/dashboard/loans/hooks/use-open-add-loan-form.tsx
 import { create } from "zustand";
 
 interface IAddLoanModalState {
