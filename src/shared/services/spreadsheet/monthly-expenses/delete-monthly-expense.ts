@@ -2,7 +2,7 @@
 import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
 import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
 
-import { MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
+import { columnIndexToLetter, MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
 
 /**
  * Interface for deleting a monthly expense
@@ -25,8 +25,8 @@ export async function deleteMonthlyExpense(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Convert column index to A1 notation (0 = A, 1 = B, etc.)
-    const columnLetter = String.fromCodePoint(65 + deleteData.columnIndex); // 65 is ASCII for 'A'
+    // Use the same helper function from add-expense service for consistency
+    const columnLetter = columnIndexToLetter(deleteData.columnIndex);
 
     // Clear the cell value
     await sheetsClient.spreadsheets.values.update({

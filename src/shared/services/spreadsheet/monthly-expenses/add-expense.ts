@@ -3,7 +3,7 @@ import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
 import { AddMonthlyExpenseRequest } from "@bhaisaab/shared/constants/validation/monthly-expenses";
 import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
 
-import { MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
+import { columnIndexToLetter, MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
 
 /**
  * Adds an expense to a monthly record
@@ -18,17 +18,19 @@ export async function addMonthlyExpense(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // First, get the current row data to find the next empty cell for expense
+    // Expenses now start from column F (index 5)
+    const EXPENSE_START_COLUMN_INDEX = 5; // Column F
+
+    // Get the current row's expense cells to find the next empty one
     const rowResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
-      range: `${MONTHLY_EXPENSE_SHEET_NAME}!E${expenseData.rowIndex}:ZZ${expenseData.rowIndex}`,
+      range: `${MONTHLY_EXPENSE_SHEET_NAME}!F${expenseData.rowIndex}:ZZ${expenseData.rowIndex}`,
       valueRenderOption: "UNFORMATTED_VALUE",
     });
 
-    // Find the next empty cell in the row
     const rowValues = rowResponse.data.values?.[0] ?? [];
 
-    // Count non-empty cells to determine the next column
+    // Count non-empty cells to determine next empty column
     let filledCellCount = 0;
     for (const value of rowValues) {
       if (value !== null && value !== undefined && value !== "") {
@@ -38,11 +40,10 @@ export async function addMonthlyExpense(
       }
     }
 
-    // E is the 5th column (index 4), so we add filledCellCount to get the next empty column
-    const nextEmptyColumnIndex = 4 + filledCellCount;
+    const nextEmptyColumnIndex = EXPENSE_START_COLUMN_INDEX + filledCellCount;
 
-    // Convert column index to A1 notation (0 = A, 1 = B, etc.)
-    const columnLetter = String.fromCodePoint(65 + nextEmptyColumnIndex); // 65 is ASCII for 'A'
+    // Convert index to A1 notation (supporting columns beyond Z)
+    const columnLetter = columnIndexToLetter(nextEmptyColumnIndex);
 
     // Update the cell with the expense amount
     await sheetsClient.spreadsheets.values.update({
@@ -54,7 +55,7 @@ export async function addMonthlyExpense(
       },
     });
 
-    // If a comment is provided, add it as a note to the cell
+    // If a comment is provided, add it as a note
     if (expenseData.comment) {
       const spreadsheetInfo = await sheetsClient.spreadsheets.get({
         spreadsheetId,
