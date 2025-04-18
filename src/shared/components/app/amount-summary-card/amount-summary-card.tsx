@@ -5,7 +5,7 @@ import {
 } from "@bhaisaab/shared/components/core/collapsible";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { useLocalStorage } from "react-use";
 
 import {
   AmountSummaryItem,
@@ -23,8 +23,12 @@ export const AmountSummaryCard = ({
   rows,
   title,
   defaultOpen = true,
+  collapsedStateId,
 }: IAmountSummaryCardProps) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [isOpen, setIsOpen] = useLocalStorage(
+    `amount-summary-${collapsedStateId}`,
+    defaultOpen,
+  );
 
   return (
     <Collapsible
