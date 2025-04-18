@@ -11,6 +11,8 @@ const getBaseUrl = () => {
   return "http://localhost:3001/api";
 };
 
+console.info("===== process ======", process.env);
+
 // Default config for the axios instance
 const axiosConfig: AxiosRequestConfig = {
   baseURL: getBaseUrl(),
