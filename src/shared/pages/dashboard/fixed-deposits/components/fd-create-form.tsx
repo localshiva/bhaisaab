@@ -22,22 +22,33 @@ import { addYears } from "date-fns/addYears";
 import { format } from "date-fns/format";
 import { intervalToDuration } from "date-fns/intervalToDuration";
 import { Plus } from "lucide-react";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { useAddFDStore } from "../hooks/use-add-fd-modal";
+import { useAddFDStore } from "../hooks/use-add-fd-store";
+
+const INITIAL_VALUES: CreateFixedDepositRequest = {
+  amount: 0,
+  interestRate: 0,
+  depositDate: format(new Date(), "yyyy-MM-dd"),
+  maturityDate: format(addYears(new Date(), 1), "yyyy-MM-dd"),
+};
 
 export const FDCreateForm = () => {
-  const { isAddFDOpen, toggleAddFD, closeAddFD } = useAddFDStore();
+  const {
+    isAddFDOpen,
+    toggleAddFD,
+    closeAddFD,
+    defaultValues,
+    clearDefaultValues,
+  } = useAddFDStore();
   const { createFixedDeposit, isLoading } = useCreateFixedDeposit();
 
   const { control, handleSubmit, reset, setValue, getValues } =
     useForm<CreateFixedDepositRequest>({
       resolver: zodResolver(CreateFixedDepositSchema),
       defaultValues: {
-        amount: 0,
-        interestRate: 0,
-        depositDate: format(new Date(), "yyyy-MM-dd"),
-        maturityDate: format(addYears(new Date(), 1), "yyyy-MM-dd"),
+        ...INITIAL_VALUES,
       },
     });
 
@@ -46,7 +57,8 @@ export const FDCreateForm = () => {
       onSuccess: () => {
         // Close dialog and reset form on success
         closeAddFD();
-        reset();
+        reset(INITIAL_VALUES);
+        clearDefaultValues();
       },
       onError: err => {
         console.error("Failed to create fixed deposit:", err);
@@ -54,6 +66,36 @@ export const FDCreateForm = () => {
       },
     });
   };
+
+  useEffect(() => {
+    if (defaultValues && isAddFDOpen) {
+      // Apply the values to the form
+      setValue("amount", defaultValues.amount);
+      setValue("interestRate", defaultValues.interestRate);
+
+      if (defaultValues.depositDate) {
+        setValue(
+          "depositDate",
+          format(new Date(defaultValues.depositDate), "yyyy-MM-dd"),
+        );
+      }
+
+      if (defaultValues.maturityDate) {
+        setValue(
+          "maturityDate",
+          format(new Date(defaultValues.maturityDate), "yyyy-MM-dd"),
+        );
+      }
+    }
+  }, [defaultValues, isAddFDOpen, setValue]);
+
+  // Reset default values when the dialog is closed
+  useEffect(() => {
+    if (!isAddFDOpen) {
+      reset(INITIAL_VALUES);
+      clearDefaultValues();
+    }
+  }, [isAddFDOpen, clearDefaultValues, reset]);
 
   return (
     <Dialog open={isAddFDOpen} onOpenChange={toggleAddFD}>

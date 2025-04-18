@@ -1,25 +1,16 @@
-import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Badge } from "@bhaisaab/shared/components/core/badge";
-import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import {
   calculateMonthlyInterest,
   calculateTotalInterest,
   isMatured,
-  useDeleteFixedDeposit,
 } from "@bhaisaab/shared/hooks/services/fixed-deposits";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { cn } from "@bhaisaab/shared/utils/shadcn";
-import {
-  CalendarClock,
-  CalendarIcon,
-  Loader2,
-  Percent,
-  Trash2,
-  Wallet,
-} from "lucide-react";
+import { CalendarClock, CalendarIcon, Percent, Wallet } from "lucide-react";
 import { FC, memo } from "react";
-import { toast } from "sonner";
+
+import { FDListItemActions } from "./fd-list-item-actions";
 
 interface FDListItemProps {
   id: number; // Added ID for delete functionality
@@ -31,7 +22,6 @@ interface FDListItemProps {
 
 export const FDListItem: FC<FDListItemProps> = memo(
   ({ id, amount, interestRate, depositDate, maturityDate }) => {
-    const { deleteFixedDeposit, isDeleting } = useDeleteFixedDeposit();
     // Convert string values to numbers
     const numAmount = Number.parseFloat(amount);
     const numInterestRate = Number.parseFloat(interestRate);
@@ -60,15 +50,6 @@ export const FDListItem: FC<FDListItemProps> = memo(
         (new Date(maturityDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
       ),
     );
-
-    // Handle delete action
-    const handleDelete = () => {
-      if (typeof id === "number") {
-        deleteFixedDeposit(id);
-      } else {
-        toast.error("Fixed deposit ID should be a row number");
-      }
-    };
 
     return (
       <div
@@ -107,24 +88,12 @@ export const FDListItem: FC<FDListItemProps> = memo(
               </Badge>
 
               {/* Delete Dialog */}
-              <ConfirmAlertDialog
-                message={`Are you sure you want to delete this fixed deposit of
-                      ${formatCurrency(numAmount)}? This action cannot be undone.`}
-                actionLabel="Delete"
-                onConfirm={handleDelete}
-                buttonContent={
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="hover:text-destructive"
-                  >
-                    {isDeleting ? (
-                      <Loader2 className="size-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="size-4" />
-                    )}
-                  </Button>
-                }
+              <FDListItemActions
+                id={id}
+                amount={numAmount}
+                interestRate={numInterestRate}
+                depositDate={formattedDepositDate}
+                maturityDate={formattedMaturityDate}
               />
             </div>
           </div>
