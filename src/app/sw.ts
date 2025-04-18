@@ -35,6 +35,32 @@ const serwist = new Serwist({
   disableDevLogs: true,
 });
 
+interface IFetchEvent extends Event {
+  request: Request;
+  respondWith(response: Promise<Response> | Response): void;
+  preloadResponse: Promise<Response | undefined>;
+}
+
+// @ts-expect-error - This is a workaround for a bug in the `serwist` package.
+self.addEventListener("fetch", (event: IFetchEvent) => {
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      (async () => {
+        try {
+          const preloadResponse = await event.preloadResponse;
+          if (preloadResponse) {
+            return preloadResponse;
+          }
+          return await fetch(event.request);
+        } catch (error) {
+          console.error("Navigation preload error:", error);
+          return fetch(event.request);
+        }
+      })(),
+    );
+  }
+});
+
 serwist.addEventListeners();
 
 // Optional: Add error handling for debugging
