@@ -3,7 +3,6 @@
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useFixedDeposits } from "@bhaisaab/shared/hooks/services/fixed-deposits";
-import { Banknote } from "lucide-react";
 
 import { FDCreateForm } from "./components/fd-create-form";
 import { FDEmptyList } from "./components/fd-empty-list";
@@ -23,7 +22,6 @@ export default function FixedDeposits() {
     <div className="flex flex-col gap-4 max-w-6xl mx-auto p-4">
       <div className="w-full flex justify-between items-center">
         <div className="flex items-center">
-          <Banknote className="size-6 mr-2 text-primary" />
           <Typography variant="h4" weight="semibold">
             Fixed Deposits
           </Typography>
