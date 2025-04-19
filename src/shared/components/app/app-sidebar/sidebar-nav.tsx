@@ -7,8 +7,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@bhaisaab/shared/components/core/sidebar";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
+import { useIsMobile } from "@bhaisaab/shared/hooks/use-mobile";
 import {
   Banknote,
   BanknoteArrowUp,
@@ -51,6 +53,14 @@ const navItems = [
 
 export default function SidebarNav() {
   const pathname = usePathname();
+  const isMobile = useIsMobile();
+  const { toggleSidebar } = useSidebar();
+
+  const handleToggleSidebar = useCallback(() => {
+    if (isMobile) {
+      toggleSidebar();
+    }
+  }, [isMobile, toggleSidebar]);
 
   const renderItem = useCallback(
     (item: INavItem) => {
@@ -59,7 +69,7 @@ export default function SidebarNav() {
       return (
         <SidebarMenuItem key={title}>
           <SidebarMenuButton asChild isActive={url === pathname}>
-            <Link href={url}>
+            <Link href={url} onClick={handleToggleSidebar}>
               <Icon />
               <span>
                 <Typography variant={"label"}>{title}</Typography>
@@ -69,7 +79,7 @@ export default function SidebarNav() {
         </SidebarMenuItem>
       );
     },
-    [pathname],
+    [handleToggleSidebar, pathname],
   );
 
   return (

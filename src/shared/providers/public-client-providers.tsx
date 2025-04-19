@@ -12,9 +12,7 @@ import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
 import { toast } from "sonner";
 
-import { useIsMobile } from "../hooks/use-mobile";
 import { getErrorMessage } from "../utils/error";
-import { cn } from "../utils/shadcn";
 
 interface PublicClientProvidersProps {
   nonce: string | null;
@@ -52,8 +50,6 @@ export function PublicClientProviders({
   children,
   nonce,
 }: PropsWithChildren<PublicClientProvidersProps>) {
-  const isMobile = useIsMobile();
-
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
@@ -64,13 +60,7 @@ export function PublicClientProviders({
           enableColorScheme
           nonce={nonce ?? ""}
         >
-          <SidebarProvider
-            className={cn({
-              "flex-col": isMobile,
-            })}
-          >
-            {children}
-          </SidebarProvider>
+          <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
       </SessionProvider>
     </QueryClientProvider>
