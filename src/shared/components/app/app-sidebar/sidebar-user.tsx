@@ -50,7 +50,7 @@ export default function SidebarUser({ user }: SidebarUserProps) {
               Signing out...
             </SidebarMenuButton>
           ) : (
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
                   <User2 /> {user?.name ?? "User"}
