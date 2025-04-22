@@ -18,6 +18,15 @@ interface MonthlyExpenseListItemProps {
   remainder: string;
 }
 
+function parseMonthYear(dateStr: string): Date {
+  const [month, yearStr] = dateStr.split(",").map(part => part.trim());
+  const year = Number.parseInt(yearStr, 10);
+
+  // Create a date string in a format widely supported
+  const formattedDate = `${month} 1, ${year}`;
+  return new Date(formattedDate);
+}
+
 export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
   ({ id, date, inHand, totalExpense, additionalPayment, remainder }) => {
     // Convert string values to numbers
@@ -27,7 +36,7 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
     const numRemainder = Number(remainder) || 0;
 
     // Parse date and determine if it's current or previous month
-    const expenseDate = new Date(date);
+    const expenseDate = new Date(parseMonthYear(date));
     const currentMonth = new Date();
     const previousMonth = subMonths(currentMonth, 1);
 
