@@ -5,7 +5,8 @@ import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { cn } from "@bhaisaab/shared/utils/shadcn";
 import { format, subMonths } from "date-fns";
 import { CalendarDays, Receipt } from "lucide-react";
-import { FC, memo } from "react";
+import { useRouter } from "next/navigation";
+import { FC, memo, useCallback } from "react";
 
 import { MonthlyExpenseActions } from "./monthly-expense-actions";
 
@@ -29,6 +30,8 @@ function parseMonthYear(dateStr: string): Date {
 
 export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
   ({ id, date, inHand, totalExpense, additionalPayment, remainder }) => {
+    const router = useRouter();
+
     // Convert string values to numbers
     const numInHand = Number(inHand) || 0;
     const numAdditionalPayment = Number(additionalPayment) || 0;
@@ -54,8 +57,18 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
     // Determine if user can add expenses (only current and previous month)
     const canAddExpenses = isCurrentMonth || isPreviousMonth;
 
+    const handleCardClick = useCallback(() => {
+      const actualRowIndex = id + 2;
+      const queryString = `?rowIndex=${actualRowIndex}&date=${encodeURIComponent(date)}&canAddExpenses=${canAddExpenses}`;
+      router.push(`/monthly-expenses/monthly-expense-details${queryString}`);
+    }, [id, date, canAddExpenses, router]);
+
     return (
-      <div className="border rounded-lg overflow-hidden shadow-sm bg-card hover:shadow-md transition-shadow flex flex-col">
+      <div
+        className="border rounded-lg overflow-hidden shadow-sm bg-card hover:shadow-md transition-shadow flex flex-col cursor-pointer"
+        onClick={handleCardClick}
+        role="button"
+      >
         {/* Top colored strip */}
         <div className="h-1 w-full bg-primary" />
 
@@ -134,7 +147,10 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               <Typography
                 variant="body"
                 weight="semibold"
-                className="text-green-600"
+                className={cn({
+                  "text-red-600": numRemainder < 0,
+                  "text-green-600": numRemainder > 0,
+                })}
               >
                 {formatCurrency(numRemainder)}
               </Typography>
