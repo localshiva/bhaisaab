@@ -1,14 +1,17 @@
 // @bhaisaab/pages/monthly-expense/components/monthly-expense-list-item.tsx
 import { Badge } from "@bhaisaab/shared/components/core/badge";
+import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { cn } from "@bhaisaab/shared/utils/shadcn";
 import { format, subMonths } from "date-fns";
-import { CalendarDays, Receipt } from "lucide-react";
+import { CalendarDays, DollarSign, Plus, Receipt } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, memo, useCallback } from "react";
+import { useToggle } from "react-use";
 
-import { MonthlyExpenseActions } from "./monthly-expense-actions";
+import { AdditionalPaymentForm } from "./additional-payment-form";
+import { MonthlyExpenseForm } from "./monthly-expense-form";
 
 interface MonthlyExpenseListItemProps {
   id: number;
@@ -31,6 +34,8 @@ function parseMonthYear(dateStr: string): Date {
 export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
   ({ id, date, inHand, totalExpense, additionalPayment, remainder }) => {
     const router = useRouter();
+    const [isAddExpenseOpen, toggleAddExpenseOpen] = useToggle(false);
+    const [isAddPaymentOpen, toggleAddPaymentOpen] = useToggle(false);
 
     // Convert string values to numbers
     const numInHand = Number(inHand) || 0;
@@ -63,6 +68,9 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
       router.push(`/monthly-expenses/monthly-expense-details${queryString}`);
     }, [id, date, canAddExpenses, router]);
 
+    // The spreadsheet rows start at 1, header at row 1, so add 2 to the 0-based id
+    const actualRowIndex = id + 2;
+
     return (
       <div
         className="border rounded-lg overflow-hidden shadow-sm bg-card hover:shadow-md transition-shadow flex flex-col cursor-pointer"
@@ -94,12 +102,6 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               >
                 {isCurrentMonth ? "Current" : "Past"}
               </Badge>
-
-              <MonthlyExpenseActions
-                id={id}
-                date={date}
-                canAddExpenses={canAddExpenses}
-              />
             </div>
           </div>
 
@@ -190,7 +192,45 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
                 : "This is a past month, expenses are locked."}
             </Typography>
           </div>
+
+          {/* Show action buttons directly if expenses can be added */}
+          <div className="flex gap-2 pt-4" onClick={e => e.stopPropagation()}>
+            <Button
+              variant="outline"
+              size="default"
+              className="flex-1"
+              onClick={() => toggleAddPaymentOpen(true)}
+              disabled={!canAddExpenses}
+            >
+              <Plus className="mr-1 size-4" />
+              Payment
+            </Button>
+            <Button
+              variant="outline"
+              size="default"
+              className="flex-1"
+              onClick={() => toggleAddExpenseOpen(true)}
+              disabled={!canAddExpenses}
+            >
+              <DollarSign className="mr-1 size-4" />
+              Expense
+            </Button>
+          </div>
         </div>
+
+        <MonthlyExpenseForm
+          rowIndex={actualRowIndex}
+          date={date}
+          isOpen={isAddExpenseOpen}
+          toggleOpen={toggleAddExpenseOpen}
+        />
+
+        <AdditionalPaymentForm
+          rowIndex={actualRowIndex}
+          date={date}
+          isOpen={isAddPaymentOpen}
+          toggleOpen={toggleAddPaymentOpen}
+        />
       </div>
     );
   },
