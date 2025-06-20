@@ -1,7 +1,8 @@
 import { clientEnv } from "@bhaisaab/shared/utils/env-vars/client.env";
 
 export const MONTHLY_EXPENSE_SHEET_NAME = clientEnv.isDev
-  ? "Monthly Expense Test"
+  ? //   ? "Monthly Expenses Test"
+    "Monthly Expense"
   : "Monthly Expense";
 
 // Converts 0-based column index to column letter (e.g., 0 -> A, 26 -> AA)
