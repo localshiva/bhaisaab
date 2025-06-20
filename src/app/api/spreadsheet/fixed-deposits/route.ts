@@ -24,7 +24,7 @@ export async function GET() {
       success: true,
       data: {
         headers: values[0],
-        rows: values.slice(1),
+        rows: values.slice(1).reverse(),
       },
     });
   } catch (error) {
