@@ -13,26 +13,30 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
 }) => {
   const summaryData = useMemo(() => {
     // Current month data (most recent row)
-    const currentMonthRow = rows.length > 0 ? rows.at(-1) : null;
+    const currentMonthRow = rows.length > 0 ? rows.at(0) : null;
 
     // Previous month data (second most recent row)
-    const previousMonthRow = rows.length > 1 ? rows.at(-2) : null;
+    const previousMonthRow = rows.length > 1 ? rows.at(1) : null;
 
     // Current month values
     const currentMonthInHand = currentMonthRow
       ? Number(currentMonthRow[1]) || 0
       : 0;
     const currentMonthExpense = currentMonthRow
-      ? Number(currentMonthRow[2]) || 0
+      ? Number(currentMonthRow[3]) || 0
       : 0;
     const currentMonthRemainder = currentMonthRow
-      ? Number(currentMonthRow[3]) || 0
+      ? Number(currentMonthRow[4]) || 0
+      : 0;
+
+    const previousMonthRemainder = previousMonthRow
+      ? Number(previousMonthRow[4]) || 0
       : 0;
 
     // Calculate expense change percentage compared to previous month
     let expenseChangePercent = 0;
     if (previousMonthRow) {
-      const previousMonthExpense = Number(previousMonthRow[2]) || 0;
+      const previousMonthExpense = Number(previousMonthRow[3]) || 0;
       if (previousMonthExpense > 0) {
         expenseChangePercent = Math.round(
           ((currentMonthExpense - previousMonthExpense) /
@@ -63,7 +67,19 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
       },
       {
         amount: Math.round(currentMonthRemainder),
-        subtitle: `${rows.length} months tracked`,
+        subtitle: (() => {
+          if (!previousMonthRow) {
+            return "No previous data";
+          }
+
+          if (previousMonthRemainder === currentMonthRemainder) {
+            return "No change";
+          }
+
+          return previousMonthRemainder < currentMonthRemainder
+            ? "Gain from last month"
+            : "Loss from last month";
+        })(),
         title: "Current Month Remainder",
       },
     ];
