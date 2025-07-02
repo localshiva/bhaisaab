@@ -4,7 +4,10 @@ import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export type IFixedDepositRow = string[];
+export interface IFixedDepositRow {
+  data: string[]; // [amount, interestRate, depositDate, maturityDate]
+  originalRowIndex: number;
+}
 
 // Query key for fixed deposits
 export const fixedDepositsQueryKey = ["fixedDeposits"];

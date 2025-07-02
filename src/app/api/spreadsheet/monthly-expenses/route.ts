@@ -17,11 +17,20 @@ export async function GET() {
       });
     }
 
+    // Add original row index to each row before reversing
+    const rowsWithIndex = values
+      .slice(1)
+      .map((row, index) => ({
+        data: row,
+        originalRowIndex: index + 2, // +2 for header row and 1-based indexing
+      }))
+      .reverse();
+
     return NextResponse.json({
       success: true,
       data: {
         headers: values[0],
-        rows: values.slice(1).reverse(),
+        rows: rowsWithIndex,
       },
     });
   } catch (error) {

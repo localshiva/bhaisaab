@@ -6,7 +6,10 @@ import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export type IMonthlyExpenseRow = string[];
+export interface IMonthlyExpenseRow {
+  data: string[]; // [date, inHand, additionalPayment, totalExpense, remainder]
+  originalRowIndex: number;
+}
 
 const monthlyExpensesQueryKey = ["monthlyExpenses"];
 

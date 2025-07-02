@@ -22,15 +22,15 @@ export const MonthlyExpensesList: FC<MonthlyExpensesListProps> = ({ rows }) => {
       </Typography>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {rows.map((row, index) => (
+        {rows.map(row => (
           <MonthlyExpenseListItem
-            key={`monthly-expense-${index}`}
-            id={index}
-            date={row[0]}
-            inHand={row[1]}
-            additionalPayment={row[2]}
-            totalExpense={row[3]}
-            remainder={row[4]}
+            key={`monthly-expense-${row.originalRowIndex}`}
+            originalRowIndex={row.originalRowIndex}
+            date={row.data[0]}
+            inHand={row.data[1]}
+            additionalPayment={row.data[2]}
+            totalExpense={row.data[3]}
+            remainder={row.data[4]}
           />
         ))}
       </div>

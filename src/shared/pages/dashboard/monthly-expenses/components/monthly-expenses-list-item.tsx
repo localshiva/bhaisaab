@@ -14,7 +14,7 @@ import { AdditionalPaymentForm } from "./additional-payment-form";
 import { MonthlyExpenseForm } from "./monthly-expense-form";
 
 interface MonthlyExpenseListItemProps {
-  id: number;
+  originalRowIndex: number;
   date: string;
   inHand: string;
   additionalPayment: string;
@@ -32,7 +32,14 @@ function parseMonthYear(dateStr: string): Date {
 }
 
 export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
-  ({ id, date, inHand, totalExpense, additionalPayment, remainder }) => {
+  ({
+    originalRowIndex,
+    date,
+    inHand,
+    totalExpense,
+    additionalPayment,
+    remainder,
+  }) => {
     const router = useRouter();
     const [isAddExpenseOpen, toggleAddExpenseOpen] = useToggle(false);
     const [isAddPaymentOpen, toggleAddPaymentOpen] = useToggle(false);
@@ -63,10 +70,9 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
     const canAddExpenses = isCurrentMonth || isPreviousMonth;
 
     const handleCardClick = useCallback(() => {
-      const actualRowIndex = id + 2;
-      const queryString = `?rowIndex=${actualRowIndex}&date=${encodeURIComponent(date)}&canAddExpenses=${canAddExpenses}`;
+      const queryString = `?rowIndex=${originalRowIndex}&date=${encodeURIComponent(date)}&canAddExpenses=${canAddExpenses}`;
       router.push(`/monthly-expenses/monthly-expense-details${queryString}`);
-    }, [id, date, canAddExpenses, router]);
+    }, [date, canAddExpenses, router, originalRowIndex]);
 
     const onAddExpense = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -83,9 +89,6 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
       },
       [toggleAddPaymentOpen],
     );
-
-    // The spreadsheet rows start at 1, header at row 1, so add 2 to the 0-based id
-    const actualRowIndex = id + 2;
 
     return (
       <>
@@ -237,14 +240,14 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
         </div>
 
         <MonthlyExpenseForm
-          rowIndex={actualRowIndex}
+          rowIndex={originalRowIndex}
           date={date}
           isOpen={isAddExpenseOpen}
           toggleOpen={toggleAddExpenseOpen}
         />
 
         <AdditionalPaymentForm
-          rowIndex={actualRowIndex}
+          rowIndex={originalRowIndex}
           date={date}
           isOpen={isAddPaymentOpen}
           toggleOpen={toggleAddPaymentOpen}

@@ -22,10 +22,10 @@ export const FDSummaryCard: FC<FDSummaryCardProps> = ({ rows }) => {
     let activeCount = 0;
 
     for (const row of rows) {
-      const amount = Math.round(Number(row[0]));
-      const interestRate = Number(row[1]);
-      const depositDate = row[2];
-      const maturityDate = row[3];
+      const amount = Math.round(Number(row.data[0]));
+      const interestRate = Number(row.data[1]);
+      const depositDate = row.data[2];
+      const maturityDate = row.data[3];
 
       // Check if matured
       if (isMatured(maturityDate)) {

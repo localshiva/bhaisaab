@@ -13,7 +13,7 @@ import { FC, memo } from "react";
 import { FDListItemActions } from "./fd-list-item-actions";
 
 interface FDListItemProps {
-  id: number; // Added ID for delete functionality
+  originalRowIndex: number;
   amount: string;
   interestRate: string;
   depositDate: string;
@@ -21,7 +21,7 @@ interface FDListItemProps {
 }
 
 export const FDListItem: FC<FDListItemProps> = memo(
-  ({ id, amount, interestRate, depositDate, maturityDate }) => {
+  ({ originalRowIndex, amount, interestRate, depositDate, maturityDate }) => {
     // Convert string values to numbers
     const numAmount = Number.parseFloat(amount);
     const numInterestRate = Number.parseFloat(interestRate);
@@ -89,7 +89,7 @@ export const FDListItem: FC<FDListItemProps> = memo(
 
               {/* Delete Dialog */}
               <FDListItemActions
-                id={id}
+                id={originalRowIndex}
                 amount={numAmount}
                 interestRate={numInterestRate}
                 depositDate={formattedDepositDate}

@@ -20,23 +20,23 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
 
     // Current month values
     const currentMonthInHand = currentMonthRow
-      ? Number(currentMonthRow[1]) || 0
+      ? Number(currentMonthRow.data[1]) || 0
       : 0;
     const currentMonthExpense = currentMonthRow
-      ? Number(currentMonthRow[3]) || 0
+      ? Number(currentMonthRow.data[3]) || 0
       : 0;
     const currentMonthRemainder = currentMonthRow
-      ? Number(currentMonthRow[4]) || 0
+      ? Number(currentMonthRow.data[4]) || 0
       : 0;
 
     const previousMonthRemainder = previousMonthRow
-      ? Number(previousMonthRow[4]) || 0
+      ? Number(previousMonthRow.data[4]) || 0
       : 0;
 
     // Calculate expense change percentage compared to previous month
     let expenseChangePercent = 0;
     if (previousMonthRow) {
-      const previousMonthExpense = Number(previousMonthRow[3]) || 0;
+      const previousMonthExpense = Number(previousMonthRow.data[3]) || 0;
       if (previousMonthExpense > 0) {
         expenseChangePercent = Math.round(
           ((currentMonthExpense - previousMonthExpense) /
@@ -48,7 +48,7 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
 
     // Current month label
     const currentMonthLabel = currentMonthRow
-      ? currentMonthRow[0]
+      ? currentMonthRow.data[0]
       : format(new Date(), "MMMM, yyyy");
 
     return [
