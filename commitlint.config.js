@@ -37,6 +37,7 @@ const config = {
         "auth",
         "ui",
         "nav",
+        "doc"
       ],
     ],
     "scope-empty": [2, "never"],

@@ -14,6 +14,10 @@ pnpm dev
 
 Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
 
+Development environment variables can be found here - [Notion -> Career -> Projects -> Bhaisaab](https://www.notion.so/House-Expense-Manager-bfea3b649fb34f8789074bb00303d5a4?source=copy_link)
+
+Production environment variables on Vercel can be found here - [Vercel -> Bhaisaab -> Environment Variables](https://vercel.com/bhaisaab/settings/environment-variables)
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Deploy on Vercel
