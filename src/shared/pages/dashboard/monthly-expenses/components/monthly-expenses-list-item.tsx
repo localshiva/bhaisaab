@@ -4,7 +4,7 @@ import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { cn } from "@bhaisaab/shared/utils/shadcn";
-import { format, subMonths } from "date-fns";
+import { format } from "date-fns";
 import { CalendarDays, DollarSign, Plus, Receipt } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, memo, useCallback } from "react";
@@ -53,12 +53,9 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
     // Parse date and determine if it's current or previous month
     const expenseDate = new Date(parseMonthYear(date));
     const currentMonth = new Date();
-    const previousMonth = subMonths(currentMonth, 1);
 
     const isCurrentMonth =
       format(expenseDate, "MMMM, yyyy") === format(currentMonth, "MMMM, yyyy");
-    const isPreviousMonth =
-      format(expenseDate, "MMMM, yyyy") === format(previousMonth, "MMMM, yyyy");
 
     // Calculate expense percentage
     const expensePercentage =
@@ -66,13 +63,10 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
         ? Math.min(100, Math.round((numTotalExpense / numInHand) * 100))
         : 0;
 
-    // Determine if user can add expenses (only current and previous month)
-    const canAddExpenses = isCurrentMonth || isPreviousMonth;
-
     const handleCardClick = useCallback(() => {
-      const queryString = `?rowIndex=${originalRowIndex}&date=${encodeURIComponent(date)}&canAddExpenses=${canAddExpenses}`;
+      const queryString = `?rowIndex=${originalRowIndex}&date=${encodeURIComponent(date)}&canAddExpenses=${isCurrentMonth}`;
       router.push(`/monthly-expenses/monthly-expense-details${queryString}`);
-    }, [date, canAddExpenses, router, originalRowIndex]);
+    }, [date, isCurrentMonth, router, originalRowIndex]);
 
     const onAddExpense = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -207,7 +201,7 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
             <div className="mt-4 p-3 rounded-lg flex items-center gap-2 bg-blue-50 dark:bg-blue-950/20">
               <Receipt className="size-5 text-blue-600 shrink-0" />
               <Typography variant="small">
-                {canAddExpenses
+                {isCurrentMonth
                   ? "You can add expenses for this month."
                   : "This is a past month, expenses are locked."}
               </Typography>
@@ -220,7 +214,7 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
                 size="default"
                 className="flex-1"
                 onClick={onAddPayment}
-                disabled={!canAddExpenses}
+                disabled={!isCurrentMonth}
               >
                 <Plus className="mr-1 size-4" />
                 Payment
@@ -230,7 +224,7 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
                 size="default"
                 className="flex-1"
                 onClick={onAddExpense}
-                disabled={!canAddExpenses}
+                disabled={!isCurrentMonth}
               >
                 <DollarSign className="mr-1 size-4" />
                 Expense
