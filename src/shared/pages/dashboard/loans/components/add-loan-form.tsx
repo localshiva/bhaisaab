@@ -53,7 +53,7 @@ export const AddLoanForm = () => {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Plus className="size-4" />
-          <span>Add new</span>
+          <span>Add new loan</span>
         </Button>
       </DialogTrigger>
 
