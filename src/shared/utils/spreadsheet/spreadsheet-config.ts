@@ -1,3 +1,4 @@
+import { SESSION_EXPIRED_MESSAGE } from "@bhaisaab/shared/constants/app";
 import { google, sheets_v4 } from "googleapis";
 
 import { getUserSession } from "../auth/auth";
@@ -11,14 +12,9 @@ import { getUserSession } from "../auth/auth";
 export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
   const session = await getUserSession();
 
+  // No session means it expired or the Google refresh failed
   if (!session?.user || !session.access_token) {
-    throw new Error("User not authenticated or missing access token");
-  }
-
-  // Check for refresh error - force user to re-login
-  if (session.error === "RefreshAccessTokenError") {
-    // Redirect to sign in or throw error to be caught by your API route
-    const error = new Error("Session expired - please sign in again");
+    const error = new Error(SESSION_EXPIRED_MESSAGE);
     (error as { status?: number }).status = 401;
 
     throw error;

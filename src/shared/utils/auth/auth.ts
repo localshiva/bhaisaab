@@ -11,7 +11,13 @@ const googleProviderConfig = {
   authorization: { ...googleServiceConfig.authorization },
 };
 
-const refreshToken = async (token: JWT): Promise<JWT> => {
+/**
+ * Gets a new Google access token using the stored refresh token.
+ *
+ * Returns `null` when Google rejects the refresh,
+ * which makes Auth.js delete the session cookie so the user signs in again.
+ */
+const refreshToken = async (token: JWT): Promise<JWT | null> => {
   try {
     const response = await fetch("https://oauth2.googleapis.com/token", {
       headers: {
@@ -48,8 +54,7 @@ const refreshToken = async (token: JWT): Promise<JWT> => {
     };
   } catch (error) {
     console.error("Error refreshing access token", error);
-    // If refresh fails, mark token for re-authentication
-    return { ...token, error: "RefreshAccessTokenError" };
+    return null;
   }
 };
 
@@ -88,10 +93,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return refreshToken(token);
     },
     session({ session, token }) {
-      if (token.error) {
-        session.error = token.error;
-      }
-
       const scope = getCurrentScope();
       scope.setUser({
         id: session.user.id,

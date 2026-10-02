@@ -10,7 +10,6 @@ declare module "next-auth" {
     access_token: Account["access_token"];
     refresh_token: Account["refresh_token"];
     expires_at: Account["expires_at"];
-    error?: string;
   }
 }
 
@@ -20,6 +19,5 @@ declare module "next-auth/jwt" {
     access_token: Account["access_token"];
     refresh_token: Account["refresh_token"];
     expires_at: Account["expires_at"];
-    error?: string;
   }
 }

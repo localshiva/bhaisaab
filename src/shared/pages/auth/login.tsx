@@ -15,14 +15,21 @@ interface LoginProps {
 export const Login: FC<LoginProps> = ({ error }) => {
   // Show error toast if error parameter is provided
   useEffect(() => {
-    if (error) {
-      const errorMessage =
-        error === "AccessDenied"
-          ? "Your email is not authorized to access this application."
-          : "An error occurred during sign in. Please try again.";
-
-      toast.error(errorMessage);
+    if (!error) {
+      return;
     }
+
+    if (error === "SessionExpired") {
+      toast.info("Your session expired. Please sign in again.");
+      return;
+    }
+
+    const errorMessage =
+      error === "AccessDenied"
+        ? "Your email is not authorized to access this application."
+        : "An error occurred during sign in. Please try again.";
+
+    toast.error(errorMessage);
   }, [error]);
 
   return (
