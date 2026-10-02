@@ -1,6 +1,7 @@
+import { SESSION_EXPIRED_MESSAGE } from "@bhaisaab/shared/constants/app";
 import { google, sheets_v4 } from "googleapis";
 
-import { getUserSession } from "../auth/auth";
+import { getGoogleTokens } from "../auth/auth";
 
 /**
  * Creates a Google Sheets API client using OAuth token from the user's session
@@ -9,16 +10,11 @@ import { getUserSession } from "../auth/auth";
  * @returns Google Sheets API client
  */
 export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
-  const session = await getUserSession();
+  const tokens = await getGoogleTokens();
 
-  if (!session?.user || !session.access_token) {
-    throw new Error("User not authenticated or missing access token");
-  }
-
-  // Check for refresh error - force user to re-login
-  if (session.error === "RefreshAccessTokenError") {
-    // Redirect to sign in or throw error to be caught by your API route
-    const error = new Error("Session expired - please sign in again");
+  // No tokens means the session expired or the Google refresh failed
+  if (!tokens) {
+    const error = new Error(SESSION_EXPIRED_MESSAGE);
     (error as { status?: number }).status = 401;
 
     throw error;
@@ -31,9 +27,9 @@ export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
   });
 
   oauth2Client.setCredentials({
-    access_token: session.access_token,
-    refresh_token: session.refresh_token,
-    expiry_date: (session.expires_at ?? 0) * 1000,
+    access_token: tokens.access_token,
+    refresh_token: tokens.refresh_token,
+    expiry_date: (tokens.expires_at ?? 0) * 1000,
   });
 
   // Create and return Sheets client

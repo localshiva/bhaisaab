@@ -1,6 +1,8 @@
 import { AxiosError, isAxiosError } from "axios";
 import { NextResponse } from "next/server";
 
+import { SESSION_EXPIRED_MESSAGE } from "../constants/app";
+
 const isLikelyHTML = (str: string) => /^<!doctype html>/i.test(str.trim());
 
 // Get error message based on the error type which could be Error or AxiosError
@@ -54,8 +56,35 @@ export const getErrorMessage = (
   return defaultMessage;
 };
 
+/**
+ * Whether Google rejected the user's credentials.
+ *
+ * Covers a revoked or expired access token (401)
+ * and a refresh token Google no longer accepts (`invalid_grant`).
+ */
+const isGoogleAuthError = (error: unknown): boolean => {
+  const { status, response } = error as {
+    status?: number;
+    response?: { status?: number; data?: { error?: string } };
+  };
+
+  return (
+    status === 401 ||
+    response?.status === 401 ||
+    response?.data?.error === "invalid_grant"
+  );
+};
+
 export const getServerError = (error: unknown) => {
   console.error("API error:", getErrorMessage(error));
+
+  // Ask the client to sign in again instead of showing Google's raw error
+  if (isGoogleAuthError(error)) {
+    return NextResponse.json(
+      { success: false, error: SESSION_EXPIRED_MESSAGE },
+      { status: 401 },
+    );
+  }
 
   // Return appropriate error response
   return NextResponse.json(

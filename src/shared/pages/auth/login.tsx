@@ -13,16 +13,30 @@ interface LoginProps {
 }
 
 export const Login: FC<LoginProps> = ({ error }) => {
-  // Show error toast if error parameter is provided
+  /**
+   * Show a toast when an error parameter is provided.
+   *
+   * Fixed ids stop a duplicate toast when the effect runs twice,
+   * as React does in development.
+   */
   useEffect(() => {
-    if (error) {
-      const errorMessage =
-        error === "AccessDenied"
-          ? "Your email is not authorized to access this application."
-          : "An error occurred during sign in. Please try again.";
-
-      toast.error(errorMessage);
+    if (!error) {
+      return;
     }
+
+    if (error === "SessionExpired") {
+      toast.info("Your session expired. Please sign in again.", {
+        id: "session-expired",
+      });
+      return;
+    }
+
+    const errorMessage =
+      error === "AccessDenied"
+        ? "Your email is not authorized to access this application."
+        : "An error occurred during sign in. Please try again.";
+
+    toast.error(errorMessage, { id: "login-error" });
   }, [error]);
 
   return (

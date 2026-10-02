@@ -1,8 +1,9 @@
 // In your auth.ts file
 import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
 import { getCurrentScope } from "@sentry/nextjs";
+import { headers } from "next/headers";
 import NextAuth from "next-auth";
-import { JWT } from "next-auth/jwt";
+import { getToken, JWT } from "next-auth/jwt";
 import Google from "next-auth/providers/google";
 
 import { serverEnv } from "../env-vars/server.env";
@@ -11,33 +12,37 @@ const googleProviderConfig = {
   authorization: { ...googleServiceConfig.authorization },
 };
 
-const refreshToken = async (token: JWT): Promise<JWT> => {
+/**
+ * Gets a new Google access token using the stored refresh token.
+ *
+ * Returns `null` when Google rejects the refresh,
+ * which makes Auth.js delete the session cookie so the user signs in again.
+ */
+const refreshToken = async (token: JWT): Promise<JWT | null> => {
   try {
-    const url = `https://oauth2.googleapis.com/token?${new URLSearchParams({
-      client_id: serverEnv.AUTH_GOOGLE_ID,
-      client_secret: serverEnv.AUTH_GOOGLE_SECRET,
-      grant_type: "refresh_token",
-      refresh_token: token.refresh_token!,
-    })}`;
-
-    const response = await fetch(url, {
+    const response = await fetch("https://oauth2.googleapis.com/token", {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       method: "POST",
+      body: new URLSearchParams({
+        client_id: serverEnv.AUTH_GOOGLE_ID,
+        client_secret: serverEnv.AUTH_GOOGLE_SECRET,
+        grant_type: "refresh_token",
+        refresh_token: token.refresh_token!,
+      }),
     });
 
     const refreshedTokens = (await response.json()) as {
       access_token: string;
       expires_in: number;
-      refresh_token: string;
+      refresh_token?: string;
+      error?: string;
     };
 
-    // Info log the refreshed tokens
-    console.info("🚀 ~ refreshedTokens ~", refreshedTokens);
-
     if (!response.ok) {
-      throw new Error(JSON.stringify(refreshedTokens));
+      // Log only Google's error code, never the token payload
+      throw new Error(refreshedTokens.error ?? `HTTP ${response.status}`);
     }
 
     return {
@@ -50,10 +55,17 @@ const refreshToken = async (token: JWT): Promise<JWT> => {
     };
   } catch (error) {
     console.error("Error refreshing access token", error);
-    // If refresh fails, mark token for re-authentication
-    return { ...token, error: "RefreshAccessTokenError" };
+    return null;
   }
 };
+
+/**
+ * Whether the Google access token has expired.
+ *
+ * Counts it as expired 10 seconds early to avoid edge cases.
+ */
+const isTokenExpired = (token: JWT): boolean =>
+  !token.expires_at || token.expires_at * 1000 <= Date.now() + 10_000;
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [Google(googleProviderConfig)],
@@ -81,29 +93,16 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         new Date((token.expires_at ?? 0) * 1000),
       );
 
-      // Return the previous token if it hasn't expired yet
-      // Add a 10-second buffer to prevent edge cases
-      if (token.expires_at && token.expires_at * 1000 > Date.now() + 10_000) {
-        return token;
-      }
-
-      return refreshToken(token);
+      return isTokenExpired(token) ? refreshToken(token) : token;
     },
-    session({ session, token }) {
-      if (token.error) {
-        session.error = token.error;
-      }
-
+    session({ session }) {
       const scope = getCurrentScope();
       scope.setUser({
         id: session.user.id,
         email: session.user.email,
       });
 
-      session.access_token = token.access_token;
-      session.refresh_token = token.refresh_token;
-      session.expires_at = token.expires_at;
-
+      // Google tokens stay out of the session: it is also sent to the browser
       return session;
     },
   },
@@ -125,7 +124,27 @@ export async function getUserCredentials() {
   };
 }
 
-export async function getUserSession() {
-  const session = await auth();
-  return session;
+/**
+ * Reads the Google tokens from the encrypted session cookie. Server only.
+ *
+ * The session object is also sent to the browser,
+ * so the tokens are read here instead of being stored on it.
+ *
+ * Refreshes the access token when it has expired.
+ * Returns `null` when there is no session or the refresh fails.
+ */
+export async function getGoogleTokens(): Promise<JWT | null> {
+  const req = { headers: await headers() };
+  const { AUTH_SECRET: secret } = serverEnv;
+
+  // The cookie name has a `__Secure-` prefix on HTTPS only
+  const token =
+    (await getToken({ req, secret, secureCookie: true })) ??
+    (await getToken({ req, secret, secureCookie: false }));
+
+  if (!token?.access_token) {
+    return null;
+  }
+
+  return isTokenExpired(token) ? refreshToken(token) : token;
 }

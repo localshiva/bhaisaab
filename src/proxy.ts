@@ -1,4 +1,4 @@
-// middleware.ts
+// proxy.ts
 import { NextResponse } from "next/server";
 
 import { auth } from "./shared/utils/auth/auth";
@@ -12,13 +12,9 @@ const publicRoutes = ["/privacy-policy", "/terms-and-conditions", "/contact"];
 // Auth routes that should only be accessible when NOT logged in
 const authRoutes = ["/auth/login", "/auth/error", API_AUTH_SIGNIN_PATH];
 
-export default auth(req => {
+export const proxy = auth(req => {
   // First apply security headers
   const response = setSecurityHeaders(req);
-
-  if (req.auth?.error === "RefreshAccessTokenError") {
-    return NextResponse.redirect(new URL("/api/auth/signout", req.url));
-  }
 
   const { pathname } = req.nextUrl;
 
@@ -60,7 +56,18 @@ export default auth(req => {
       return response;
     }
 
-    return NextResponse.redirect(new URL("/auth/login", req.url));
+    // A session cookie without a session means it expired or the refresh failed.
+    // Auth.js deletes that cookie on this same response.
+    const hadSession = req.cookies
+      .getAll()
+      .some(({ name }) => name.includes("authjs.session-token"));
+
+    return NextResponse.redirect(
+      new URL(
+        hadSession ? "/auth/login?error=SessionExpired" : "/auth/login",
+        req.url,
+      ),
+    );
   }
 
   return response;
