@@ -5,7 +5,7 @@ import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { cn } from "@bhaisaab/shared/utils/shadcn";
 import { format } from "date-fns";
-import { CalendarDays, DollarSign, Plus, Receipt } from "lucide-react";
+import { CalendarDays, Plus, Receipt } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, memo, useCallback } from "react";
 import { useToggle } from "react-use";
@@ -208,7 +208,10 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
             </div>
 
             {/* Show action buttons directly if expenses can be added */}
-            <div className="flex gap-2 pt-4" onClick={e => e.stopPropagation()}>
+            <div
+              className="flex flex-wrap gap-2 pt-4"
+              onClick={e => e.stopPropagation()}
+            >
               <Button
                 variant="outline"
                 size="default"
@@ -216,8 +219,8 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
                 onClick={onAddPayment}
                 disabled={!isCurrentMonth}
               >
-                <Plus className="mr-1 size-4" />
-                Payment
+                <Plus className="size-4" />
+                Addn. Payment
               </Button>
               <Button
                 variant="outline"
@@ -226,8 +229,8 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
                 onClick={onAddExpense}
                 disabled={!isCurrentMonth}
               >
-                <DollarSign className="mr-1 size-4" />
-                Expense
+                <Plus className="size-4" />
+                Expenses
               </Button>
             </div>
           </div>
