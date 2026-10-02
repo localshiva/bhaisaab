@@ -9,6 +9,7 @@ import { CalendarDays, Plus, Receipt } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, memo, useCallback } from "react";
 import { useToggle } from "react-use";
+import { toast } from "sonner";
 
 import { AdditionalPaymentForm } from "./additional-payment-form";
 import { MonthlyExpenseForm } from "./monthly-expense-form";
@@ -21,6 +22,13 @@ interface MonthlyExpenseListItemProps {
   totalExpense: string;
   remainder: string;
 }
+
+/**
+ * Looks disabled but stays clickable,
+ * so pressing it can explain why it is locked.
+ */
+const lockedButtonClass =
+  "opacity-50 cursor-not-allowed hover:bg-background dark:hover:bg-input/30";
 
 function parseMonthYear(dateStr: string): Date {
   const [month, yearStr] = dateStr.split(",").map(part => part.trim());
@@ -53,6 +61,7 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
     // Parse date and determine if it's current or previous month
     const expenseDate = new Date(parseMonthYear(date));
     const currentMonth = new Date();
+    const monthLabel = format(expenseDate, "MMM, yyyy");
 
     const isCurrentMonth =
       format(expenseDate, "MMMM, yyyy") === format(currentMonth, "MMMM, yyyy");
@@ -68,20 +77,38 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
       router.push(`/monthly-expenses/monthly-expense-details${queryString}`);
     }, [date, isCurrentMonth, router, originalRowIndex]);
 
+    const showLockedToast = useCallback(() => {
+      toast.info(
+        `${monthLabel} is a past month. You can only add payments and expenses for the current month.`,
+      );
+    }, [monthLabel]);
+
     const onAddExpense = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
+
+        if (!isCurrentMonth) {
+          showLockedToast();
+          return;
+        }
+
         toggleAddExpenseOpen(true);
       },
-      [toggleAddExpenseOpen],
+      [isCurrentMonth, showLockedToast, toggleAddExpenseOpen],
     );
 
     const onAddPayment = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
+
+        if (!isCurrentMonth) {
+          showLockedToast();
+          return;
+        }
+
         toggleAddPaymentOpen(true);
       },
-      [toggleAddPaymentOpen],
+      [isCurrentMonth, showLockedToast, toggleAddPaymentOpen],
     );
 
     return (
@@ -100,7 +127,7 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               <div className="flex items-center gap-2">
                 <CalendarDays className="size-5 text-muted-foreground" />
                 <Typography variant="h5" weight="semibold">
-                  {format(expenseDate, "MMM, yyyy")}
+                  {monthLabel}
                 </Typography>
               </div>
 
@@ -215,9 +242,9 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               <Button
                 variant="outline"
                 size="default"
-                className="flex-1"
+                className={cn("flex-1", !isCurrentMonth && lockedButtonClass)}
                 onClick={onAddPayment}
-                disabled={!isCurrentMonth}
+                aria-disabled={!isCurrentMonth}
               >
                 <Plus className="size-4" />
                 Addn. Payment
@@ -225,9 +252,9 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               <Button
                 variant="outline"
                 size="default"
-                className="flex-1"
+                className={cn("flex-1", !isCurrentMonth && lockedButtonClass)}
                 onClick={onAddExpense}
-                disabled={!isCurrentMonth}
+                aria-disabled={!isCurrentMonth}
               >
                 <Plus className="size-4" />
                 Expenses
