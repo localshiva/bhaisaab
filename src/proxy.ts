@@ -1,4 +1,4 @@
-// middleware.ts
+// proxy.ts
 import { NextResponse } from "next/server";
 
 import { auth } from "./shared/utils/auth/auth";
@@ -12,7 +12,7 @@ const publicRoutes = ["/privacy-policy", "/terms-and-conditions", "/contact"];
 // Auth routes that should only be accessible when NOT logged in
 const authRoutes = ["/auth/login", "/auth/error", API_AUTH_SIGNIN_PATH];
 
-export default auth(req => {
+export const proxy = auth(req => {
   // First apply security headers
   const response = setSecurityHeaders(req);
 
