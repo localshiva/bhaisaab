@@ -104,29 +104,6 @@ export async function createFixedDeposit(
               fields: "userEnteredFormat(backgroundColor)",
             },
           },
-          // Add protection
-          {
-            addProtectedRange: {
-              protectedRange: {
-                range: {
-                  sheetId,
-                  startRowIndex: nextRowAfterLast - 1,
-                  endRowIndex: nextRowAfterLast,
-                  startColumnIndex: 0,
-                  endColumnIndex: 4,
-                },
-                description:
-                  "Non-editable fixed deposit entry (can be deleted)",
-                warningOnly: false,
-                editors: {
-                  // No editors means no one can edit, not even owner
-                  users: [],
-                  groups: [],
-                  domainUsersCanEdit: false,
-                },
-              },
-            },
-          },
         ],
       },
     });
