@@ -8,7 +8,7 @@
     "dev:turbo": "SERWIST_SUPPRESS_TURBOPACK_WARNING=1 next dev --turbopack --port 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint src",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "tsc --noEmit",
     "prepare": "husky"
