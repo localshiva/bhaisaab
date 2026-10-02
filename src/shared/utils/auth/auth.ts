@@ -13,31 +13,29 @@ const googleProviderConfig = {
 
 const refreshToken = async (token: JWT): Promise<JWT> => {
   try {
-    const url = `https://oauth2.googleapis.com/token?${new URLSearchParams({
-      client_id: serverEnv.AUTH_GOOGLE_ID,
-      client_secret: serverEnv.AUTH_GOOGLE_SECRET,
-      grant_type: "refresh_token",
-      refresh_token: token.refresh_token!,
-    })}`;
-
-    const response = await fetch(url, {
+    const response = await fetch("https://oauth2.googleapis.com/token", {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       method: "POST",
+      body: new URLSearchParams({
+        client_id: serverEnv.AUTH_GOOGLE_ID,
+        client_secret: serverEnv.AUTH_GOOGLE_SECRET,
+        grant_type: "refresh_token",
+        refresh_token: token.refresh_token!,
+      }),
     });
 
     const refreshedTokens = (await response.json()) as {
       access_token: string;
       expires_in: number;
-      refresh_token: string;
+      refresh_token?: string;
+      error?: string;
     };
 
-    // Info log the refreshed tokens
-    console.info("🚀 ~ refreshedTokens ~", refreshedTokens);
-
     if (!response.ok) {
-      throw new Error(JSON.stringify(refreshedTokens));
+      // Log only Google's error code, never the token payload
+      throw new Error(refreshedTokens.error ?? `HTTP ${response.status}`);
     }
 
     return {
