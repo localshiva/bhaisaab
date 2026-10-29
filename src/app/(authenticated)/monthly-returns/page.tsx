@@ -1,4 +1,4 @@
-import MonthlyReturns from "@bhaisaab/shared/pages/dashboard/monthly-returns/monthly-returns";
+import MonthlyReturns from "@bhaisaab/features/monthly-returns/monthly-returns-page";
 
 export default function MonthlyReturnsPage() {
   return <MonthlyReturns />;

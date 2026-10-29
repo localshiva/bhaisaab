@@ -1,7 +1,6 @@
-// @bhaisaab/pages/spreadsheet/monthly-returns/components/mr-source-list-item.tsx
+import { useDeleteMonthlySource } from "@bhaisaab/features/monthly-returns/_shared/hooks/monthly-return";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import { useDeleteMonthlySource } from "@bhaisaab/shared/hooks/services/monthly-return";
 import { BanknoteArrowUp, Loader2, Trash2 } from "lucide-react";
 import { FC, useState } from "react";
 

@@ -1,6 +1,6 @@
+import { IMonthlyReturnsRow } from "@bhaisaab/features/monthly-returns/_shared/hooks/monthly-return";
+import { getTotalIncome } from "@bhaisaab/features/monthly-returns/_shared/utils/income";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import { IMonthlyReturnsRow } from "@bhaisaab/shared/hooks/services/monthly-return";
-import { getTotalIncome } from "@bhaisaab/shared/utils/income";
 import { FC, useMemo } from "react";
 
 import { MRSourceListItem } from "./mr-source-list-item";

@@ -1,7 +1,7 @@
 import {
   AddSourceRequest,
   DeleteSourceRequest,
-} from "@bhaisaab/shared/constants/validation/monthly-returns";
+} from "@bhaisaab/features/monthly-returns/_shared/schemas/monthly-returns";
 import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
