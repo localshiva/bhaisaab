@@ -2,36 +2,16 @@ import { auth } from "@bhaisaab/shared/server/auth";
 import { setSecurityHeaders } from "@bhaisaab/shared/server/content-security-policy";
 import { NextResponse } from "next/server";
 
-const API_AUTH_SIGNIN_PATH = "/api/auth/signin";
-
 // Fully public routes that anyone can access regardless of auth status
 const publicRoutes = ["/privacy-policy", "/terms-and-conditions", "/contact"];
 
 // Auth routes that should only be accessible when NOT logged in
-const authRoutes = ["/auth/login", "/auth/error", API_AUTH_SIGNIN_PATH];
+const authRoutes = ["/auth/login", "/auth/error"];
 
 export const proxy = auth(req => {
   const response = setSecurityHeaders(req);
 
   const { pathname } = req.nextUrl;
-
-  if (pathname.startsWith("/api/")) {
-    if (!req.auth && !pathname.startsWith(API_AUTH_SIGNIN_PATH)) {
-      return new NextResponse(
-        JSON.stringify({
-          error: "Unauthorized",
-          message:
-            "You are not authorized to access this resource. Please log in.",
-        }),
-        {
-          status: 401,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
-    }
-
-    return response;
-  }
 
   if (req.auth && authRoutes.some(route => pathname.startsWith(route))) {
     return NextResponse.redirect(new URL("/", req.url));
