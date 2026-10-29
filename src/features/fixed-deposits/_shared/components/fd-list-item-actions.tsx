@@ -49,7 +49,13 @@ export const FDListItemActions: FC<FDListItemActionsProps> = ({
 
   const handleDelete = () => {
     if (typeof id === "number") {
-      deleteFixedDeposit(id);
+      deleteFixedDeposit(id, {
+        onSuccess: () => {
+          toast.success(
+            `Fixed deposit of ${formatCurrency(amount)} was deleted successfully`,
+          );
+        },
+      });
     } else {
       toast.error("Fixed deposit ID should be a row number");
     }

@@ -17,6 +17,7 @@ import {
 } from "@bhaisaab/shared/components/core/dialog";
 import { Input } from "@bhaisaab/shared/components/core/input";
 import { Label } from "@bhaisaab/shared/components/core/label";
+import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addMonths } from "date-fns/addMonths";
 import { addYears } from "date-fns/addYears";
@@ -26,6 +27,7 @@ import { isValid } from "date-fns/isValid";
 import { Plus } from "lucide-react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 /**
  * The blank form: today's deposit date and a one-year term.
@@ -64,6 +66,9 @@ export const FDCreateForm = () => {
   const onSubmit = (data: CreateFixedDepositRequest) => {
     createFixedDeposit(data, {
       onSuccess: () => {
+        toast.success(
+          `Fixed deposit of ${formatCurrency(data.amount)} was created successfully`,
+        );
         closeAddFD();
         reset(getBlankValues());
         clearDefaultValues();
