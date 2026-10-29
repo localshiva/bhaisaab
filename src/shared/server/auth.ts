@@ -85,7 +85,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     authorized({ auth }) {
       return !!auth;
     },
+    /**
+     * Runs on every session read, not only at sign-in.
+     *
+     * Returning `null` makes Auth.js delete the session cookie.
+     * So, an email removed from `ALLOWED_EMAILS` ends that session
+     * on its next request, without waiting for the session to expire.
+     */
     async jwt({ token, account, user }) {
+      if (!isAllowedEmail(token.email)) {
+        return null;
+      }
+
       if (account && user) {
         return {
           ...token,
@@ -133,7 +144,8 @@ export async function getUserCredentials() {
  * So, the tokens are read here instead of being stored on it.
  *
  * Refreshes the access token when it has expired.
- * Returns `null` when there is no session or the refresh fails.
+ * Returns `null` when there is no session, the email is no longer
+ * in `ALLOWED_EMAILS`, or the refresh fails.
  */
 export async function getGoogleTokens(): Promise<JWT | null> {
   const req = { headers: await headers() };
@@ -144,7 +156,7 @@ export async function getGoogleTokens(): Promise<JWT | null> {
     (await getToken({ req, secret, secureCookie: true })) ??
     (await getToken({ req, secret, secureCookie: false }));
 
-  if (!token?.access_token) {
+  if (!token?.access_token || !isAllowedEmail(token.email)) {
     return null;
   }
 
