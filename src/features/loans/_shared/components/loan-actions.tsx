@@ -40,10 +40,8 @@ export const LoanActions: FC<LoanActionsProps> = ({
   const [isDeleteOpen, toggleDeleteOpen] = useToggle(false);
   const { deleteLoan, isLoading: isDeleting } = useDeleteLoan();
 
-  // Then inside the LoanActions component, add a new state:
   const [isPaymentsOpen, togglePaymentsOpen] = useToggle(false);
 
-  // Replace the handleViewPayments function with:
   const handleViewPayments = () => {
     togglePaymentsOpen(true);
     setOpen(false);
@@ -55,8 +53,10 @@ export const LoanActions: FC<LoanActionsProps> = ({
   };
 
   const handleDelete = () => {
-    // Important: The spreadsheet rows start at 1,
-    // but the header is at row 1, so we need to add 2 to the 0-based id
+    /**
+     * The delete request takes a 0-based sheet row. Row 0 is the header,
+     * so loan `id` sits at row id + 1.
+     */
     const rowIndex = id + 1;
 
     deleteLoan(
@@ -67,7 +67,7 @@ export const LoanActions: FC<LoanActionsProps> = ({
         },
         onError: error => {
           console.error("Error deleting loan:", error);
-          // Error handling will be done by the hook and toast notifications
+          // The mutation's toast meta shows the error to the user.
         },
       },
     );
@@ -78,7 +78,7 @@ export const LoanActions: FC<LoanActionsProps> = ({
     setOpen(false);
   };
 
-  // The spreadsheet rows start at 1, header at row 1, so add 2 to the 0-based id
+  // 1-based sheet row: row 1 is the header, so loan `id` is row id + 2.
   const actualRowIndex = id + 2;
 
   return (
@@ -91,7 +91,6 @@ export const LoanActions: FC<LoanActionsProps> = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40">
-          {/* Add Payment Item */}
           {!isFullyPaid && (
             <DropdownMenuItem onSelect={handleAddPayment}>
               <DollarSign className="mr-2 h-4 w-4" />

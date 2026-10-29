@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Define a Zod schema for adding a new loan
 export const AddLoanSchema = z.object({
   provider: z.string().min(1, "Provider name is required"),
   amount: z
@@ -12,10 +11,8 @@ export const AddLoanSchema = z.object({
     .min(100, "Amount must be greater than 0"),
 });
 
-// Type inference from the Zod schema
 export type AddLoanRequest = z.infer<typeof AddLoanSchema>;
 
-// Validation schema for loan payment
 export const AddLoanPaymentSchema = z.object({
   rowIndex: z
     .number()
@@ -29,7 +26,6 @@ export const AddLoanPaymentSchema = z.object({
 
 export type AddLoanPaymentRequest = z.infer<typeof AddLoanPaymentSchema>;
 
-// Validation schema for loan deletion
 export const DeleteLoanSchema = z.object({
   rowIndex: z
     .number()
@@ -37,7 +33,6 @@ export const DeleteLoanSchema = z.object({
     .positive("Row index must be positive"),
 });
 
-// Validation schema for fetching loan payments
 export const LoanPaymentsSchema = z.object({
   rowIndex: z
     .number()

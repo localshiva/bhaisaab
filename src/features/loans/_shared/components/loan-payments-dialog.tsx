@@ -31,14 +31,14 @@ export const LoanPaymentsDialog: FC<LoanPaymentsDialogProps> = ({
 }) => {
   const { data: payments, isLoading } = useLoanPayments(rowIndex);
 
-  // Calculate total amount paid
   const totalPaid =
     payments?.reduce((sum, payment) => sum + payment.amount, 0) ?? 0;
 
-  // Build a payment display function
+  /**
+   * The sheet does not store payment dates. So, this shows a made-up
+   * date, one month apart per payment column.
+   */
   const getPaymentDate = (columnIndex: number) => {
-    // This is a placeholder - in a real app, you might want to store
-    // actual payment dates. Here we're generating fake dates based on column index.
     const baseDate = new Date();
     baseDate.setMonth(
       baseDate.getMonth() - (payments?.length ?? 0) + (columnIndex - 4),
@@ -46,7 +46,6 @@ export const LoanPaymentsDialog: FC<LoanPaymentsDialogProps> = ({
     return format(baseDate, "MMM d, yyyy");
   };
 
-  // Render functions to keep the JSX clean
   const renderLoading = () => (
     <div className="flex flex-col items-center justify-center py-8">
       <Loader2 className="size-8 text-primary animate-spin mb-2" />
@@ -133,7 +132,6 @@ export const LoanPaymentsDialog: FC<LoanPaymentsDialogProps> = ({
     </>
   );
 
-  // Content renderer based on state
   const renderContent = () => {
     if (isLoading) {
       return renderLoading();

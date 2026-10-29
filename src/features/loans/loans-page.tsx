@@ -28,14 +28,11 @@ export default function Loans() {
           Loans
         </Typography>
 
-        {/* Add a new loan */}
         <AddLoanForm />
       </div>
 
-      {/* Main summary card */}
       <LoanSummaryCard rows={data.rows} />
 
-      {/* Display loan list */}
       <LoanList rows={data.rows} />
     </div>
   );

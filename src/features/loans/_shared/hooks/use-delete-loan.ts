@@ -5,7 +5,7 @@ import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 /**
- * Hook for deleting a loan
+ * Deletes a loan row, then refetches the loan list.
  */
 export function useDeleteLoan() {
   const queryClient = useQueryClient();
@@ -19,7 +19,6 @@ export function useDeleteLoan() {
       return data;
     },
     onSuccess: () => {
-      // Invalidate and refetch loans query after successful deletion
       void queryClient.invalidateQueries({ queryKey: loansQueryKey });
     },
     meta: {

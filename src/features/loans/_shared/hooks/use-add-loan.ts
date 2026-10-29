@@ -5,7 +5,7 @@ import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 /**
- * Hook for adding a new loan
+ * Appends a loan row, then refetches the loan list.
  */
 export function useAddLoan() {
   const queryClient = useQueryClient();
@@ -19,7 +19,6 @@ export function useAddLoan() {
       return data;
     },
     onSuccess: () => {
-      // Invalidate and refetch loans query after successful mutation
       void queryClient.invalidateQueries({ queryKey: loansQueryKey });
     },
     meta: {

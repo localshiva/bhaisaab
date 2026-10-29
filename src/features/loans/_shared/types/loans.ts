@@ -1,22 +1,24 @@
-/**
- * Interface for the loan payment request
- */
 export interface IAddLoanPaymentRequest {
-  rowIndex: number; // The row index (1-based) of the loan to add payment for
-  amount: number; // The payment amount
+  /** 1-based sheet row of the loan, header row included. */
+  rowIndex: number;
+  amount: number;
 }
 
-/**
- * Interface for the loan deletion request
- */
 export interface IDeleteLoanRequest {
-  rowIndex: number; // The row index (1-based) of the loan to delete
+  /**
+   * 0-based sheet row of the loan, header row included.
+   *
+   * Unlike the payment requests, this is passed straight to a
+   * `deleteDimension` request, which counts rows from 0.
+   */
+  rowIndex: number;
 }
 
 export type ILoanRow = string[];
 
 /**
- * Interface for loan payment details
+ * One filled payment cell of a loan row. `columnIndex` is the cell's
+ * 0-based sheet column, so the first payment (column E) is 4.
  */
 export interface ILoanPayment {
   amount: number;

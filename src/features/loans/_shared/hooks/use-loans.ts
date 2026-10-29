@@ -5,7 +5,8 @@ import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useQuery } from "@tanstack/react-query";
 
 /**
- * Hook for fetching all loans
+ * Fetches the Loan Report header and rows. Rows are in sheet order, so
+ * row i is sheet row i + 2.
  */
 export function useLoans() {
   return useQuery({

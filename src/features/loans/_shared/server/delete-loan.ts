@@ -8,10 +8,8 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 
 /**
- * Deletes a loan from the loan report sheet
- *
- * @param deleteData Data identifying which loan to delete
- * @returns Boolean indicating success
+ * Removes the loan's row from the Loan Report sheet. The rows below it
+ * shift up, so client row indexes go stale until the list is refetched.
  */
 export async function deleteLoan(
   deleteData: IDeleteLoanRequest,
@@ -20,10 +18,9 @@ export async function deleteLoan(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Get the sheet ID needed for the deleteRows request
     const spreadsheetInfo = await sheetsClient.spreadsheets.get({
       spreadsheetId,
-      ranges: [LOAN_REPORT_SHEET_NAME], // This filters to just this sheet
+      ranges: [LOAN_REPORT_SHEET_NAME],
       fields: "sheets.properties(sheetId,title)",
     });
 
@@ -33,7 +30,6 @@ export async function deleteLoan(
       throw new Error(`Sheet ${LOAN_REPORT_SHEET_NAME} not found`);
     }
 
-    // Use the existing utility function to delete the row
     await deleteSingleRow(
       sheetsClient,
       spreadsheetId,

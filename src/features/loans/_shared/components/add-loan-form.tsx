@@ -35,13 +35,12 @@ export const AddLoanForm = () => {
   const onSubmit = (data: AddLoanRequest) => {
     addLoan(data, {
       onSuccess: () => {
-        // Close dialog and reset form on success
         closeAddLoan();
         reset();
       },
       onError: (err: Error) => {
         console.error("Failed to add loan:", err);
-        // Error handling will be done by the hook and toast notifications
+        // The mutation's toast meta shows the error to the user.
       },
     });
   };
@@ -56,7 +55,6 @@ export const AddLoanForm = () => {
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">
-        {/* Header */}
         <DialogHeader>
           <DialogTitle>Add new loan</DialogTitle>
           <DialogDescription>
@@ -65,9 +63,7 @@ export const AddLoanForm = () => {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Form */}
           <div className="grid gap-4 py-4">
-            {/* Provider */}
             <div className="grid gap-2">
               <Controller
                 name="provider"
@@ -102,7 +98,6 @@ export const AddLoanForm = () => {
               />
             </div>
 
-            {/* Loan Amount */}
             <div className="grid gap-2">
               <Controller
                 name="amount"
@@ -130,7 +125,6 @@ export const AddLoanForm = () => {
                           : ""
                       }
                       onChange={e => {
-                        // Ensure we always have a positive number
                         const inputValue = e.target.value;
                         const numValue =
                           inputValue === ""

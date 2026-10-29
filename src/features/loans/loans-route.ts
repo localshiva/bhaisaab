@@ -9,11 +9,12 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * GET handler for fetching loans data
+ * Returns the Loan Report sheet split into its header row and loan rows.
+ *
+ * Rows keep sheet order. So, row i is sheet row i + 2.
  */
 export async function GET() {
   try {
-    // Get loans data using the service
     const values = await getAllLoans();
 
     if (values.length === 0) {
@@ -36,14 +37,12 @@ export async function GET() {
 }
 
 /**
- * POST handler for adding a new loan
+ * Validates the body against `AddLoanSchema` and appends the loan.
  */
 export async function POST(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = (await request.json()) as unknown;
 
-    // Validate against schema
     const result = AddLoanSchema.safeParse(body);
 
     if (!result.success) {
@@ -57,7 +56,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call service to add the loan
     const success = await addLoan(result.data);
 
     if (!success) {
@@ -75,20 +73,17 @@ export async function POST(request: NextRequest) {
       message: "Loan added successfully",
     });
   } catch (error) {
-    // Return appropriate error response
     return getServerError(error);
   }
 }
 
 /**
- * DELETE handler for removing a loan
+ * Validates the body against `DeleteLoanSchema` and deletes that sheet row.
  */
 export async function DELETE(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = (await request.json()) as unknown;
 
-    // Validate against schema
     const result = DeleteLoanSchema.safeParse(body);
 
     if (!result.success) {
@@ -102,7 +97,6 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Call service to delete the loan
     const success = await deleteLoan(result.data);
 
     if (!success) {
@@ -120,7 +114,6 @@ export async function DELETE(request: NextRequest) {
       message: "Loan deleted successfully",
     });
   } catch (error) {
-    // Return appropriate error response
     return getServerError(error);
   }
 }

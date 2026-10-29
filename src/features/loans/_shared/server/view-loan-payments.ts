@@ -5,26 +5,23 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 
 import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 
-/**
- * Interface for the loan payments request
- */
 export interface ILoanPaymentsRequest {
-  rowIndex: number; // The row index (1-based) of the loan to view payments for
+  /** 1-based sheet row of the loan, header row included. */
+  rowIndex: number;
 }
 
 /**
- * Interface for loan payment details
+ * One filled payment cell. `columnIndex` is the cell's 0-based sheet
+ * column, so the first payment (column E) is 4.
  */
 export interface ILoanPayment {
   amount: number;
-  columnIndex: number; // Useful for potential future features like editing payments
+  columnIndex: number;
 }
 
 /**
- * Fetches all payments for a specific loan
- *
- * @param requestData Data identifying which loan to fetch payments for
- * @returns Array of payment amounts
+ * Reads the loan's payment cells from column E onwards and returns the
+ * non-empty ones in sheet order.
  */
 export async function getLoanPayments(
   requestData: ILoanPaymentsRequest,
@@ -33,7 +30,6 @@ export async function getLoanPayments(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Fetch the row with payment data (starting from column E)
     const rowResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range: `${LOAN_REPORT_SHEET_NAME}!E${requestData.rowIndex}:ZZZ${requestData.rowIndex}`,
@@ -43,13 +39,11 @@ export async function getLoanPayments(
     const rowValues = rowResponse.data.values?.[0] ?? [];
     const payments: ILoanPayment[] = [];
 
-    // Process each cell to find payments (non-empty cells)
     for (const [index, value] of rowValues.entries()) {
       if (value !== null && value !== undefined && value !== "") {
-        // Add payment with its amount and column index (E is 4 in 0-based index)
         payments.push({
           amount: Number(value),
-          columnIndex: index + 4, // +4 because we start from column E (index 4)
+          columnIndex: index + 4, // The range starts at column E.
         });
       }
     }

@@ -8,14 +8,12 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * POST handler for adding a payment to an existing loan
+ * Writes a payment into the next empty payment cell of a loan row.
  */
 export async function POST(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = (await request.json()) as unknown;
 
-    // Validate against schema
     const result = AddLoanPaymentSchema.safeParse(body);
 
     if (!result.success) {
@@ -29,7 +27,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call service to add the payment
     const success = await addLoanPayment(result.data);
 
     if (!success) {
@@ -47,17 +44,15 @@ export async function POST(request: NextRequest) {
       message: "Payment added successfully",
     });
   } catch (error) {
-    // Return appropriate error response
     return getServerError(error);
   }
 }
 
 /**
- * GET handler for fetching loan payments
+ * Lists the payments of the loan at the 1-based `rowIndex` query param.
  */
 export async function GET(request: NextRequest) {
   try {
-    // Get the rowIndex from the query string
     const searchParams = request.nextUrl.searchParams;
     const rowIndex = searchParams.get("rowIndex");
 
@@ -71,7 +66,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Validate the rowIndex
     const result = LoanPaymentsSchema.safeParse({
       rowIndex: Number.parseInt(rowIndex, 10),
     });
@@ -87,7 +81,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch the payments data
     const payments = await getLoanPayments(result.data);
 
     return NextResponse.json({

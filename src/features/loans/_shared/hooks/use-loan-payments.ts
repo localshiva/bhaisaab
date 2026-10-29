@@ -5,7 +5,8 @@ import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useQuery } from "@tanstack/react-query";
 
 /**
- * Hook for fetching payments for a specific loan
+ * Fetches the payments of the loan at the 1-based sheet row `rowIndex`.
+ * Disabled until `rowIndex` is positive.
  */
 export function useLoanPayments(rowIndex: number) {
   return useQuery({
@@ -16,7 +17,6 @@ export function useLoanPayments(rowIndex: number) {
       );
       return data.data;
     },
-    // Don't fetch if rowIndex is invalid
     enabled: rowIndex > 0,
     meta: {
       toast: true,

@@ -6,26 +6,19 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 
 /**
- * Fetches data from the loan report spreadsheet
- *
- * @param range The A1 notation range to fetch (e.g., "Sheet1!A1:Z")
- * @returns The values from the specified range
+ * @param range A1 notation range, including the sheet name.
  */
 export async function fetchLoansData(range: string): Promise<string[][]> {
   try {
-    // Create the Google Sheets client
     const sheetsClient = await createSheetsClient();
 
-    // Get the configured spreadsheet ID
     const { spreadsheetId } = googleServiceConfig;
 
-    // Fetch the data from the spreadsheet
     const response = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range,
     });
 
-    // Return the values or an empty array if none found
     return response.data.values ?? [];
   } catch (error) {
     console.error("Error fetching loans data:", error);
@@ -34,9 +27,8 @@ export async function fetchLoansData(range: string): Promise<string[][]> {
 }
 
 /**
- * Fetches all loans data from the loan report sheet
- *
- * @returns Array of loan data rows
+ * Returns columns A to D of the Loan Report sheet, header row first.
+ * Payment cells from column E onwards are left out.
  */
 export async function getAllLoans(): Promise<string[][]> {
   const range = `${LOAN_REPORT_SHEET_NAME}!A1:D`;

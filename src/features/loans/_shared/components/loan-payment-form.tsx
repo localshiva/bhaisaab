@@ -54,13 +54,12 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
       { rowIndex, amount: data.amount },
       {
         onSuccess: () => {
-          // Close dialog and reset form on success
           toggleOpen(false);
           reset();
         },
         onError: (err: Error) => {
           console.error("Failed to add payment:", err);
-          // Error handling will be done by the hook and toast notifications
+          // The mutation's toast meta shows the error to the user.
         },
       },
     );
@@ -69,7 +68,6 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={toggleOpen}>
       <DialogContent className="sm:max-w-md">
-        {/* Header */}
         <DialogHeader>
           <DialogTitle>Add Payment for {provider}</DialogTitle>
           <DialogDescription>
@@ -79,9 +77,7 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Form */}
           <div className="grid gap-4 py-4">
-            {/* Payment Amount */}
             <div className="grid gap-2">
               <Controller
                 name="amount"
@@ -110,7 +106,6 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
                           : ""
                       }
                       onChange={e => {
-                        // Ensure we always have a positive number
                         const inputValue = e.target.value;
                         const numValue =
                           inputValue === ""

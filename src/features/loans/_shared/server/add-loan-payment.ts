@@ -7,10 +7,8 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 
 /**
- * Adds a payment to an existing loan
- *
- * @param paymentData Data for the new payment to be added
- * @returns Boolean indicating success
+ * Writes the payment into the first empty cell from column E onwards
+ * of the loan's row. Column C's formula then picks it up as paid.
  */
 export async function addLoanPayment(
   paymentData: IAddLoanPaymentRequest,
@@ -19,33 +17,29 @@ export async function addLoanPayment(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // First, get the current row data to find the next empty cell for payment
     const rowResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range: `${LOAN_REPORT_SHEET_NAME}!E${paymentData.rowIndex}:ZZZ${paymentData.rowIndex}`,
       valueRenderOption: "UNFORMATTED_VALUE",
     });
 
-    // Find the next empty cell in the row
     const rowValues = rowResponse.data.values?.[0] ?? [];
 
-    // Count non-empty cells to determine the next column
     let filledCellCount = 0;
     for (const value of rowValues) {
       if (value !== null && value !== undefined && value !== "") {
         filledCellCount += 1;
       } else {
-        break; // Stop at the first empty cell
+        break;
       }
     }
 
-    // E is the 5th column (index 4), so we add filledCellCount to get the next empty column
+    // Payments start at column E, which is 0-based column 4.
     const nextEmptyColumnIndex = 4 + filledCellCount;
 
-    // Convert column index to A1 notation (0 = A, 1 = B, etc.)
-    const columnLetter = String.fromCodePoint(65 + nextEmptyColumnIndex); // 65 is ASCII for 'A'
+    // Only single letters A to Z are produced.
+    const columnLetter = String.fromCodePoint(65 + nextEmptyColumnIndex);
 
-    // Update the cell with the payment amount
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
       range: `${LOAN_REPORT_SHEET_NAME}!${columnLetter}${paymentData.rowIndex}`,

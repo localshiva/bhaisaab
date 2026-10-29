@@ -6,10 +6,11 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 
 /**
- * Adds a new loan to the loan report sheet and applies formulas
+ * Appends a loan row to the Loan Report sheet.
  *
- * @param loanData Data for the new loan to be added
- * @returns Boolean indicating success
+ * Columns A and B get the provider and amount. Column C gets a formula
+ * that sums the payments from column E onwards, and column D gets the
+ * pending amount (B - C).
  */
 export async function addLoan(loanData: {
   provider: string;
@@ -19,7 +20,6 @@ export async function addLoan(loanData: {
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Get the current data to determine the next row
     const valuesResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range: `${LOAN_REPORT_SHEET_NAME}!A:A`,
@@ -28,9 +28,8 @@ export async function addLoan(loanData: {
 
     const nextRowAfterLast = valuesResponse.data.values?.length
       ? valuesResponse.data.values.length + 1
-      : 2; // Start at row 2 if sheet is empty (accounting for header row)
+      : 2; // Row 1 is the header.
 
-    // 1. Add the provider and amount
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
       range: `${LOAN_REPORT_SHEET_NAME}!A${nextRowAfterLast}:B${nextRowAfterLast}`,
@@ -40,7 +39,6 @@ export async function addLoan(loanData: {
       },
     });
 
-    // 2. Get the sheet ID for batch updates
     const spreadsheetInfo = await sheetsClient.spreadsheets.get({
       spreadsheetId,
       ranges: [LOAN_REPORT_SHEET_NAME],
@@ -53,8 +51,6 @@ export async function addLoan(loanData: {
       throw new Error(`Sheet ${LOAN_REPORT_SHEET_NAME} not found`);
     }
 
-    // 3. Apply the formulas for calculating Paid Amount and Pending Amount
-    // We'll use a batch update because it provides more capabilities
     await sheetsClient.spreadsheets.batchUpdate({
       spreadsheetId,
       requestBody: {
@@ -63,7 +59,7 @@ export async function addLoan(loanData: {
             updateCells: {
               range: {
                 sheetId,
-                startRowIndex: nextRowAfterLast - 1, // 0-based index
+                startRowIndex: nextRowAfterLast - 1, // 0-based
                 endRowIndex: nextRowAfterLast, // exclusive
                 startColumnIndex: 2, // Column C (0-based)
                 endColumnIndex: 4, // Column E (exclusive)
