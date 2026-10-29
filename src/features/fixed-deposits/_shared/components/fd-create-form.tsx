@@ -4,6 +4,7 @@ import {
   CreateFixedDepositRequest,
   CreateFixedDepositSchema,
 } from "@bhaisaab/features/fixed-deposits/_shared/schemas/fixed-deposits";
+import { toDateInputValue } from "@bhaisaab/features/fixed-deposits/_shared/utils/date-input";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
@@ -21,6 +22,7 @@ import { addMonths } from "date-fns/addMonths";
 import { addYears } from "date-fns/addYears";
 import { format } from "date-fns/format";
 import { intervalToDuration } from "date-fns/intervalToDuration";
+import { isValid } from "date-fns/isValid";
 import { Plus } from "lucide-react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -69,18 +71,15 @@ export const FDCreateForm = () => {
       setValue("amount", defaultValues.amount);
       setValue("interestRate", defaultValues.interestRate);
 
-      if (defaultValues.depositDate) {
-        setValue(
-          "depositDate",
-          format(new Date(defaultValues.depositDate), "yyyy-MM-dd"),
-        );
+      // An unparseable sheet date keeps the blank form's value.
+      const depositDate = toDateInputValue(defaultValues.depositDate);
+      if (depositDate) {
+        setValue("depositDate", depositDate);
       }
 
-      if (defaultValues.maturityDate) {
-        setValue(
-          "maturityDate",
-          format(new Date(defaultValues.maturityDate), "yyyy-MM-dd"),
-        );
+      const maturityDate = toDateInputValue(defaultValues.maturityDate);
+      if (maturityDate) {
+        setValue("maturityDate", maturityDate);
       }
     }
   }, [defaultValues, isAddFDOpen, setValue]);
@@ -225,14 +224,16 @@ export const FDCreateForm = () => {
                       onChange={e => {
                         onChange(e);
 
-                        // Default to a one-year term.
-                        setValue(
-                          "maturityDate",
-                          format(
-                            addYears(new Date(e.target.value), 1),
-                            "yyyy-MM-dd",
-                          ),
+                        /**
+                         * Default to a one-year term. A cleared or invalid
+                         * deposit date leaves the maturity date as it is.
+                         */
+                        const maturityDate = toDateInputValue(
+                          addYears(new Date(e.target.value), 1),
                         );
+                        if (maturityDate) {
+                          setValue("maturityDate", maturityDate);
+                        }
                       }}
                       {...restField}
                     />
@@ -252,11 +253,26 @@ export const FDCreateForm = () => {
                 name="maturityDate"
                 control={control}
                 render={({ field, formState: { errors } }) => {
-                  const depositDate = getValues("depositDate");
+                  const depositDate = new Date(getValues("depositDate"));
+                  const maturityDate = new Date(field.value);
                   const interval = intervalToDuration({
-                    start: new Date(depositDate),
-                    end: new Date(field.value),
+                    start: depositDate,
+                    end: maturityDate,
                   });
+
+                  /**
+                   * Sets the maturity date to the deposit date plus the
+                   * term. Does nothing while the deposit date is cleared
+                   * or invalid, as there is no date to add the term to.
+                   */
+                  const setTerm = (years: number, months: number) => {
+                    const newDate = toDateInputValue(
+                      addMonths(addYears(depositDate, years), months),
+                    );
+                    if (newDate) {
+                      field.onChange(newDate);
+                    }
+                  };
 
                   return (
                     <>
@@ -284,16 +300,10 @@ export const FDCreateForm = () => {
                             max="20"
                             value={interval.years ?? 0}
                             onChange={e => {
-                              const years = Number(e.target.value || 0);
-                              const months = interval.months ?? 0;
-
-                              let newDate = addYears(
-                                new Date(depositDate),
-                                years,
+                              setTerm(
+                                Number(e.target.value || 0),
+                                interval.months ?? 0,
                               );
-                              newDate = addMonths(newDate, months);
-
-                              field.onChange(format(newDate, "yyyy-MM-dd"));
                             }}
                           />
                         </div>
@@ -311,25 +321,20 @@ export const FDCreateForm = () => {
                             max="11"
                             value={interval.months ?? 0}
                             onChange={e => {
-                              const months = Number(e.target.value ?? 0);
-                              const years = interval.years ?? 0;
-
-                              let newDate = addYears(
-                                new Date(depositDate),
-                                years,
+                              setTerm(
+                                interval.years ?? 0,
+                                Number(e.target.value || 0),
                               );
-                              newDate = addMonths(newDate, months);
-
-                              field.onChange(format(newDate, "yyyy-MM-dd"));
                             }}
                           />
                         </div>
                       </div>
 
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Matures on{" "}
-                        {format(new Date(field.value), "MMM d, yyyy")}
-                      </p>
+                      {isValid(maturityDate) && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Matures on {format(maturityDate, "MMM d, yyyy")}
+                        </p>
+                      )}
 
                       <Input id="maturityDate" type="hidden" {...field} />
 
