@@ -167,6 +167,23 @@ const eslintConfig = [
           ],
         },
       ],
+
+      // No barrel files: import from the file that defines the symbol
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "ExportAllDeclaration, ExportNamedDeclaration[source]",
+          message:
+            "No re-exports. Import from the file that defines the symbol.",
+        },
+      ],
+    },
+  },
+  {
+    // Next.js entry files re-export from features
+    files: ["src/app/**"],
+    rules: {
+      "no-restricted-syntax": "off",
     },
   },
   {
