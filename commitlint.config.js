@@ -1,4 +1,26 @@
+import { readdirSync } from "node:fs";
+
 const CASE = "lower-case";
+
+/**
+ * Scopes for work outside a single feature.
+ */
+const FIXED_SCOPES = ["app", "shared", "config", "dep", "doc"];
+
+/**
+ * Every folder in src/features is a valid scope.
+ *
+ * Read on each commit, so that a new feature folder needs no config edit.
+ */
+function getFeatureScopes() {
+  try {
+    return readdirSync("src/features", { withFileTypes: true })
+      .filter(entry => entry.isDirectory())
+      .map(entry => entry.name);
+  } catch {
+    return [];
+  }
+}
 
 const config = {
   extends: ["@commitlint/config-conventional"],
@@ -20,26 +42,7 @@ const config = {
         "revert", // Reverts a previous commit
       ],
     ],
-    "scope-enum": [
-      2,
-      "always",
-      [
-        "dep",
-        "config",
-        "util",
-        "asset",
-        "component",
-        "hook",
-        "screen",
-        "provider",
-        "store",
-        "service",
-        "auth",
-        "ui",
-        "nav",
-        "doc"
-      ],
-    ],
+    "scope-enum": () => [2, "always", [...FIXED_SCOPES, ...getFeatureScopes()]],
     "scope-empty": [2, "never"],
     "type-case": [2, "always", CASE],
     "scope-case": [2, "always", CASE],
