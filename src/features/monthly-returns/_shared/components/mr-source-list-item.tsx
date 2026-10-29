@@ -1,8 +1,10 @@
 import { useDeleteMonthlySource } from "@bhaisaab/features/monthly-returns/_shared/hooks/use-delete-monthly-source";
+import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { BanknoteArrowUp, Loader2, Trash2 } from "lucide-react";
 import { FC, useState } from "react";
+import { useToggle } from "react-use";
 
 interface MRSourceListItemProps {
   index: number;
@@ -15,6 +17,8 @@ interface MRSourceListItemProps {
  * One income source row.
  *
  * `index` is the source's 0-based sheet row, sent as the delete request's id.
+ *
+ * The delete button asks for confirmation before it sends the request.
  */
 export const MRSourceListItem: FC<MRSourceListItemProps> = ({
   index,
@@ -23,6 +27,7 @@ export const MRSourceListItem: FC<MRSourceListItemProps> = ({
   amount,
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isConfirmOpen, toggleConfirmOpen] = useToggle(false);
   const { deleteSource, isLoading } = useDeleteMonthlySource();
 
   const handleDelete = () => {
@@ -62,7 +67,7 @@ export const MRSourceListItem: FC<MRSourceListItemProps> = ({
           variant="ghost"
           size="icon"
           className="size-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-          onClick={handleDelete}
+          onClick={toggleConfirmOpen}
           disabled={isLoading && isDeleting}
           aria-label={`Delete ${source}`}
         >
@@ -73,6 +78,15 @@ export const MRSourceListItem: FC<MRSourceListItemProps> = ({
           )}
         </Button>
       </div>
+
+      <ConfirmAlertDialog
+        title="Delete Income Source"
+        message={`Are you sure you want to delete ${source}? This action cannot be undone.`}
+        actionLabel="Delete"
+        onConfirm={handleDelete}
+        isOpen={isConfirmOpen}
+        onOpenChange={toggleConfirmOpen}
+      />
     </div>
   );
 };
