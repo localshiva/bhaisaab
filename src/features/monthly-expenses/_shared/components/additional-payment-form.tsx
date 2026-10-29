@@ -71,7 +71,7 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Controller
@@ -93,6 +93,7 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
                       id="amount"
                       type="number"
                       min={1}
+                      step={1}
                       placeholder="Enter payment amount"
                       className={
                         errors.amount

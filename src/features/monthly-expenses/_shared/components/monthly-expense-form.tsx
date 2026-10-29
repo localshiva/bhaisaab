@@ -73,7 +73,7 @@ export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Controller
@@ -95,6 +95,7 @@ export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
                       id="amount"
                       type="number"
                       min={1}
+                      step={1}
                       placeholder="Enter expense amount"
                       className={
                         errors.amount

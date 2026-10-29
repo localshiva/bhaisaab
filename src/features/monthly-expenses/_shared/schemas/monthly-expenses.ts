@@ -2,7 +2,7 @@ import { z } from "zod";
 
 /**
  * Fields the user enters for an expense.
- * The comment is stored as the cell's note.
+ * The amount is whole rupees. The comment is stored as the cell's note.
  */
 export const BaseMonthlyExpenseSchema = z.object({
   amount: z
@@ -11,6 +11,7 @@ export const BaseMonthlyExpenseSchema = z.object({
       invalid_type_error: "Amount must be a number",
     })
     .positive("Amount must be greater than 0")
+    .int("Amount must be a whole number")
     .min(1, "Amount must be at least 1"),
   comment: z.string().optional(),
 });
@@ -31,13 +32,15 @@ export type AddMonthlyExpenseRequest = z.infer<typeof AddMonthlyExpenseSchema>;
 
 /**
  * Body of the additional payment request.
- * The amount replaces the month's additional payment, it is not added to it.
+ * The amount is whole rupees.
+ * It replaces the month's additional payment, it is not added to it.
  */
 export const AddAdditionalPaymentSchema = z.object({
   rowIndex: z.number().int().positive(),
   amount: z
     .number()
     .positive("Amount must be greater than 0")
+    .int("Amount must be a whole number")
     .min(1, "Amount must be at least 1"),
 });
 
