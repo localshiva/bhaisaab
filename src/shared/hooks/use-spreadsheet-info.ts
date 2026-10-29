@@ -1,4 +1,3 @@
-// @bhaisaab/shared/hooks/use-spreadsheet-info.ts
 import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useQuery } from "@tanstack/react-query";

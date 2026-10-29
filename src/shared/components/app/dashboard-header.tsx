@@ -1,7 +1,7 @@
 "use client";
 import { SidebarTrigger } from "@bhaisaab/shared/components/core/sidebar";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import { useSpreadsheetInfo } from "@bhaisaab/shared/hooks/services/spreadsheet-info";
+import { useSpreadsheetInfo } from "@bhaisaab/shared/hooks/use-spreadsheet-info";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const DEFAULT_SPREADSHEET_TITLE = "Bhaisaab";

@@ -1,4 +1,3 @@
-// @bhaisaab/shared/pages/not-found.tsx
 import { GoBackButton } from "@bhaisaab/shared/components/app/go-back-button";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";

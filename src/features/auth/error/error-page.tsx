@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorPageContainer } from "@bhaisaab/shared/pages/error";
+import { ErrorPageContainer } from "@bhaisaab/shared/components/app/error-page-container";
 import { useSearchParams } from "next/navigation";
 
 export default function ErrorPage() {
