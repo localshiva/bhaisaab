@@ -1,4 +1,4 @@
-import { useDeleteLoan } from "@bhaisaab/features/loans/_shared/hooks/loan";
+import { useDeleteLoan } from "@bhaisaab/features/loans/_shared/hooks/use-delete-loan";
 import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {

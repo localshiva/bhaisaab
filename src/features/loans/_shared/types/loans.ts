@@ -12,3 +12,13 @@ export interface IAddLoanPaymentRequest {
 export interface IDeleteLoanRequest {
   rowIndex: number; // The row index (1-based) of the loan to delete
 }
+
+export type ILoanRow = string[];
+
+/**
+ * Interface for loan payment details
+ */
+export interface ILoanPayment {
+  amount: number;
+  columnIndex: number;
+}

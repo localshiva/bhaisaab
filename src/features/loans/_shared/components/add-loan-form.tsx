@@ -1,4 +1,4 @@
-import { useAddLoan } from "@bhaisaab/features/loans/_shared/hooks/loan";
+import { useAddLoan } from "@bhaisaab/features/loans/_shared/hooks/use-add-loan";
 import { useAddLoanModalStore } from "@bhaisaab/features/loans/_shared/hooks/use-open-add-loan-form";
 import {
   AddLoanRequest,

@@ -1,4 +1,4 @@
-import { useAddLoanPayment } from "@bhaisaab/features/loans/_shared/hooks/loan";
+import { useAddLoanPayment } from "@bhaisaab/features/loans/_shared/hooks/use-add-loan-payment";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,

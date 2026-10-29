@@ -1,4 +1,4 @@
-import { ILoanRow } from "@bhaisaab/features/loans/_shared/hooks/loan";
+import { ILoanRow } from "@bhaisaab/features/loans/_shared/types/loans";
 import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
 import { FC, useMemo } from "react";
 

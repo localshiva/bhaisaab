@@ -1,4 +1,4 @@
-import { ILoanRow } from "@bhaisaab/features/loans/_shared/hooks/loan";
+import { ILoanRow } from "@bhaisaab/features/loans/_shared/types/loans";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { FC } from "react";
 

@@ -1,7 +1,5 @@
-import {
-  ILoanPayment,
-  useLoanPayments,
-} from "@bhaisaab/features/loans/_shared/hooks/loan";
+import { useLoanPayments } from "@bhaisaab/features/loans/_shared/hooks/use-loan-payments";
+import { ILoanPayment } from "@bhaisaab/features/loans/_shared/types/loans";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,

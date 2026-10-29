@@ -2,7 +2,7 @@
 import { AddLoanForm } from "@bhaisaab/features/loans/_shared/components/add-loan-form";
 import { LoanList } from "@bhaisaab/features/loans/_shared/components/loan-list";
 import { LoanSummaryCard } from "@bhaisaab/features/loans/_shared/components/loan-summary-card";
-import { useLoans } from "@bhaisaab/features/loans/_shared/hooks/loan";
+import { useLoans } from "@bhaisaab/features/loans/_shared/hooks/use-loans";
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 
