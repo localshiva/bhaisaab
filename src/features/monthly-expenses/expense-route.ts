@@ -15,7 +15,7 @@ import { z } from "zod";
 const UpdateExpenseSchema = z.object({
   rowIndex: z.number().int().positive(),
   columnIndex: z.number().int().min(0),
-  amount: z.number().positive(),
+  amount: z.number().min(1),
   comment: z.string().optional(),
 });
 

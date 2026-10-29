@@ -84,7 +84,7 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
     if (!editingExpense) return;
 
     const amount = Number.parseFloat(editAmount);
-    if (Number.isNaN(amount) || amount <= 0) {
+    if (Number.isNaN(amount) || amount < 1) {
       toast.error("Please enter a valid amount");
       return;
     }
