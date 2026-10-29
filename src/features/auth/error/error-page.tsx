@@ -8,8 +8,8 @@ export default function ErrorPage() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
-  let errorMessage = "An error occurred during authentication.";
-  let errorDescription = "Please try again or contact support.";
+  let errorMessage: string;
+  let errorDescription: string;
 
   switch (error) {
     case "AccessDenied": {
