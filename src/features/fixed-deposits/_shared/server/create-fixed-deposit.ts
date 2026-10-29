@@ -1,8 +1,10 @@
-import { CreateFixedDepositRequest } from "@bhaisaab/shared/constants/validation/fixed-deposits";
+import "server-only";
+
+import { CreateFixedDepositRequest } from "@bhaisaab/features/fixed-deposits/_shared/schemas/fixed-deposits";
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
-import { FD_SHEET_NAME } from "./shared";
+import { FD_SHEET_NAME } from "./fd-report-sheet";
 
 /**
  * Creates a new fixed deposit in the sheet

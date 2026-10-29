@@ -1,4 +1,9 @@
-// @bhaisaab/pages/spreadsheet/fixed-deposits/components/fd-create-form.tsx
+import { useCreateFixedDeposit } from "@bhaisaab/features/fixed-deposits/_shared/hooks/fixed-deposits";
+import { useAddFDStore } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-add-fd-store";
+import {
+  CreateFixedDepositRequest,
+  CreateFixedDepositSchema,
+} from "@bhaisaab/features/fixed-deposits/_shared/schemas/fixed-deposits";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
@@ -11,12 +16,6 @@ import {
 } from "@bhaisaab/shared/components/core/dialog";
 import { Input } from "@bhaisaab/shared/components/core/input";
 import { Label } from "@bhaisaab/shared/components/core/label";
-import {
-  CreateFixedDepositRequest,
-  CreateFixedDepositSchema,
-} from "@bhaisaab/shared/constants/validation/fixed-deposits";
-import { useCreateFixedDeposit } from "@bhaisaab/shared/hooks/services/fixed-deposits";
-import { useAddFDStore } from "@bhaisaab/shared/pages/dashboard/fixed-deposits/hooks/use-add-fd-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addMonths } from "date-fns/addMonths";
 import { addYears } from "date-fns/addYears";

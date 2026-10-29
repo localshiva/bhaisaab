@@ -1,4 +1,4 @@
-import { IFixedDepositRow } from "@bhaisaab/shared/hooks/services/fixed-deposits";
+import { IFixedDepositRow } from "@bhaisaab/features/fixed-deposits/_shared/hooks/fixed-deposits";
 
 import { FDListItem } from "./fd-list-item";
 

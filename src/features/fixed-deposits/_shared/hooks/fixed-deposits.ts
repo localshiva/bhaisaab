@@ -1,5 +1,4 @@
-// @bhaisaab/shared/hooks/services/fixed-deposits.ts
-import { CreateFixedDepositRequest } from "@bhaisaab/shared/constants/validation/fixed-deposits";
+import { CreateFixedDepositRequest } from "@bhaisaab/features/fixed-deposits/_shared/schemas/fixed-deposits";
 import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

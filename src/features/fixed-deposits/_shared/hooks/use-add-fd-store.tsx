@@ -1,5 +1,4 @@
-// @bhaisaab/shared/pages/dashboard/fixed-deposits/hooks/use-add-fd-modal.tsx
-import { CreateFixedDepositRequest } from "@bhaisaab/shared/constants/validation/fixed-deposits";
+import { CreateFixedDepositRequest } from "@bhaisaab/features/fixed-deposits/_shared/schemas/fixed-deposits";
 import { create } from "zustand";
 
 interface IAddFDState {

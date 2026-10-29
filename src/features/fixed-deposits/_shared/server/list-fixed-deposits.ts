@@ -1,8 +1,9 @@
-// @bhaisaab/shared/services/spreadsheet/fixed-deposits/list.ts
+import "server-only";
+
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
-import { FD_SHEET_NAME } from "./shared";
+import { FD_SHEET_NAME } from "./fd-report-sheet";
 
 /**
  * Fetches all fixed deposits from the spreadsheet

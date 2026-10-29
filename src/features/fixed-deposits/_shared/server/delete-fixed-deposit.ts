@@ -1,9 +1,10 @@
-// @bhaisaab/shared/services/spreadsheet/fixed-deposits/delete.ts
+import "server-only";
+
 import { deleteSingleRow } from "@bhaisaab/shared/server/spreadsheet/delete-single-row";
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
-import { FD_SHEET_NAME } from "./shared";
+import { FD_SHEET_NAME } from "./fd-report-sheet";
 
 /**
  * Deletes a fixed deposit from the spreadsheet by ID

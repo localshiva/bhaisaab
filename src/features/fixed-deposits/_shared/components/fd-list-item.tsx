@@ -1,10 +1,10 @@
-import { Badge } from "@bhaisaab/shared/components/core/badge";
-import { Typography } from "@bhaisaab/shared/components/core/typography";
 import {
   calculateMonthlyInterest,
   calculateTotalInterest,
   isMatured,
-} from "@bhaisaab/shared/hooks/services/fixed-deposits";
+} from "@bhaisaab/features/fixed-deposits/_shared/hooks/fixed-deposits";
+import { Badge } from "@bhaisaab/shared/components/core/badge";
+import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { cn } from "@bhaisaab/shared/utils/shadcn";
 import { CalendarClock, CalendarIcon, Percent, Wallet } from "lucide-react";

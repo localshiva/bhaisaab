@@ -1,9 +1,9 @@
-import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
 import {
   calculateTotalInterest,
   IFixedDepositRow,
   isMatured,
-} from "@bhaisaab/shared/hooks/services/fixed-deposits";
+} from "@bhaisaab/features/fixed-deposits/_shared/hooks/fixed-deposits";
+import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
 import { FC, useMemo } from "react";
 
 interface FDSummaryCardProps {

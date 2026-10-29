@@ -1,3 +1,5 @@
+import { useDeleteFixedDeposit } from "@bhaisaab/features/fixed-deposits/_shared/hooks/fixed-deposits";
+import { useAddFDStore } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-add-fd-store";
 import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
@@ -6,8 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@bhaisaab/shared/components/core/dropdown-menu";
-import { useDeleteFixedDeposit } from "@bhaisaab/shared/hooks/services/fixed-deposits";
-import { useAddFDStore } from "@bhaisaab/shared/pages/dashboard/fixed-deposits/hooks/use-add-fd-store";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { Copy, Loader2, MoreVertical, Trash2 } from "lucide-react";
