@@ -1,4 +1,3 @@
-// @bhaisaab/shared/components/app/go-back-button.tsx
 "use client";
 
 import { Button } from "@bhaisaab/shared/components/core/button";

@@ -4,7 +4,12 @@ import { NextResponse } from "next/server";
 
 const isLikelyHTML = (str: string) => /^<!doctype html>/i.test(str.trim());
 
-// Get error message based on the error type which could be Error or AxiosError
+/**
+ * Turns any thrown value into a message the user can read.
+ *
+ * Handles Axios errors from the app's API, Google API errors,
+ * `Error` objects and plain strings.
+ */
 export const getErrorMessage = (
   error: unknown,
   defaultMessage = "Something went wrong. Please retry.",
@@ -14,7 +19,7 @@ export const getErrorMessage = (
 
     const rawData = axiosError?.response?.data;
 
-    // 🛑 Check for HTML string
+    // An HTML body means the request hit a page, not an API route
     if (typeof rawData === "string" && isLikelyHTML(rawData)) {
       return "Requested API route was not found.";
     }
@@ -50,8 +55,6 @@ export const getErrorMessage = (
     return (error as Error).message;
   }
 
-  // If we don't know what the error is, return a generic message
-  // This should never happen
   return defaultMessage;
 };
 
@@ -74,6 +77,12 @@ const isGoogleAuthError = (error: unknown): boolean => {
   );
 };
 
+/**
+ * Logs an API error and builds the JSON error response the client expects.
+ *
+ * Google credential errors become a 401 with `SESSION_EXPIRED_MESSAGE`,
+ * which signs the user out.
+ */
 export const getServerError = (error: unknown) => {
   console.error("API error:", getErrorMessage(error));
 
@@ -85,7 +94,6 @@ export const getServerError = (error: unknown) => {
     );
   }
 
-  // Return appropriate error response
   return NextResponse.json(
     {
       success: false,

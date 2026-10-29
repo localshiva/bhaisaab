@@ -22,7 +22,6 @@ export const AmountSummaryItem: FC<AmountSummaryItemProps> = ({
         ₹{amount}
       </Typography>
 
-      {/* Number of months */}
       {!!subtitle && (
         <Typography variant={"caption"} textColor={"muted"}>
           {subtitle}

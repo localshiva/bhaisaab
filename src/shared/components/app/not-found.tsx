@@ -32,7 +32,6 @@ export default function NotFound() {
         </div>
 
         <div className="relative py-10">
-          {/* Decorative elements */}
           <div className="absolute inset-0 flex items-center justify-center opacity-10">
             <div className="w-40 h-40 rounded-full bg-primary animate-pulse"></div>
           </div>

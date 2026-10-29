@@ -21,7 +21,7 @@ interface PublicClientProvidersProps {
 /**
  * Sends the user to the login page when an API call reports an expired session.
  *
- * Returns true when it did, so the caller can skip its own error toast.
+ * Returns true when it did, so that the caller can skip its own error toast.
  */
 function handleSessionExpired(error: unknown): boolean {
   const isSessionExpired =
@@ -38,7 +38,6 @@ function handleSessionExpired(error: unknown): boolean {
   return isSessionExpired;
 }
 
-// Create a client
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {

@@ -5,7 +5,7 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextResponse } from "next/server";
 
 /**
- * GET handler for fetching spreadsheet data
+ * Returns the spreadsheet title and the ID and title of each sheet.
  */
 export async function GET() {
   try {

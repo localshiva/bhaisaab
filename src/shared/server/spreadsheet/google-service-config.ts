@@ -3,13 +3,15 @@ import "server-only";
 import { serverEnv } from "@bhaisaab/shared/server/server.env";
 
 /**
- * Configuration for Google services
- * These settings control how we interact with Google APIs
+ * The spreadsheet the app reads and writes,
+ * and the OAuth scopes the Google sign-in asks for.
+ *
+ * `access_type: "offline"` with `prompt: "consent"` makes Google return
+ * a refresh token on every sign-in. The token refresh in auth needs it.
  */
 export const googleServiceConfig = {
   spreadsheetId: serverEnv.GOOGLE_SPREADSHEET_ID,
 
-  // Authorization settings for Google APIs
   authorization: {
     params: {
       scope:

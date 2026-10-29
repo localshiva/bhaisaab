@@ -5,10 +5,10 @@ import { getGoogleTokens } from "@bhaisaab/shared/server/auth";
 import { google, sheets_v4 } from "googleapis";
 
 /**
- * Creates a Google Sheets API client using OAuth token from the user's session
+ * Builds a Sheets client that acts as the signed-in user.
  *
- * @param token OAuth token with Google Sheets scope
- * @returns Google Sheets API client
+ * Throws a 401 error with `SESSION_EXPIRED_MESSAGE` when there are
+ * no Google tokens, so that the client signs the user out.
  */
 export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
   const tokens = await getGoogleTokens();
@@ -21,7 +21,6 @@ export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
     throw error;
   }
 
-  // Create OAuth2 client with access token
   const oauth2Client = new google.auth.OAuth2({
     clientId: process.env.AUTH_GOOGLE_ID,
     clientSecret: process.env.AUTH_GOOGLE_SECRET,
@@ -33,7 +32,6 @@ export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
     expiry_date: (tokens.expires_at ?? 0) * 1000,
   });
 
-  // Create and return Sheets client
   return google.sheets({
     version: "v4",
     auth: oauth2Client,

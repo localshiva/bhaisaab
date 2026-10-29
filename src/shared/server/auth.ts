@@ -1,4 +1,3 @@
-// In your auth.ts file
 import "server-only";
 
 import { serverEnv } from "@bhaisaab/shared/server/server.env";
@@ -16,8 +15,8 @@ const googleProviderConfig = {
 /**
  * Gets a new Google access token using the stored refresh token.
  *
- * Returns `null` when Google rejects the refresh,
- * which makes Auth.js delete the session cookie so the user signs in again.
+ * Returns `null` when the refresh fails.
+ * Auth.js then deletes the session cookie and the user signs in again.
  */
 const refreshToken = async (token: JWT): Promise<JWT | null> => {
   try {
@@ -61,9 +60,10 @@ const refreshToken = async (token: JWT): Promise<JWT | null> => {
 };
 
 /**
- * Whether the Google access token has expired.
+ * Counts the token as expired 10 seconds early,
+ * so that a request never starts with a token about to expire.
  *
- * Counts it as expired 10 seconds early to avoid edge cases.
+ * A token without `expires_at` counts as expired.
  */
 const isTokenExpired = (token: JWT): boolean =>
   !token.expires_at || token.expires_at * 1000 <= Date.now() + 10_000;
@@ -88,7 +88,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         };
       }
 
-      // log the date and time when the token was expires
       console.info(
         "🚀 ~ Token expires at ~",
         new Date((token.expires_at ?? 0) * 1000),
@@ -128,8 +127,8 @@ export async function getUserCredentials() {
 /**
  * Reads the Google tokens from the encrypted session cookie. Server only.
  *
- * The session object is also sent to the browser,
- * so the tokens are read here instead of being stored on it.
+ * The session object is also sent to the browser.
+ * So, the tokens are read here instead of being stored on it.
  *
  * Refreshes the access token when it has expired.
  * Returns `null` when there is no session or the refresh fails.
