@@ -2,6 +2,7 @@
 import { MonthlyExpenseSummaryCard } from "@bhaisaab/features/monthly-expenses/_shared/components/monthly-expense-summary-card";
 import { MonthlyExpensesList } from "@bhaisaab/features/monthly-expenses/_shared/components/monthly-expenses-list";
 import { useMonthlyExpenses } from "@bhaisaab/features/monthly-expenses/_shared/hooks/use-monthly-expenses";
+import { getIndiaMonthStart } from "@bhaisaab/features/monthly-expenses/_shared/utils/current-month";
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { format } from "date-fns/format";
@@ -33,7 +34,7 @@ export const MonthlyExpense = () => {
         </Typography>
 
         <Typography variant={"body"}>
-          {format(new Date(), "MMMM yyyy")}
+          {format(getIndiaMonthStart(), "MMMM yyyy")}
         </Typography>
       </div>
 

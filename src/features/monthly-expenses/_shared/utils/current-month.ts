@@ -43,6 +43,17 @@ export function getIndiaMonthYear(now: Date = new Date()): {
 }
 
 /**
+ * The first day of today's month in India time, as a local date.
+ *
+ * For formatting the month only. Its time and time zone carry no meaning.
+ */
+export function getIndiaMonthStart(): Date {
+  const { month, year } = getIndiaMonthYear();
+
+  return new Date(year, month, 1);
+}
+
+/**
  * Whether a column A month is today's month in India time.
  *
  * An empty or unreadable month is never current. So, it stays locked.

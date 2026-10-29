@@ -1,4 +1,5 @@
 import { IMonthlyExpenseRow } from "@bhaisaab/features/monthly-expenses/_shared/types/monthly-expenses";
+import { getIndiaMonthStart } from "@bhaisaab/features/monthly-expenses/_shared/utils/current-month";
 import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
 import { format } from "date-fns";
 import { FC, useMemo } from "react";
@@ -56,7 +57,7 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
 
     const currentMonthLabel = currentMonthRow
       ? (currentMonthRow.data[0] ?? "")
-      : format(new Date(), "MMMM, yyyy");
+      : format(getIndiaMonthStart(), "MMMM, yyyy");
 
     return [
       {
