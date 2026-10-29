@@ -15,17 +15,17 @@ Lets the user see every month at a glance, with a summary of the latest month co
 7. A summary card titled "Expense Summary" sits above the list. Clicking its title collapses or expands it. It is open by default, and the browser remembers the choice in localStorage under the key `amount-summary-monthly-expense-summary-card`.
 8. The summary card treats the first returned row as the latest month and the second as the month before. It shows three amounts, each rounded to whole rupees.
 
-   | Title                   | Amount                 | Subtitle                                                                                                                                                                                                                             |
-   | ----------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-   | Current Month In Hand   | Column B, latest month | Column A text of the latest month. With no rows, today's month as `October, 2026`.                                                                                                                                                   |
-   | Current Month Expenses  | Column D, latest month | `+N% vs last month` or `-N% vs last month`, where N is the change in column D rounded to a whole number. "No change from last month" when N is 0, when there is no earlier month, or when the earlier month's column D is 0 or less. |
-   | Current Month Remainder | Column E, latest month | "No previous data" with no earlier month. "No change" when both remainders are equal. "Gain from last month" when the latest remainder is higher. "Loss from last month" when it is lower.                                           |
+   | Title                   | Amount                 | Subtitle                                                                                                                                                                                                                                   |
+   | ----------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+   | Current Month In Hand   | Column B, latest month | Column A text of the latest month. With no rows, today's month as `October, 2026`.                                                                                                                                                         |
+   | Current Month Expenses  | Column D, latest month | `+N% vs last month` or `-N% vs last month`, where N is the change in column D rounded to a whole number. "No change from last month" when N is 0. No subtitle when there is no earlier month or the earlier month's column D is 0 or less. |
+   | Current Month Remainder | Column E, latest month | "No previous data" with no earlier month. "No change" when both remainders are equal. "Gain from last month" when the latest remainder is higher. "Loss from last month" when it is lower.                                                 |
 
 9. Amounts on this page show as Indian rupees with Indian digit grouping, for example `₹1,25,000`. Month cards keep up to two decimals. The summary card shows whole rupees.
 10. Below the summary, a section titled "Your Monthly Expenses" shows one card per month in the order the route returns them. The grid has one column on phones, two on medium screens and three on large screens.
 11. Each month card shows the following.
     - The month as `Oct, 2026` (pattern `MMM, yyyy`), parsed from column A.
-    - A "Current" or "Past" badge, as set out in [current-month-lock.md](current-month-lock.md).
+    - A "Current", "Upcoming" or "Past" badge, as set out in [current-month-lock.md](current-month-lock.md).
     - "In Hand" from column B.
     - "Additional Payment" from column C, in green.
     - "Total Expense" from column D, in red.
@@ -44,16 +44,16 @@ Tab: `Monthly Expense`. This page reads `A1:E` with the Sheets default of format
 
 The full row layout of the tab, which every capability in this feature shares:
 
-| Row or column | Holds                | Format                                                                | Written by                                                                                     |
-| ------------- | -------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Row 1         | Header row           | Text. The app skips it.                                               | The sheet owner                                                                                |
-| Rows 2 onward | One month per row    | Oldest at the top, newest at the bottom                               | The sheet owner adds new month rows by hand                                                    |
-| A             | Month                | Displays as full month name, comma, year, for example `January, 2025` | The sheet owner. The app never writes it.                                                      |
-| B             | In Hand              | Plain number, for example `85000`                                     | The sheet owner. The app never writes it.                                                      |
-| C             | Additional Payment   | Whole number. The month's one additional payment total.               | The app, through [additional-payment.md](additional-payment.md)                                |
-| D             | Total Expense        | Plain number                                                          | A sheet formula. The app never writes it.                                                      |
-| E             | Remainder            | Plain number, may be negative                                         | The sheet formula `B + C - D`. The app never writes it.                                        |
-| F onward      | One expense per cell | Whole number. The expense's comment is the cell's note.               | The app, through [add-expense.md](add-expense.md) and [expense-details.md](expense-details.md) |
+| Row or column | Holds                                                                                | Format                                                                                         | Written by                                                                                     |
+| ------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Row 1         | Header row                                                                           | Text. The app skips it.                                                                        | The sheet owner                                                                                |
+| Rows 2 onward | One month per row                                                                    | Oldest at the top, newest at the bottom                                                        | The sheet owner adds new month rows by hand                                                    |
+| A             | Month                                                                                | Displays as full month name, comma, year, for example `January, 2025`                          | The sheet owner. The app never writes it.                                                      |
+| B             | In Hand                                                                              | Plain number, for example `85000`                                                              | The sheet owner. The app never writes it.                                                      |
+| C             | Additional Payment. The sheet's header text for this column is "Additional Expense". | Whole number. The month's one additional payment total.                                        | The app, through [additional-payment.md](additional-payment.md)                                |
+| D             | Total Expense                                                                        | Plain number                                                                                   | A sheet formula. The app never writes it.                                                      |
+| E             | Remainder                                                                            | Plain number, may be negative                                                                  | The sheet formula `B + C - D`. The app never writes it.                                        |
+| F onward      | One expense per cell                                                                 | Whole number. The expense's comment is the cell's note. A cell holding text is not an expense. | The app, through [add-expense.md](add-expense.md) and [expense-details.md](expense-details.md) |
 
 A note is the small text box Google Sheets attaches to a cell, shown when you hover over it. It is separate from the cell's value.
 
@@ -82,11 +82,15 @@ Response of `GET /api/spreadsheet/monthly-expenses`:
 - **Dev and production use the same `Monthly Expense` tab.** Which spreadsheet the app opens comes from the `GOOGLE_SPREADSHEET_ID` environment variable, not from the tab name. So, the tab name needs no switch per environment.
 - **The summary card's "latest month" is the last sheet row, not today's calendar month.** The card reads the first row the route returns, and the route returns rows in reverse sheet order. A row for today's month must exist in the sheet for the card to show today's figures.
 - **Columns B to E are read as displayed text and turned into numbers in the browser.** The list route uses the Sheets default of formatted values. So, these cells must display plain numbers for the page to read them.
+- **The column C header text stays "Additional Expense" in the sheet, while the app calls it the additional payment.** The app reads columns by position, not by header text. So, the header needs no rename.
+- **The expenses amount has no comparison line without a usable earlier month.** With no earlier month, or an earlier total of 0 or less, there is nothing to compare against. "No change from last month" would claim a comparison that was never made.
 
 ## Edge cases
 
-- **Empty tab.** The route returns no headers and no rows. The summary card shows ₹0 for all three amounts, today's month as the first subtitle, "No change from last month" and "No previous data". The list shows the empty state with the text "No monthly expenses added yet" and no "Your Monthly Expenses" heading.
-- **Only one month row.** The summary card shows "No change from last month" and "No previous data".
+- **Empty tab.** The route returns no headers and no rows. The summary card shows ₹0 for all three amounts, today's month as the first subtitle, no subtitle under the expenses amount, and "No previous data". The list shows the empty state with the text "No monthly expenses added yet" and no "Your Monthly Expenses" heading.
+- **Only one month row.** The summary card shows no subtitle under the expenses amount, and "No previous data" under the remainder.
+- **Earlier month's column D is 0 or less.** The summary card shows no subtitle under the expenses amount.
+- **Entirely empty month row.** The sheet returns no cells for it. Its card renders locked, like an unreadable column A (see [current-month-lock.md](current-month-lock.md)), with ₹0 amounts. As the latest month, the summary card shows ₹0 amounts and no month text.
 - **Missing or non-numeric value in B to E.** It shows as ₹0. A cell that displays a currency symbol or thousands separators, such as `₹85,000`, also reads as ₹0.
 - **Failed list request.** A red toast, which is a small pop-up message, shows the error from the server. The page shows "No data found" in place of the summary and list.
 - **Expired Google session.** The server answers 401 with the session-expired message. The browser signs the user out and sends them to `/auth/login?error=SessionExpired` without a toast.

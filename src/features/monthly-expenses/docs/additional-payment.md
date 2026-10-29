@@ -18,7 +18,7 @@ Lets the user record extra money received in the current month on top of the mon
 8. The route writes the amount into column C of the month's row with the Sheets `USER_ENTERED` option, which stores it as if a person had typed it. The new value replaces whatever column C held.
 9. On success the route answers `{ success: true, message: "Additional payment saved successfully" }`.
 10. While saving, the "Cancel" and "Save Payment" buttons are disabled and "Save Payment" reads "Processing...".
-11. On success the dialog closes and its field clears. The month list and that month's expense list both refresh.
+11. On success a toast reads "Additional payment saved successfully", the dialog closes and its field clears. The month list and that month's expense list both refresh.
 12. On failure the dialog stays open with the entered value.
 
 ## Data
@@ -42,6 +42,7 @@ Column layout of the tab: [month-list.md](month-list.md#data).
 
 - **The amount replaces column C. It is not added to it.** Column C holds the month's one additional payment total. The dialog says "Set Additional Payment" and "Save Payment" so that the label matches what the write does.
 - **The amount must be a whole number of at least 1, the same as an expense.** Any real amount from 1 upward is allowed. The family tracks whole rupees, and paise only add noise.
+- **A successful save shows a short success toast.** Every write in the app gives the same kind of feedback.
 
 ## Edge cases
 

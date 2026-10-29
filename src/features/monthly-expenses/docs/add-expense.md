@@ -17,15 +17,15 @@ Lets the user record one expense, with an optional comment, against the current 
 5. The dialog and `POST /api/spreadsheet/monthly-expenses/expense` check the body with the same zod schema, `AddMonthlyExpenseSchema`.
    - `rowIndex` is a positive whole number, the month's 1-based sheet row.
    - `amount` is a whole number of at least 1.
-   - `comment` is an optional string.
+   - `comment` is an optional string. The schema trims its leading and trailing spaces.
 6. The route rejects an invalid body with status 400 and the error "The expense data you provided is invalid".
 7. The route rejects a month that is not current with status 403 and the error "Only the current month can be changed.", and writes nothing (see [current-month-lock.md](current-month-lock.md)).
 8. The route reads the month's row from column F to column ZZZ as raw values. It counts filled cells from F until it meets the first empty one, and writes the amount into that empty cell.
 9. The amount is written with the Sheets `USER_ENTERED` option, which stores it as if a person had typed it into the cell.
-10. When the comment is not empty, the route stores it as the note on the same cell. An empty comment leaves the cell's note untouched.
+10. When the trimmed comment is not empty, the route stores it as the note on the same cell. An empty comment, or one of only spaces, leaves the cell's note untouched.
 11. On success the route answers `{ success: true, message: "Expense added successfully" }`.
 12. While saving, the "Cancel" and "Add Expense" buttons are disabled and "Add Expense" reads "Processing...".
-13. On success the dialog closes and its fields clear. The month list and that month's expense list both refresh.
+13. On success a toast reads "Expense added successfully", the dialog closes and its fields clear. The month list and that month's expense list both refresh.
 14. On failure the dialog stays open with the entered values.
 
 ## Data
@@ -39,11 +39,11 @@ Tab: `Monthly Expense`.
 
 Request body:
 
-| Field      | Type   | Rule                                       |
-| ---------- | ------ | ------------------------------------------ |
-| `rowIndex` | number | Whole number, 1 or more. 1-based row.      |
-| `amount`   | number | Whole number, 1 or more. Rupees, no paise. |
-| `comment`  | string | Optional                                   |
+| Field      | Type   | Rule                                              |
+| ---------- | ------ | ------------------------------------------------- |
+| `rowIndex` | number | Whole number, 1 or more. 1-based row.             |
+| `amount`   | number | Whole number, 1 or more. Rupees, no paise.        |
+| `comment`  | string | Optional. Trimmed of leading and trailing spaces. |
 
 Column layout of the tab: [month-list.md](month-list.md#data).
 
@@ -54,8 +54,13 @@ Column layout of the tab: [month-list.md](month-list.md#data).
 - **A new expense fills the first empty cell from column F, not the cell after the last one.** Deleting an expense empties its cell and leaves a gap. Filling the first gap reuses that slot instead of letting the row grow with holes.
 - **Adding and viewing both read the row from F up to ZZZ.** Both must agree on which cells hold expenses. Otherwise an add could write into a cell the details page never shows. ZZZ is the last column a Google Sheet can have.
 - **The comment is a cell note, written in a second call.** The Sheets values API cannot write notes, only `batchUpdate` can. The route skips that call when there is no comment.
+- **The comment is trimmed, the same as on edit.** Adding and editing must treat comments the same. So, a comment of only spaces never becomes a note.
+- **A successful add shows a short success toast.** Every write in the app gives the same kind of feedback.
 
 ## Edge cases
+
+- **Comment of only spaces.** It is trimmed to nothing, and no note is written.
+- **Expense cell holding text.** It counts as filled. So, the amount goes into the next empty cell and the text stays.
 
 - **Month that is not current.** The route answers 403 with "Only the current month can be changed." A red toast shows that message and the dialog stays open.
 - **Row with no expenses yet.** The amount goes into column F.

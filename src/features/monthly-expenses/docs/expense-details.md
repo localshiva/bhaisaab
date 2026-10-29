@@ -20,7 +20,7 @@ Lets the user see every single expense recorded for one month, with its comment.
 
 6. The expenses come from `GET /api/spreadsheet/monthly-expenses/expense?rowIndex={rowIndex}`.
 7. The route reads the month's row from column F to column ZZZ as raw values, then reads the notes of the same range in a second call. It also reads `A{rowIndex}` to work out `isCurrentMonth` with the rule in [current-month-lock.md](current-month-lock.md).
-8. The route answers `{ success: true, data: { isCurrentMonth, expenses } }`. `expenses` holds one item per non-empty cell, in column order from left to right. Each item has the amount as a number, the cell's note as `comment`, and the cell's 0-based `columnIndex`.
+8. The route answers `{ success: true, data: { isCurrentMonth, expenses } }`. `expenses` holds one item per cell that holds a number, in column order from left to right. Empty cells and cells holding text are skipped. Each item has the amount as a number, the cell's note as `comment`, and the cell's 0-based `columnIndex`.
 9. While the expenses load, six placeholder cards show.
 10. Each expense shows as a card with the amount in rupees, the label "Item #{n}" where n counts from 1 in display order, and the comment underneath when there is one.
 11. Cards sit in a grid of one column on phones, two on medium screens and three on large screens.
@@ -59,29 +59,29 @@ GET response `data`:
 | Field            | Type    | Meaning                                                                                             |
 | ---------------- | ------- | --------------------------------------------------------------------------------------------------- |
 | `isCurrentMonth` | boolean | Whether the row is the current month, by the rule in [current-month-lock.md](current-month-lock.md) |
-| `expenses`       | array   | One item per non-empty expense cell, left to right                                                  |
+| `expenses`       | array   | One item per expense cell that holds a number, left to right                                        |
 
 Each item in `expenses`:
 
 | Field         | Type   | Meaning                                   |
 | ------------- | ------ | ----------------------------------------- |
-| `amount`      | number | The cell's raw value                      |
+| `amount`      | number | The cell's raw numeric value              |
 | `comment`     | string | The cell's note. Absent when it has none. |
 | `columnIndex` | number | The cell's 0-based column                 |
 
 PUT body:
 
-| Field         | Type   | Rule                                       |
-| ------------- | ------ | ------------------------------------------ |
-| `rowIndex`    | number | Whole number, 1 or more. 1-based row.      |
-| `columnIndex` | number | Whole number, 0 or more. 0-based.          |
-| `amount`      | number | Whole number, 1 or more. Rupees, no paise. |
-| `comment`     | string | Optional. Missing clears the note.         |
+| Field         | Type   | Rule                                             |
+| ------------- | ------ | ------------------------------------------------ |
+| `rowIndex`    | number | Whole number, 1 or more. 1-based row.            |
+| `columnIndex` | number | Whole number, 5 or more. 0-based. Column F is 5. |
+| `amount`      | number | Whole number, 1 or more. Rupees, no paise.       |
+| `comment`     | string | Optional. Missing clears the note.               |
 
 DELETE query params:
 
 - `rowIndex` is a whole number, 1 or more, 1-based.
-- `columnIndex` is a whole number, 0 or more, 0-based.
+- `columnIndex` is a whole number, 5 or more, 0-based. Column F is 5.
 
 ## Decisions
 
@@ -91,8 +91,14 @@ DELETE query params:
 - **Edit amounts are whole numbers of at least 1, the same as adding.** The family tracks whole rupees, and paise only add noise. There is no business minimum beyond 1, and any real amount from 1 upward is allowed.
 - **Delete empties the cell instead of removing it.** Removing a cell would shift every later expense one column left. The `columnIndex` values the page already holds would then point at the wrong expenses, and the next add reuses the gap anyway.
 - **The route reads the row twice.** The Sheets values API does not return notes. So, a second call to the spreadsheet API fetches the notes for the same range.
+- **Edit and delete only reach columns F onward.** Columns A to E hold the month, In Hand, the additional payment, Total and Remainder. A `columnIndex` below 5 would overwrite or clear one of them.
+- **A cell holding text is not an expense.** Text has no amount. Listing it would show ₹NaN and break the total.
+- **Every successful write shows a short success toast.** Adding, setting the additional payment, editing and deleting all give the same kind of feedback across the app.
 
 ## Edge cases
+
+- **Missing `rowIndex` or `date` in the page URL.** The page sends no request. It shows "No month selected." with a "Back to monthly expenses" link to `/monthly-expenses`.
+- **Text in an expense cell.** The cell does not show as a card and does not count towards the count or the total.
 
 - **Month with no expenses.** The page shows "No expenses recorded". Underneath, it reads "Add your first expense to get started." when `isCurrentMonth` is `true`, and "There are no expenses recorded for this month." otherwise. The count and total line does not show.
 - **Existing expense with paise.** It shows with its decimals. Saving an edit requires changing the amount to a whole number.
@@ -101,5 +107,6 @@ DELETE query params:
 - **`rowIndex` that is not a positive whole number.** The GET answers 400 with "Invalid row index". The DELETE answers 400 with "Invalid parameters".
 - **Missing `rowIndex` or `columnIndex` on the DELETE.** The route answers 400 with "Both rowIndex and columnIndex are required".
 - **Invalid PUT body.** The route answers 400 with "The expense update data you provided is invalid".
+- **`columnIndex` below 5.** The PUT answers 400 with "The expense update data you provided is invalid". The DELETE answers 400 with "Invalid parameters". The sheet does not change.
 - **Failed request.** A red toast shows the server's error message. A failed expense fetch also shows the empty state, with the change controls hidden.
 - **Expired Google session.** The browser signs the user out to `/auth/login?error=SessionExpired` without a toast.
