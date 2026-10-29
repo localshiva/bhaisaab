@@ -14,10 +14,11 @@ const MonthlyExpenseDetails: FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const rowIndex = searchParams.get("rowIndex");
+  const rowIndex = Number(searchParams.get("rowIndex"));
   const date = searchParams.get("date");
 
-  if (!rowIndex || !date) {
+  // `Number(null)` is 0, so that a missing param fails this check too
+  if (!Number.isInteger(rowIndex) || rowIndex < 1 || !date) {
     return (
       <div className="flex flex-col items-center gap-4 max-w-6xl mx-auto p-4 py-12 text-center">
         <Typography variant="h5">No month selected.</Typography>
@@ -34,7 +35,7 @@ const MonthlyExpenseDetails: FC = () => {
 
   return (
     <MonthlyExpenseList
-      rowIndex={Number(rowIndex)}
+      rowIndex={rowIndex}
       date={decodeURIComponent(date)}
       onBack={handleBack}
     />
