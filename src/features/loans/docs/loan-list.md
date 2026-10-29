@@ -56,7 +56,7 @@ The list does not read columns E onwards. [loan-payments.md](loan-payments.md) c
 
 ## Edge cases
 
-- **Sheet with only a header row, or completely empty.** The API returns no rows. The page shows the summary card with ₹0 figures and an empty state that reads "No loans added yet" and "Add your first loan to track payments and pending amounts.", with an "Add new loan" button.
+- **Sheet with only a header row, or completely empty.** The API returns no rows. The page shows the summary card with ₹0 figures and an empty state that reads "No loans added yet" and "Add your first loan to track payments and pending amounts.", with an "Add new loan" button. That button opens the same dialog as the header's "Add new loan" button. Only one dialog opens.
 - **A cell that is not a number.** The card and the summary treat it as 0.
 - **Failed request.** A toast (a short pop-up message) shows the API's error message, and the page shows "No data found". A 500 response shows "There was an error processing your request. Please try again." instead of the API's message.
 - **Expired Google session.** The API answers 401 and the app signs the user out to `/auth/login?error=SessionExpired`.

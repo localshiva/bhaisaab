@@ -20,12 +20,12 @@ Lets the user record a payment towards a loan and see every payment made on it.
 7. The API reads the loan's pending amount from column D of row `rowIndex`. A payment larger than the pending amount gets a 400 response with the error "Payment is more than the pending amount." The API writes nothing.
 8. The API reads `Loan Report!E{rowIndex}:ZZZ{rowIndex}` as raw values. It counts the filled cells from column E up to the first empty cell, and writes the amount into that first empty cell as `USER_ENTERED`.
 9. While the request runs, both dialog buttons are disabled and the submit button reads "Processing...".
-10. On success, the dialog closes, the form resets, and both the loan list and this loan's payments refetch. No success toast appears.
+10. On success, the dialog closes, the form resets, and both the loan list and this loan's payments refetch. A success toast reads "Payment of ₹X for {provider} was added successfully".
 
 ### Viewing payments
 
 11. The "View Payments" item opens a dialog titled "Payment History for {provider}" with the description "Review all payments made towards this loan."
-12. The dialog fetches `GET /api/spreadsheet/loans/payments?rowIndex={rowIndex}`, with the same 1-based `rowIndex` as recording a payment.
+12. When it opens, the dialog fetches `GET /api/spreadsheet/loans/payments?rowIndex={rowIndex}`, with the same 1-based `rowIndex` as recording a payment. The page does not fetch payments for a loan whose dialog is closed.
 13. The API rejects the request with a 400 response in two cases.
     - `rowIndex` is missing. The error is "Row index is required".
     - `rowIndex` does not parse to a whole number of at least 2. The error is "Invalid row index".
@@ -33,7 +33,7 @@ Lets the user record a payment towards a loan and see every payment made on it.
 15. While loading, the dialog shows a spinner and "Loading payment history...".
 16. With payments, the dialog shows these parts.
     - A "Payment Summary" with "Total Payments" (the count) and "Total Amount Paid" (the sum).
-    - "Payment Details", which lists one entry per payment in column order. Each entry reads "Payment #{n}" with its amount, counting from 1.
+    - "Payment Details", which lists one entry per payment in column order. Each entry reads "Payment #{n}" with its amount, counting from 1. An entry shows no date.
 17. A "Close" button closes the dialog.
 
 ## Data
@@ -55,6 +55,9 @@ The sheet stores only the amount of each payment. It stores no date, note or pay
 - **`rowIndex` must be at least 2.** Row 1 is the header and holds no loan.
 - **Payment endpoints use a 1-based row.** They build A1 ranges such as `Loan Report!E5`, and A1 notation counts rows from 1. The delete endpoint differs, as [delete-loan.md](delete-loan.md) explains.
 - **A payment goes into the first empty cell from column E, with no column limit.** Column letters go past Z, to AA, AB and onwards. A loan can have more payments than the 22 columns from E to Z.
+- **Every successful write shows a success toast.** It gives consistent feedback across the app.
+- **A payment entry shows no date.** The sheet stores no payment dates. A date worked out in the browser would be made up.
+- **Payments are fetched only while the dialog is open.** Each loan card has its own dialog. Fetching on page load would send one request per loan that the user may never look at.
 - **Paid and pending update without the app.** Writing the payment cell is enough. The sheet recalculates columns C and D.
 
 ## Edge cases
