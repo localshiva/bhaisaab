@@ -58,7 +58,10 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
     const numRemainder = Number(remainder) || 0;
 
     const expenseDate = parseMonthYear(date);
-    const monthLabel = format(expenseDate, "MMM, yyyy");
+    // An unreadable column A keeps its own text, since format throws on an invalid date
+    const monthLabel = Number.isNaN(expenseDate.getTime())
+      ? date
+      : format(expenseDate, "MMM, yyyy");
 
     const isCurrentMonth = isCurrentIndiaMonth(date);
 
