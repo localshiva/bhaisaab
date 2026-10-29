@@ -48,7 +48,6 @@ export async function getAllMonthlyReturns(): Promise<string[][]> {
 export async function addMonthlyIncomeSource(
   sourceData: AddSourceRequest,
 ): Promise<boolean> {
-  console.info("🚀 ~ sourceData:", sourceData);
   try {
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
