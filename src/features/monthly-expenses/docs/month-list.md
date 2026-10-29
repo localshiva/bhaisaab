@@ -7,7 +7,7 @@ Lets the user see every month at a glance, with a summary of the latest month co
 ## Requirements
 
 1. The page lives at `/monthly-expenses`. The app root `/` redirects here.
-2. The page heading reads "Monthly Expenses". Next to it, today's month shows in the form `October 2026` (date-fns pattern `MMMM yyyy`).
+2. The page heading reads "Monthly Expenses". Next to it, today's month in India time (the `Asia/Kolkata` time zone) shows in the form `October 2026` (date-fns pattern `MMMM yyyy`).
 3. While the month list loads, the shared loading spinner with the text "Loading..." shows.
 4. The list comes from `GET /api/spreadsheet/monthly-expenses`. The route reads range `Monthly Expense!A1:E`, treats row 1 as the header row and returns every later row with its sheet row number.
 5. The route returns rows in reverse sheet order. The last row of the sheet comes first, which puts the newest month at the top.
@@ -17,7 +17,7 @@ Lets the user see every month at a glance, with a summary of the latest month co
 
    | Title                   | Amount                 | Subtitle                                                                                                                                                                                                                                   |
    | ----------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-   | Current Month In Hand   | Column B, latest month | Column A text of the latest month. With no rows, today's month as `October, 2026`.                                                                                                                                                         |
+   | Current Month In Hand   | Column B, latest month | Column A text of the latest month. With no rows, today's month in India time as `October, 2026`.                                                                                                                                           |
    | Current Month Expenses  | Column D, latest month | `+N% vs last month` or `-N% vs last month`, where N is the change in column D rounded to a whole number. "No change from last month" when N is 0. No subtitle when there is no earlier month or the earlier month's column D is 0 or less. |
    | Current Month Remainder | Column E, latest month | "No previous data" with no earlier month. "No change" when both remainders are equal. "Gain from last month" when the latest remainder is higher. "Loss from last month" when it is lower.                                                 |
 
@@ -81,6 +81,7 @@ Response of `GET /api/spreadsheet/monthly-expenses`:
 - **Months are listed newest first.** The current month is the one used most.
 - **Dev and production use the same `Monthly Expense` tab.** Which spreadsheet the app opens comes from the `GOOGLE_SPREADSHEET_ID` environment variable, not from the tab name. So, the tab name needs no switch per environment.
 - **The summary card's "latest month" is the last sheet row, not today's calendar month.** The card reads the first row the route returns, and the route returns rows in reverse sheet order. A row for today's month must exist in the sheet for the card to show today's figures.
+- **The heading and the empty summary use India time, the same as the lock.** On a device outside India, the device clock can sit in a different month from India around midnight on the 1st. The heading would then name a different month from the card marked "Current".
 - **Columns B to E are read as displayed text and turned into numbers in the browser.** The list route uses the Sheets default of formatted values. So, these cells must display plain numbers for the page to read them.
 - **The column C header text stays "Additional Expense" in the sheet, while the app calls it the additional payment.** The app reads columns by position, not by header text. So, the header needs no rename.
 - **The expenses amount has no comparison line without a usable earlier month.** With no earlier month, or an earlier total of 0 or less, there is nothing to compare against. "No change from last month" would claim a comparison that was never made.
