@@ -19,6 +19,7 @@ import { Label } from "@bhaisaab/shared/components/core/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export const AddLoanForm = () => {
   const { isAddLoanOpen, toggleAddLoan, closeAddLoan } = useAddLoanModalStore();
@@ -35,6 +36,7 @@ export const AddLoanForm = () => {
   const onSubmit = (data: AddLoanRequest) => {
     addLoan(data, {
       onSuccess: () => {
+        toast.success(`Loan from ${data.provider} was added successfully`);
         closeAddLoan();
         reset();
       },

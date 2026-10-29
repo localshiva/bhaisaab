@@ -15,6 +15,7 @@ import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 interface LoanPaymentFormProps {
@@ -54,6 +55,9 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
       { rowIndex, amount: data.amount },
       {
         onSuccess: () => {
+          toast.success(
+            `Payment of ${formatCurrency(data.amount)} for ${provider} was added successfully`,
+          );
           toggleOpen(false);
           reset();
         },
