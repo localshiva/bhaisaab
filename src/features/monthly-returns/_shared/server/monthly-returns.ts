@@ -61,10 +61,12 @@ export async function getAllMonthlyReturns(): Promise<string[][]> {
  * Values go in as RAW, so that the sheet parses nothing.
  * A source such as "=..." or "007" stays text, as typed,
  * and the amount is stored as the number it was sent as.
+ *
+ * Throws on any failure.
  */
 export async function addMonthlyIncomeSource(
   sourceData: AddSourceRequest,
-): Promise<boolean> {
+): Promise<void> {
   try {
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
@@ -88,8 +90,6 @@ export async function addMonthlyIncomeSource(
         values: [[sourceData.type, sourceData.source, sourceData.amount]],
       },
     });
-
-    return true;
   } catch (error) {
     console.error("Error adding source:", error);
     throw error;
@@ -102,10 +102,12 @@ export async function addMonthlyIncomeSource(
  * @param deleteData `id` is the 0-based sheet row, where the header is 0.
  *                   `source` must match the row's column B,
  *                   which guards against deleting a row that moved.
+ *
+ * Throws on any failure.
  */
 export async function deleteMonthlyIncomeSource(
   deleteData: DeleteSourceRequest,
-): Promise<boolean> {
+): Promise<void> {
   try {
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
@@ -140,8 +142,6 @@ export async function deleteMonthlyIncomeSource(
     }
 
     await deleteSingleRow(sheetsClient, spreadsheetId, sheetId, deleteData.id);
-
-    return true;
   } catch (error) {
     console.error("Error deleting source:", error);
     throw error;

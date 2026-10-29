@@ -58,20 +58,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const success = await addMonthlyIncomeSource(result.data);
-
-    if (!success) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Failed to add source",
-        },
-        { status: 400 },
-      );
-    }
+    await addMonthlyIncomeSource(result.data);
 
     return NextResponse.json({
-      success,
+      success: true,
       message: "Source added successfully",
     });
   } catch (error) {
@@ -100,20 +90,10 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const success = await deleteMonthlyIncomeSource(result.data);
-
-    if (!success) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Failed to delete source",
-        },
-        { status: 400 },
-      );
-    }
+    await deleteMonthlyIncomeSource(result.data);
 
     return NextResponse.json({
-      success,
+      success: true,
       message: "Source deleted successfully",
     });
   } catch (error) {
