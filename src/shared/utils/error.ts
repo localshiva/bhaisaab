@@ -31,7 +31,7 @@ export const getErrorMessage = (
     return (rawData as { error?: string })?.error ?? defaultMessage;
   }
 
-  if ((error as { data: { error_description: string } }).data) {
+  if (typeof error === "object" && error !== null && "data" in error) {
     const googleError = error as {
       data?: { error_description?: string; error?: string };
     };
