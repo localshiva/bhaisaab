@@ -55,7 +55,7 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
         },
         onError: (err: Error) => {
           // The mutation cache shows the error toast.
-          console.error("Failed to add payment:", err);
+          console.error("Failed to set additional payment:", err);
         },
       },
     );
@@ -65,9 +65,9 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
     <Dialog open={isOpen} onOpenChange={toggleOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add Additional Payment for {date}</DialogTitle>
+          <DialogTitle>Set Additional Payment for {date}</DialogTitle>
           <DialogDescription>
-            Record an additional payment for this month.
+            Replaces any additional payment already entered for this month.
           </DialogDescription>
         </DialogHeader>
 
@@ -132,7 +132,7 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Processing..." : "Add Payment"}
+              {isLoading ? "Processing..." : "Save Payment"}
             </Button>
           </DialogFooter>
         </form>

@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: "Failed to add additional payment",
+          message: "Failed to set additional payment",
         },
         { status: 400 },
       );
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Additional payment added successfully",
+      message: "Additional payment saved successfully",
     });
   } catch (error) {
     return getServerError(error);

@@ -4,7 +4,7 @@ import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { cn } from "@bhaisaab/shared/utils/shadcn";
 import { format } from "date-fns";
-import { CalendarDays, Plus, Receipt } from "lucide-react";
+import { CalendarDays, Pencil, Plus, Receipt } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, memo, useCallback } from "react";
 import { useToggle } from "react-use";
@@ -245,7 +245,7 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
                 onClick={onAddPayment}
                 aria-disabled={!isCurrentMonth}
               >
-                <Plus className="size-4" />
+                <Pencil className="size-4" />
                 Addn. Payment
               </Button>
               <Button
