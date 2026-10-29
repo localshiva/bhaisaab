@@ -3,6 +3,9 @@ import { z } from "zod";
 /**
  * Fields the user enters for an expense.
  * The amount is whole rupees. The comment is stored as the cell's note.
+ *
+ * The comment is trimmed, the same as on edit.
+ * So, a comment of only spaces never becomes a note.
  */
 export const BaseMonthlyExpenseSchema = z.object({
   amount: z
@@ -13,7 +16,7 @@ export const BaseMonthlyExpenseSchema = z.object({
     .positive("Amount must be greater than 0")
     .int("Amount must be a whole number")
     .min(1, "Amount must be at least 1"),
-  comment: z.string().optional(),
+  comment: z.string().trim().optional(),
 });
 
 /** Body of the add expense request, validated by the form and the route. */
