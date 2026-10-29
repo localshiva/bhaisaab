@@ -46,7 +46,7 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
     }
 
     const currentMonthLabel = currentMonthRow
-      ? currentMonthRow.data[0]
+      ? (currentMonthRow.data[0] ?? "")
       : format(new Date(), "MMMM, yyyy");
 
     return [

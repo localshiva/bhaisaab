@@ -26,11 +26,11 @@ export const MonthlyExpensesList: FC<MonthlyExpensesListProps> = ({ rows }) => {
           <MonthlyExpenseListItem
             key={`monthly-expense-${row.originalRowIndex}`}
             originalRowIndex={row.originalRowIndex}
-            date={row.data[0]}
-            inHand={row.data[1]}
-            additionalPayment={row.data[2]}
-            totalExpense={row.data[3]}
-            remainder={row.data[4]}
+            date={row.data[0] ?? ""}
+            inHand={row.data[1] ?? ""}
+            additionalPayment={row.data[2] ?? ""}
+            totalExpense={row.data[3] ?? ""}
+            remainder={row.data[4] ?? ""}
           />
         ))}
       </div>

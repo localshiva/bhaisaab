@@ -11,9 +11,14 @@ export interface IMonthlyExpenseDetails {
   expenses: IMonthlyExpense[];
 }
 
-/** A month row as listed by the monthly expenses route. */
+/**
+ * A month row as listed by the monthly expenses route.
+ *
+ * Sheets drops trailing empty cells. So, `data` can be shorter than
+ * five items, and an entirely empty row arrives as an empty array.
+ */
 export interface IMonthlyExpenseRow {
-  data: string[]; // [date, inHand, additionalPayment, totalExpense, remainder]
+  data: (string | undefined)[]; // [date, inHand, additionalPayment, totalExpense, remainder]
   originalRowIndex: number; // 1-based sheet row
 }
 
