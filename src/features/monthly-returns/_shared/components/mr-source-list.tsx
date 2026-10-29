@@ -1,6 +1,7 @@
 import { IMonthlyReturnsRow } from "@bhaisaab/features/monthly-returns/_shared/types/monthly-returns";
 import { getTotalIncome } from "@bhaisaab/features/monthly-returns/_shared/utils/income";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
+import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { FC, useMemo } from "react";
 
 import { MRSourceListItem } from "./mr-source-list-item";
@@ -40,7 +41,7 @@ export const MRSourceList: FC<MRSourceListProps> = ({ rows }) => {
             </Typography>
           </Typography>
           <Typography variant="body" weight={"bold"}>
-            ₹{totalIncome.sum}
+            {formatCurrency(totalIncome.sum)}
           </Typography>
         </div>
       </div>

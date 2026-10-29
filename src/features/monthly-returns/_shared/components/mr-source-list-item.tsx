@@ -2,6 +2,7 @@ import { useDeleteMonthlySource } from "@bhaisaab/features/monthly-returns/_shar
 import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
+import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { BanknoteArrowUp, Loader2, Trash2 } from "lucide-react";
 import { FC, useState } from "react";
 import { useToggle } from "react-use";
@@ -60,7 +61,7 @@ export const MRSourceListItem: FC<MRSourceListItemProps> = ({
 
       <div className="flex items-center gap-2">
         <Typography variant={"body"} weight={"semibold"}>
-          ₹{Number.parseInt(amount, 10).toLocaleString()}
+          {formatCurrency(Number(amount))}
         </Typography>
 
         <Button
