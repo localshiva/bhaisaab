@@ -43,6 +43,12 @@ Row 1 is the header row. Sources start at row 2. Columns D to Z are read and ign
 
 Row 2 also holds three totals in `G2:I2`, with their labels `Total Income`, `Total Salary` and `Total Rent` in `G1:I1`. The sheet maintains these cells with its own formulas, and they are a sheet contract.
 
+| Cell | Formula                        |
+| ---- | ------------------------------ |
+| G2   | `=SUM(C2:C)`                   |
+| H2   | `=SUMIF(A2:A, "Salary", C2:C)` |
+| I2   | `=SUMIF(A2:A, "Rent", C2:C)`   |
+
 - The app never writes to columns G, H or I.
 - The app never treats `G:I` values as a source. They reach the page inside the row 2 array and are ignored there, like the rest of columns D to Z.
 
