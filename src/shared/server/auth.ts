@@ -88,11 +88,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         };
       }
 
-      console.info(
-        "🚀 ~ Token expires at ~",
-        new Date((token.expires_at ?? 0) * 1000),
-      );
-
       return isTokenExpired(token) ? refreshToken(token) : token;
     },
     session({ session }) {
