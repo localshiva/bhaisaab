@@ -13,14 +13,15 @@ Lets the user add a fixed deposit, either from a blank form or by copying an exi
    - Amount 0 and interest rate 0, shown as empty fields.
    - Deposit date today.
    - Maturity date one year after today.
+   - "Today" is the date when the dialog opens, not when the page loaded.
 3. "Deposit Amount" is a whole number of rupees, in a number field with `min` 1 and `step` 1. Typing a value below 1 turns it into 1. Clearing the field sets the amount to 0, which fails validation.
 4. "Interest Rate (%)" is a number field with `min` 0.01 and `step` 0.01. Typing keeps the value between 0.01 and 100. Clearing the field sets the rate to 0, which fails validation.
-5. "Deposit Date" is a date field. Clicking it opens the browser's date picker. Changing it sets the maturity date to one year after the new deposit date.
+5. "Deposit Date" is a date field. Clicking it opens the browser's date picker. Changing it to a valid date sets the maturity date to one year after the new deposit date.
 6. The maturity date is set through two number fields.
    - "Years", from 0 to 20.
    - "Months", from 0 to 11.
    - Each shows the gap between the deposit date and the current maturity date. Changing either one sets the maturity date to the deposit date plus those years and months.
-7. Below them, the form shows "Matures on {date}", in the format `MMM d, yyyy`, for example "Apr 15, 2026".
+7. Below them, the form shows "Matures on {date}", in the format `MMM d, yyyy`, for example "Apr 15, 2026". The line is hidden while the maturity date is not a valid date.
 
 ### Validation
 
@@ -41,13 +42,13 @@ Lets the user add a fixed deposit, either from a blank form or by copying an exi
     - Cells A to D get the amount as a number, the rate as a number, `=DATEVALUE("{depositDate}")` and `=DATEVALUE("{maturityDate}")`.
     - Cells A to D get a light grey background, red, green and blue each 0.95.
 13. While the request runs, both dialog buttons are disabled and the submit button reads "Creating...".
-14. On success, the dialog closes, the form returns to the blank values, any copied values are dropped, and the deposit list refetches. No success toast appears.
+14. On success, the dialog closes, the form returns to the blank values, any copied values are dropped, and the deposit list refetches. A success toast reads "Fixed deposit of ₹X was created successfully". A saved copy shows the same toast.
 15. Closing the dialog any other way, with "Cancel", the Escape key or a click outside, also returns the form to the blank values and drops any copied values.
 
 ### Copy
 
 16. The "Copy" item in a deposit card's menu opens the same dialog, prefilled with that deposit's amount, interest rate, deposit date and maturity date.
-17. Copy passes the dates as the sheet returned them. The form turns each one into `YYYY-MM-DD` with `format(new Date(sheetDate), "yyyy-MM-dd")`.
+17. Copy passes the dates as the sheet returned them. The form turns each one into `YYYY-MM-DD` with `format(new Date(sheetDate), "yyyy-MM-dd")`. A date that `new Date` cannot parse keeps the blank form's value for that field.
 18. Saving a copied deposit adds a new row. The original row is not changed.
 
 ## Data
@@ -66,6 +67,8 @@ The full layout is in [deposit-list.md](deposit-list.md).
 ## Decisions
 
 - **The amount is whole rupees, at least 1.** The family tracks whole rupees, and paise add noise. The interest rate keeps its decimals.
+- **Every successful write shows a success toast.** Creating a deposit, including from Copy, confirms with a short toast. It gives consistent feedback across the app.
+- **"Today" is worked out when the dialog opens.** A value worked out once when the page loaded would go stale if the page stays open past midnight.
 - **Changing the deposit date resets the term to 1 year.** 1 year is the most common term.
 - **The term is 1 month to 20 years.** It covers the terms banks offer.
 - **New rows get a light grey background.** It marks rows the app added, as opposed to rows typed by hand.
@@ -76,6 +79,8 @@ The full layout is in [deposit-list.md](deposit-list.md).
 
 - **Empty sheet.** The deposit goes into row 2, below the header row.
 - **Gaps in column A.** The new deposit goes below the last filled cell in column A. A gap above it stays empty.
+- **Cleared or invalid deposit date.** The form keeps working. The maturity date keeps its value, "Years" and "Months" show 0, and changing them does nothing until the deposit date is valid again. Submitting shows "Date must be in YYYY-MM-DD format" under the deposit date and sends no request.
+- **Copy of a deposit whose sheet date cannot be parsed.** That date field keeps the blank form's value, today for the deposit date and one year later for the maturity date. The user can then pick the right date.
 - **Invalid input.** The form shows the field's error message and does not send the request.
 - **Failed request.** A toast shows the API's error message. A 500 response shows "There was an error processing your request. Please try again." instead. The dialog stays open with the values the user entered.
 - **`FD Report` tab missing.** The API answers 500 with the error "Sheet FD Report not found".

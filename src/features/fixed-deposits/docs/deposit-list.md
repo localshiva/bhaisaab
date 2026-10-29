@@ -74,6 +74,6 @@ No column holds a sheet-computed total. The app computes all interest in the bro
 
 ## Edge cases
 
-- **Sheet with only a header row, or completely empty.** The API returns no rows. The page shows the summary card with ₹0 figures and "0 active, 0 matured", and an empty state that reads "No fixed deposits yet" and "Create your first fixed deposit to track interest and maturity.", with an "Add new" button.
+- **Sheet with only a header row, or completely empty.** The API returns no rows. The page shows the summary card with ₹0 figures and "0 active, 0 matured", and an empty state that reads "No fixed deposits yet" and "Create your first fixed deposit to track interest and maturity.", with an "Add new" button. That button opens the same dialog as the header's "Add new" button. Only one dialog opens.
 - **Failed request.** A toast (a short pop-up message) shows the API's error message. A 500 response shows "There was an error processing your request. Please try again." instead. The page then shows the same view as an empty sheet.
 - **Expired Google session.** The API answers 401 and the app signs the user out to `/auth/login?error=SessionExpired`.

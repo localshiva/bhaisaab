@@ -13,7 +13,7 @@ Lets the user remove a fixed deposit.
    - `id` is not a whole number, or is less than 1. The error is "Fixed deposit ID should be a row number".
 4. The API looks up the numeric id of the `FD Report` tab, then removes the whole row with a `deleteDimension` request. `deleteDimension` is the Sheets request that deletes rows and shifts the rows below it up.
 5. While the request runs, the delete item in the card's menu is disabled and reads "Deleting...".
-6. On success, the deposit list refetches. No success toast appears.
+6. On success, a success toast reads "Fixed deposit of ₹X was deleted successfully", and the deposit list refetches.
 
 ## Data
 
@@ -21,6 +21,7 @@ Sheet tab `FD Report`. The API deletes one whole row. Rows below it move up by o
 
 ## Decisions
 
+- **Every successful write shows a success toast.** It gives consistent feedback across the app.
 - **The API rejects ids that are not whole numbers or that point at the header row.** The id goes straight to `deleteDimension`, which counts rows from 0. Row 0 is the header row, and deleting it would break the sheet's column labels. A fractional id names no row.
 
 ## Edge cases
