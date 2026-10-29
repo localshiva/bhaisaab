@@ -120,18 +120,6 @@ export const Login: FC<LoginProps> = ({ error }) => {
               </Typography>
             </div>
           </div>
-
-          <div className="mt-8 border-t border-border pt-6 text-center">
-            <span className="flex items-center justify-center gap-1">
-              <Typography variant="small" textColor="muted">
-                Need help?
-              </Typography>
-
-              <Typography variant="small" textColor="link">
-                <a href="mailto:admin@example.com">Contact support</a>
-              </Typography>
-            </span>
-          </div>
         </div>
       </div>
     </div>
