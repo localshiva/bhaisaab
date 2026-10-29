@@ -3,8 +3,10 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * DELETE handler for removing a fixed deposit by ID
- * Designed to be idempotent - returns success even if record doesn't exist
+ * Deletes the FD Report row at the 0-based sheet row given as `id`.
+ *
+ * The id is a row position, not a stable key. So, it must come from
+ * a list fetched after the last delete.
  */
 export async function DELETE(
   _: NextRequest,
@@ -35,11 +37,8 @@ export async function DELETE(
       );
     }
 
-    // Call service to delete the fixed deposit
-    // id is a string when we recieve it from param, so convert to number
     await deleteFixedDeposit(rowId);
 
-    // Return success regardless of whether the record existed
     return NextResponse.json({
       success: true,
       message: "Fixed deposit deleted successfully",

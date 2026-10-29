@@ -10,7 +10,6 @@ export const FDList = ({ rows }: FDListItemProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {rows.map(row => {
-        // Map column indexes to named properties
         const amountIndex = 0;
         const interestRateIndex = 1;
         const depositDateIndex = 2;

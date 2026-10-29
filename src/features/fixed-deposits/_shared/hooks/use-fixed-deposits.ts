@@ -5,7 +5,7 @@ import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useQuery } from "@tanstack/react-query";
 
 /**
- * Hook for fetching all fixed deposits
+ * Fetches the FD Report header and deposits, newest first.
  */
 export function useFixedDeposits() {
   return useQuery({

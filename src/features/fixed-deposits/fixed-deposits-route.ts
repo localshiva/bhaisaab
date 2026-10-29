@@ -5,11 +5,11 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * GET handler for fetching all fixed deposits
+ * Returns the FD Report header row and its deposits, newest first.
+ * Each row carries the `originalRowIndex` that the delete route expects.
  */
 export async function GET() {
   try {
-    // Get fixed deposits data using the service
     const values = await listFixedDeposits();
 
     if (values.length === 0) {
@@ -19,12 +19,11 @@ export async function GET() {
       });
     }
 
-    // Add original row index to each row before reversing
     const rowsWithIndex = values
       .slice(1)
       .map((row, index) => ({
         data: row,
-        originalRowIndex: index + 1, // +2 for header row and 1-based indexing
+        originalRowIndex: index + 1, // 0-based sheet row; row 0 is the header.
       }))
       .reverse();
 
@@ -41,14 +40,13 @@ export async function GET() {
 }
 
 /**
- * POST handler for creating a new fixed deposit
+ * Validates the body against `CreateFixedDepositSchema` and appends the
+ * deposit.
  */
 export async function POST(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = (await request.json()) as unknown;
 
-    // Validate against schema
     const result = CreateFixedDepositSchema.safeParse(body);
 
     if (!result.success) {
@@ -62,7 +60,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call service to create the fixed deposit
     const success = await createFixedDeposit(result.data);
 
     return NextResponse.json({

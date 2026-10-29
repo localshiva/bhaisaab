@@ -7,20 +7,16 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 import { FD_SHEET_NAME } from "./fd-report-sheet";
 
 /**
- * Deletes a fixed deposit from the spreadsheet by ID
+ * Removes a row from the FD Report sheet. The rows below it shift up.
  *
- * @param depositId ID of the fixed deposit to delete (typically row number or unique identifier)
- * @returns A boolean indicating success
+ * @param depositId 0-based sheet row of the deposit, header row included.
  */
 export async function deleteFixedDeposit(depositId: number): Promise<boolean> {
   try {
-    // Create the Google Sheets client
     const sheetsClient = await createSheetsClient();
 
-    // Get the configured spreadsheet ID
     const { spreadsheetId } = googleServiceConfig;
 
-    // Get the sheet ID for operations
     const spreadsheetInfo = await sheetsClient.spreadsheets.get({
       spreadsheetId,
       ranges: [FD_SHEET_NAME],
@@ -32,8 +28,6 @@ export async function deleteFixedDeposit(depositId: number): Promise<boolean> {
       throw new Error(`Sheet ${FD_SHEET_NAME} not found`);
     }
 
-    // Since depositId is directly the row number and sheetId is known to be 1
-    // Delete the row using batchUpdate
     await deleteSingleRow(sheetsClient, spreadsheetId, sheetId, depositId);
 
     return true;

@@ -3,7 +3,8 @@ import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 /**
- * Hook for deleting a fixed deposit
+ * Deletes a deposit by its `originalRowIndex`, then refetches the
+ * deposit list.
  */
 export function useDeleteFixedDeposit() {
   const queryClient = useQueryClient();
@@ -11,7 +12,7 @@ export function useDeleteFixedDeposit() {
   const mutation = useMutation<
     { success: boolean; message: string },
     Error,
-    number // ID of the fixed deposit to delete
+    number
   >({
     mutationFn: async (depositId: number) => {
       const { data } = await httpClient.delete<{
@@ -21,7 +22,6 @@ export function useDeleteFixedDeposit() {
       return data;
     },
     onSuccess: () => {
-      // Invalidate and refetch fixed deposits query after successful deletion
       void queryClient.invalidateQueries({ queryKey: fixedDepositsQueryKey });
     },
     meta: {

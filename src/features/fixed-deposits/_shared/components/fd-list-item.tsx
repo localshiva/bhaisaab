@@ -22,11 +22,9 @@ interface FDListItemProps {
 
 export const FDListItem: FC<FDListItemProps> = memo(
   ({ originalRowIndex, amount, interestRate, depositDate, maturityDate }) => {
-    // Convert string values to numbers
     const numAmount = Number.parseFloat(amount);
     const numInterestRate = Number.parseFloat(interestRate);
 
-    // Calculate interest and status
     const monthlyInterest = calculateMonthlyInterest(
       numAmount,
       numInterestRate,
@@ -39,11 +37,9 @@ export const FDListItem: FC<FDListItemProps> = memo(
     );
     const matured = isMatured(maturityDate);
 
-    // Format dates for display
     const formattedDepositDate = new Date(depositDate).toLocaleDateString();
     const formattedMaturityDate = new Date(maturityDate).toLocaleDateString();
 
-    // Calculate days remaining until maturity
     const daysUntilMaturity = Math.max(
       0,
       Math.ceil(
@@ -55,13 +51,11 @@ export const FDListItem: FC<FDListItemProps> = memo(
       <div
         className={`border rounded-lg overflow-hidden shadow-sm bg-card hover:shadow-md transition-shadow flex flex-col ${matured ? "border-amber-300/30" : "border-green-300/30"}`}
       >
-        {/* Top colored strip based on status */}
         <div
           className={`h-1 w-full ${matured ? "bg-amber-500" : "bg-green-500"}`}
         />
 
         <div className="p-5">
-          {/* Header with amount and badge */}
           <div className="flex justify-between items-start mb-5">
             <div>
               <Typography
@@ -87,7 +81,6 @@ export const FDListItem: FC<FDListItemProps> = memo(
                 {matured ? "Matured" : "Active"}
               </Badge>
 
-              {/* Delete Dialog */}
               <FDListItemActions
                 id={originalRowIndex}
                 amount={numAmount}
@@ -98,7 +91,6 @@ export const FDListItem: FC<FDListItemProps> = memo(
             </div>
           </div>
 
-          {/* Interest rate and monthly interest side by side */}
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="bg-card/50 rounded-lg p-3 border">
               <div className="flex items-center mb-1">
@@ -125,9 +117,7 @@ export const FDListItem: FC<FDListItemProps> = memo(
             </div>
           </div>
 
-          {/* Dates and progress */}
           <div className="space-y-4">
-            {/* Date information */}
             <div className="flex justify-between border-t pt-4">
               <div className="flex items-center">
                 <CalendarIcon className="size-3.5 mr-1.5 text-muted-foreground" />
@@ -143,7 +133,6 @@ export const FDListItem: FC<FDListItemProps> = memo(
               </div>
             </div>
 
-            {/* Progress indicator */}
             <div className="space-y-1">
               <div className="flex justify-between items-center">
                 <Typography variant="small" textColor="muted">
@@ -170,7 +159,6 @@ export const FDListItem: FC<FDListItemProps> = memo(
               </div>
             </div>
 
-            {/* Total Interest */}
             <div
               className={`mt-4 p-4 rounded-lg ${matured ? "bg-amber-50 dark:bg-amber-950/20" : "bg-green-50 dark:bg-green-950/20"}`}
             >

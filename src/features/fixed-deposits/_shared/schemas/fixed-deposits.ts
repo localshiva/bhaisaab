@@ -1,14 +1,16 @@
 import { addMonths, addYears } from "date-fns";
 import { z } from "zod";
 
-// Helper function to ensure date is in YYYY-MM-DD format
 const dateStringValidator = z
   .string()
   .refine(val => /^\d{4}-\d{2}-\d{2}$/.test(val), {
     message: "Date must be in YYYY-MM-DD format",
   });
 
-// Define a Zod schema for creating a fixed deposit
+/**
+ * Request body for creating a deposit. The term must be between one
+ * month and twenty years.
+ */
 export const CreateFixedDepositSchema = z
   .object({
     amount: z
@@ -59,7 +61,6 @@ export const CreateFixedDepositSchema = z
     },
   );
 
-// Type inference from the Zod schema
 export type CreateFixedDepositRequest = z.infer<
   typeof CreateFixedDepositSchema
 >;

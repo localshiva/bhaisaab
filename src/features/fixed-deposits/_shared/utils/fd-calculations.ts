@@ -1,15 +1,18 @@
 /**
- * Calculates monthly interest for a fixed deposit
+ * Simple (not compounded) interest for one month.
+ *
+ * @param interestRate Annual rate as a percentage, such as 7.5.
  */
 export function calculateMonthlyInterest(
   amount: number,
   interestRate: number,
 ): number {
-  return (amount * interestRate) / 1200; // 1200 = 12 months * 100 (to convert percentage)
+  return (amount * interestRate) / 1200; // 12 months x 100 percent
 }
 
 /**
- * Calculates total expected interest for a fixed deposit
+ * Simple interest over the whole term. The term is counted in whole
+ * calendar months, ignoring the day of the month.
  */
 export function calculateTotalInterest(
   amount: number,
@@ -20,7 +23,6 @@ export function calculateTotalInterest(
   const startDate = new Date(depositDate);
   const endDate = new Date(maturityDate);
 
-  // Calculate months between deposit and maturity (approximate)
   const months =
     (endDate.getFullYear() - startDate.getFullYear()) * 12 +
     (endDate.getMonth() - startDate.getMonth());
@@ -30,7 +32,7 @@ export function calculateTotalInterest(
 }
 
 /**
- * Determines if a fixed deposit is matured based on maturity date
+ * True once the maturity date has passed or is today.
  */
 export function isMatured(maturityDate: string): boolean {
   const today = new Date();

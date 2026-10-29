@@ -53,21 +53,19 @@ export const FDCreateForm = () => {
   const onSubmit = (data: CreateFixedDepositRequest) => {
     createFixedDeposit(data, {
       onSuccess: () => {
-        // Close dialog and reset form on success
         closeAddFD();
         reset(INITIAL_VALUES);
         clearDefaultValues();
       },
       onError: err => {
         console.error("Failed to create fixed deposit:", err);
-        // Error handling is done by the hook and toast notifications
+        // The mutation's toast meta shows the error to the user.
       },
     });
   };
 
   useEffect(() => {
     if (defaultValues && isAddFDOpen) {
-      // Apply the values to the form
       setValue("amount", defaultValues.amount);
       setValue("interestRate", defaultValues.interestRate);
 
@@ -87,7 +85,7 @@ export const FDCreateForm = () => {
     }
   }, [defaultValues, isAddFDOpen, setValue]);
 
-  // Reset default values when the dialog is closed
+  // Closing the dialog drops any values copied from another deposit.
   useEffect(() => {
     if (!isAddFDOpen) {
       reset(INITIAL_VALUES);
@@ -105,7 +103,6 @@ export const FDCreateForm = () => {
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">
-        {/* Header */}
         <DialogHeader>
           <DialogTitle>Add new fixed deposit</DialogTitle>
           <DialogDescription>
@@ -114,9 +111,7 @@ export const FDCreateForm = () => {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Form */}
           <div className="grid gap-4 py-4">
-            {/* Amount */}
             <div className="grid gap-2">
               <Controller
                 name="amount"
@@ -141,7 +136,6 @@ export const FDCreateForm = () => {
                       placeholder="Enter amount"
                       aria-invalid={!!errors.amount}
                       onChange={e => {
-                        // Ensure we always have a positive number
                         const inputValue = e.target.value;
                         const numValue =
                           inputValue === ""
@@ -163,7 +157,6 @@ export const FDCreateForm = () => {
               />
             </div>
 
-            {/* Interest Rate */}
             <div className="grid gap-2">
               <Controller
                 name="interestRate"
@@ -207,7 +200,6 @@ export const FDCreateForm = () => {
               />
             </div>
 
-            {/* Deposit Date */}
             <div className="grid gap-2">
               <Controller
                 name="depositDate"
@@ -231,10 +223,9 @@ export const FDCreateForm = () => {
                       onClick={e => e.currentTarget.showPicker()}
                       aria-invalid={errors.depositDate ? "true" : "false"}
                       onChange={e => {
-                        // First, update the deposit date field
                         onChange(e);
 
-                        // Update the maturity date field
+                        // Default to a one-year term.
                         setValue(
                           "maturityDate",
                           format(
@@ -256,7 +247,6 @@ export const FDCreateForm = () => {
               />
             </div>
 
-            {/* Maturity Date */}
             <div className="grid gap-2">
               <Controller
                 name="maturityDate"
@@ -355,7 +345,6 @@ export const FDCreateForm = () => {
             </div>
           </div>
 
-          {/* Footer */}
           <DialogFooter>
             <Button
               type="button"

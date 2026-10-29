@@ -5,7 +5,7 @@ import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 /**
- * Hook for creating a new fixed deposit
+ * Appends a deposit row, then refetches the deposit list.
  */
 export function useCreateFixedDeposit() {
   const queryClient = useQueryClient();
@@ -19,7 +19,6 @@ export function useCreateFixedDeposit() {
       return data;
     },
     onSuccess: () => {
-      // Invalidate and refetch fixed deposits query after successful mutation
       void queryClient.invalidateQueries({ queryKey: fixedDepositsQueryKey });
     },
     meta: {

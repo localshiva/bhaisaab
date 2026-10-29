@@ -16,7 +16,8 @@ import { useToggle } from "react-use";
 import { toast } from "sonner";
 
 interface FDListItemActionsProps {
-  id: number; // Added ID for delete functionality
+  /** The deposit's `originalRowIndex`. */
+  id: number;
   amount: number;
   interestRate: number;
   depositDate: string;
@@ -46,7 +47,6 @@ export const FDListItemActions: FC<FDListItemActionsProps> = ({
     toggleOpen(false);
   };
 
-  // Handle delete action
   const handleDelete = () => {
     if (typeof id === "number") {
       deleteFixedDeposit(id);
@@ -66,7 +66,7 @@ export const FDListItemActions: FC<FDListItemActionsProps> = ({
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-40">
-          {/* Copy to create a new fixed deposit */}
+          {/* Opens the create form prefilled with this deposit. */}
           <DropdownMenuItem onClick={onCopy}>
             <Copy className="mr-2 h-4 w-4" />
             <span>Copy</span>
@@ -74,7 +74,6 @@ export const FDListItemActions: FC<FDListItemActionsProps> = ({
 
           <DropdownMenuSeparator />
 
-          {/* Delete */}
           <DropdownMenuItem
             onClick={onDelete}
             variant="destructive"

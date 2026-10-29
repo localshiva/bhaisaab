@@ -12,13 +12,9 @@ interface FDSummaryCardProps {
 
 export const FDSummaryCard: FC<FDSummaryCardProps> = ({ rows }) => {
   const summaryData = useMemo(() => {
-    // Total active investment amount
     let activeAmount = 0;
-    // Total expected interest (from active deposits)
     let totalInterest = 0;
-    // Count of matured FDs
     let maturedCount = 0;
-    // Count of active FDs
     let activeCount = 0;
 
     for (const row of rows) {
@@ -27,14 +23,12 @@ export const FDSummaryCard: FC<FDSummaryCardProps> = ({ rows }) => {
       const depositDate = row.data[2];
       const maturityDate = row.data[3];
 
-      // Check if matured
       if (isMatured(maturityDate)) {
         maturedCount += 1;
       } else {
         activeCount += 1;
         activeAmount += amount;
 
-        // Calculate interest only for active FDs
         const interest = calculateTotalInterest(
           amount,
           interestRate,

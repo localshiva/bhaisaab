@@ -7,10 +7,11 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 import { FD_SHEET_NAME } from "./fd-report-sheet";
 
 /**
- * Creates a new fixed deposit in the sheet
+ * Appends a deposit row to the FD Report sheet in one batch update.
  *
- * @param depositData Data for the new fixed deposit to be added
- * @returns Boolean indicating success
+ * Columns A to D get amount, interest rate, deposit date and maturity
+ * date. The dates are written as `DATEVALUE` formulas, so the sheet
+ * stores real dates, and the new cells get a light grey background.
  */
 export async function createFixedDeposit(
   depositData: CreateFixedDepositRequest,
@@ -19,19 +20,16 @@ export async function createFixedDeposit(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Get the current sheet to find the row count
     const valuesResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range: `${FD_SHEET_NAME}!A:A`,
       valueRenderOption: "UNFORMATTED_VALUE",
     });
 
-    // Determine the next row
     const nextRowAfterLast = valuesResponse.data.values?.length
       ? valuesResponse.data.values.length + 1
-      : 2; // Start from row 2 as headers already exist
+      : 2; // Row 1 is the header.
 
-    // Get the sheet ID for operations
     const spreadsheetInfo = await sheetsClient.spreadsheets.get({
       spreadsheetId,
       ranges: [FD_SHEET_NAME],
@@ -43,12 +41,10 @@ export async function createFixedDeposit(
       throw new Error(`Sheet ${FD_SHEET_NAME} not found`);
     }
 
-    // Combine all operations into a single batchUpdate call
     await sheetsClient.spreadsheets.batchUpdate({
       spreadsheetId,
       requestBody: {
         requests: [
-          // Update the values
           {
             updateCells: {
               rows: [
@@ -84,7 +80,6 @@ export async function createFixedDeposit(
               },
             },
           },
-          // Format cell background
           {
             repeatCell: {
               range: {
