@@ -1,4 +1,4 @@
-import { useAddMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/hooks/monthly-expenses";
+import { useAddMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/hooks/use-add-monthly-expense";
 import { AddMonthlyExpenseSchema } from "@bhaisaab/features/monthly-expenses/_shared/schemas/monthly-expenses";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {

@@ -1,4 +1,4 @@
-import { IMonthlyExpenseRow } from "@bhaisaab/features/monthly-expenses/_shared/hooks/monthly-expenses";
+import { IMonthlyExpenseRow } from "@bhaisaab/features/monthly-expenses/_shared/types/monthly-expenses";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { FC } from "react";
 

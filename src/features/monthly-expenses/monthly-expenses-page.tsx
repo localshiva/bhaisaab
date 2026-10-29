@@ -1,7 +1,7 @@
 "use client";
 import { MonthlyExpenseSummaryCard } from "@bhaisaab/features/monthly-expenses/_shared/components/monthly-expense-summary-card";
 import { MonthlyExpensesList } from "@bhaisaab/features/monthly-expenses/_shared/components/monthly-expenses-list";
-import { useMonthlyExpenses } from "@bhaisaab/features/monthly-expenses/_shared/hooks/monthly-expenses";
+import { useMonthlyExpenses } from "@bhaisaab/features/monthly-expenses/_shared/hooks/use-monthly-expenses";
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { format } from "date-fns/format";

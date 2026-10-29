@@ -1,8 +1,6 @@
-import {
-  useExpenseDelete,
-  useExpenseEdit,
-  useMonthlyExpense,
-} from "@bhaisaab/features/monthly-expenses/_shared/hooks/monthly-expenses";
+import { useExpenseDelete } from "@bhaisaab/features/monthly-expenses/_shared/hooks/use-expense-delete";
+import { useExpenseEdit } from "@bhaisaab/features/monthly-expenses/_shared/hooks/use-expense-edit";
+import { useMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/hooks/use-monthly-expense";
 import { IMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/types/monthly-expenses";
 import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Button } from "@bhaisaab/shared/components/core/button";
