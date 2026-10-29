@@ -1,4 +1,3 @@
-// @bhaisaab/pages/loans/components/loan-empty-list.tsx
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { CreditCard } from "lucide-react";
 

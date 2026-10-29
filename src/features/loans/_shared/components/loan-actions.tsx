@@ -1,4 +1,4 @@
-// @bhaisaab/pages/loans/components/loan-actions.tsx
+import { useDeleteLoan } from "@bhaisaab/features/loans/_shared/hooks/loan";
 import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@bhaisaab/shared/components/core/dropdown-menu";
-import { useDeleteLoan } from "@bhaisaab/shared/hooks/services/loan";
 import {
   DollarSign,
   Loader2,

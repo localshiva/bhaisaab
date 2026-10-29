@@ -1,6 +1,5 @@
-// @bhaisaab/pages/loans/components/loan-summary-card.tsx
+import { ILoanRow } from "@bhaisaab/features/loans/_shared/hooks/loan";
 import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
-import { ILoanRow } from "@bhaisaab/shared/hooks/services/loan";
 import { FC, useMemo } from "react";
 
 interface LoanSummaryCardProps {

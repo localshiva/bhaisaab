@@ -1,16 +1,11 @@
-// @bhaisaab/shared/services/spreadsheet/loan/delete-loan.ts
+import "server-only";
+
+import { IDeleteLoanRequest } from "@bhaisaab/features/loans/_shared/types/loans";
 import { deleteSingleRow } from "@bhaisaab/shared/server/spreadsheet/delete-single-row";
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
-import { LOAN_REPORT_SHEET_NAME } from "./shared";
-
-/**
- * Interface for the loan deletion request
- */
-export interface IDeleteLoanRequest {
-  rowIndex: number; // The row index (1-based) of the loan to delete
-}
+import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 
 /**
  * Deletes a loan from the loan report sheet

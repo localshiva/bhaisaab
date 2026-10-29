@@ -1,4 +1,7 @@
-// @bhaisaab/pages/loans/components/loan-payments-dialog.tsx
+import {
+  ILoanPayment,
+  useLoanPayments,
+} from "@bhaisaab/features/loans/_shared/hooks/loan";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
@@ -10,10 +13,6 @@ import {
 } from "@bhaisaab/shared/components/core/dialog";
 import { Separator } from "@bhaisaab/shared/components/core/separator";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import {
-  ILoanPayment,
-  useLoanPayments,
-} from "@bhaisaab/shared/hooks/services/loan";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { format } from "date-fns";
 import { Banknote, CalendarIcon, Loader2 } from "lucide-react";

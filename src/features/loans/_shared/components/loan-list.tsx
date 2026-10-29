@@ -1,6 +1,5 @@
-// @bhaisaab/pages/loans/components/loan-list.tsx
+import { ILoanRow } from "@bhaisaab/features/loans/_shared/hooks/loan";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import { ILoanRow } from "@bhaisaab/shared/hooks/services/loan";
 import { FC } from "react";
 
 import { LoanEmptyList } from "./loan-empty-list";

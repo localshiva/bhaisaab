@@ -1,4 +1,4 @@
-// @bhaisaab/pages/loans/components/loan-payment-form.tsx
+import { useAddLoanPayment } from "@bhaisaab/features/loans/_shared/hooks/loan";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
@@ -10,7 +10,6 @@ import {
 } from "@bhaisaab/shared/components/core/dialog";
 import { Input } from "@bhaisaab/shared/components/core/input";
 import { Label } from "@bhaisaab/shared/components/core/label";
-import { useAddLoanPayment } from "@bhaisaab/shared/hooks/services/loan";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC } from "react";

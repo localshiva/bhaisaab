@@ -1,4 +1,3 @@
-// @bhaisaab/shared/constants/validation/loans.ts
 import { z } from "zod";
 
 // Define a Zod schema for adding a new loan

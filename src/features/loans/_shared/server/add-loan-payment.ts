@@ -1,16 +1,10 @@
-// @bhaisaab/shared/services/spreadsheet/loan/add-payment.ts
+import "server-only";
+
+import { IAddLoanPaymentRequest } from "@bhaisaab/features/loans/_shared/types/loans";
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
-import { LOAN_REPORT_SHEET_NAME } from "./shared";
-
-/**
- * Interface for the loan payment request
- */
-export interface IAddLoanPaymentRequest {
-  rowIndex: number; // The row index (1-based) of the loan to add payment for
-  amount: number; // The payment amount
-}
+import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 
 /**
  * Adds a payment to an existing loan

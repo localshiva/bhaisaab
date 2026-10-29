@@ -1,4 +1,4 @@
-import Loans from "@bhaisaab/shared/pages/dashboard/loans/loans";
+import Loans from "@bhaisaab/features/loans/loans-page";
 
 export default function LoansPage() {
   return <Loans />;

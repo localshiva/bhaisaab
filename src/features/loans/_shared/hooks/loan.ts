@@ -1,7 +1,8 @@
-// @bhaisaab/shared/hooks/services/loans.ts
-import { AddLoanRequest } from "@bhaisaab/shared/constants/validation/loans";
-import { IAddLoanPaymentRequest } from "@bhaisaab/shared/services/spreadsheet/loan/add-loan-payment";
-import { IDeleteLoanRequest } from "@bhaisaab/shared/services/spreadsheet/loan/delete-loan";
+import { AddLoanRequest } from "@bhaisaab/features/loans/_shared/schemas/loans";
+import {
+  IAddLoanPaymentRequest,
+  IDeleteLoanRequest,
+} from "@bhaisaab/features/loans/_shared/types/loans";
 import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

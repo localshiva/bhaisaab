@@ -1,4 +1,9 @@
-// @bhaisaab/pages/loans/components/add-loan-form.tsx
+import { useAddLoan } from "@bhaisaab/features/loans/_shared/hooks/loan";
+import { useAddLoanModalStore } from "@bhaisaab/features/loans/_shared/hooks/use-open-add-loan-form";
+import {
+  AddLoanRequest,
+  AddLoanSchema,
+} from "@bhaisaab/features/loans/_shared/schemas/loans";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
@@ -11,12 +16,6 @@ import {
 } from "@bhaisaab/shared/components/core/dialog";
 import { Input } from "@bhaisaab/shared/components/core/input";
 import { Label } from "@bhaisaab/shared/components/core/label";
-import {
-  AddLoanRequest,
-  AddLoanSchema,
-} from "@bhaisaab/shared/constants/validation/loans";
-import { useAddLoan } from "@bhaisaab/shared/hooks/services/loan";
-import { useAddLoanModalStore } from "@bhaisaab/shared/pages/dashboard/loans/hooks/use-open-add-loan-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
