@@ -12,16 +12,24 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+/**
+ * 0-based index of column F, the first expense column.
+ *
+ * Columns A to E hold the month, In Hand, the additional payment,
+ * Total and Remainder. So, edit and delete must never reach them.
+ */
+const FIRST_EXPENSE_COLUMN_INDEX = 5;
+
 const UpdateExpenseSchema = z.object({
   rowIndex: z.number().int().positive(),
-  columnIndex: z.number().int().min(0),
+  columnIndex: z.number().int().min(FIRST_EXPENSE_COLUMN_INDEX),
   amount: z.number().int().min(1),
   comment: z.string().optional(),
 });
 
 const DeleteExpenseSchema = z.object({
   rowIndex: z.number().int().positive(),
-  columnIndex: z.number().int().min(0),
+  columnIndex: z.number().int().min(FIRST_EXPENSE_COLUMN_INDEX),
 });
 
 /**
