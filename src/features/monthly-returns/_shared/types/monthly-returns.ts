@@ -1,1 +1,1 @@
-export type IMonthlyReturnsRow = Record<string, string>;
+export type IMonthlyReturnsRow = string[]; // [type, source, amount]
