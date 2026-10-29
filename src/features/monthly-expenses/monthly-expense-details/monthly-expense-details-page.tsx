@@ -5,7 +5,7 @@ import { FC } from "react";
 
 /**
  * Expenses of the month named by the `rowIndex` and `date` query params.
- * Edit and delete controls show only when `canAddExpenses` is "true".
+ * Whether the month accepts changes comes from the server, not the URL.
  */
 const MonthlyExpenseDetails: FC = () => {
   const router = useRouter();
@@ -13,7 +13,6 @@ const MonthlyExpenseDetails: FC = () => {
 
   const rowIndex = searchParams.get("rowIndex");
   const date = searchParams.get("date");
-  const canAddExpenses = searchParams.get("canAddExpenses");
 
   if (!rowIndex || !date) {
     return <div className="container py-12 text-center">Loading...</div>;
@@ -27,7 +26,6 @@ const MonthlyExpenseDetails: FC = () => {
     <MonthlyExpenseList
       rowIndex={Number(rowIndex)}
       date={decodeURIComponent(date)}
-      canAddExpenses={canAddExpenses === "true"}
       onBack={handleBack}
     />
   );

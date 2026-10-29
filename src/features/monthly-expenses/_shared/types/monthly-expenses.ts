@@ -5,6 +5,12 @@ export interface IMonthlyExpense {
   columnIndex: number; // 0-based sheet column, used to edit or delete the cell
 }
 
+/** One month's expenses, as the expense route returns them. */
+export interface IMonthlyExpenseDetails {
+  isCurrentMonth: boolean; // whether the month accepts changes
+  expenses: IMonthlyExpense[];
+}
+
 /** A month row as listed by the monthly expenses route. */
 export interface IMonthlyExpenseRow {
   data: string[]; // [date, inHand, additionalPayment, totalExpense, remainder]

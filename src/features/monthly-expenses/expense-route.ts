@@ -7,6 +7,7 @@ import {
 import { deleteMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/server/delete-monthly-expense";
 import { getMonthlyExpenses } from "@bhaisaab/features/monthly-expenses/_shared/server/get-expenses";
 import { updateMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/server/update-monthly-expense";
+import { IMonthlyExpenseDetails } from "@bhaisaab/features/monthly-expenses/_shared/types/monthly-expenses";
 import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -76,7 +77,8 @@ const MonthlyExpenseSchema = z.object({
 });
 
 /**
- * Returns the expenses recorded in one month's row, with their notes.
+ * Returns the expenses recorded in one month's row, with their notes,
+ * and whether the month is current and so accepts changes.
  *
  * `rowIndex` is the 1-based sheet row of the month.
  */
@@ -110,11 +112,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const expenses = await getMonthlyExpenses(result.data);
+    const [expenses, isCurrentMonth] = await Promise.all([
+      getMonthlyExpenses(result.data),
+      isRowCurrentMonth(result.data.rowIndex),
+    ]);
+
+    const data: IMonthlyExpenseDetails = { isCurrentMonth, expenses };
 
     return NextResponse.json({
       success: true,
-      data: expenses,
+      data,
     });
   } catch (error) {
     return getServerError(error);

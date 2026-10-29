@@ -68,9 +68,9 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
         : 0;
 
     const handleCardClick = useCallback(() => {
-      const queryString = `?rowIndex=${originalRowIndex}&date=${encodeURIComponent(date)}&canAddExpenses=${isCurrentMonth}`;
+      const queryString = `?rowIndex=${originalRowIndex}&date=${encodeURIComponent(date)}`;
       router.push(`/monthly-expenses/monthly-expense-details${queryString}`);
-    }, [date, isCurrentMonth, router, originalRowIndex]);
+    }, [date, router, originalRowIndex]);
 
     const showLockedToast = useCallback(() => {
       toast.info(

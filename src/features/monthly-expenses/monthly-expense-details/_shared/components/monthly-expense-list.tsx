@@ -32,7 +32,6 @@ import { toast } from "sonner";
 interface IMonthlyExpenseListProps {
   rowIndex: number;
   date: string;
-  canAddExpenses: boolean;
   onBack: () => void;
 }
 
@@ -45,10 +44,14 @@ interface IEditableExpense {
 export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
   rowIndex,
   date,
-  canAddExpenses,
   onBack,
 }) => {
-  const { data: expenses, isLoading } = useMonthlyExpense(rowIndex, true);
+  const { data, isLoading } = useMonthlyExpense(rowIndex, true);
+  const expenses = data?.expenses;
+
+  // False while loading and after a failed fetch, which hides the change controls
+  const canChange = data?.isCurrentMonth === true;
+
   const { updateExpense, isLoading: isUpdating } = useExpenseEdit();
   const { deleteExpense, isLoading: isDeleting } = useExpenseDelete();
 
@@ -197,7 +200,7 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
               </CardTitle>
               <CardDescription>Item #{index + 1}</CardDescription>
             </div>
-            {canAddExpenses && (
+            {canChange && (
               <div className="flex items-center gap-1">
                 <TooltipProvider>
                   <Tooltip>
@@ -250,7 +253,7 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
       );
     },
     [
-      canAddExpenses,
+      canChange,
       editAmount,
       editComment,
       editingExpense,
@@ -285,7 +288,7 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
             No expenses recorded
           </Typography>
           <Typography variant="body" textColor="muted" className="mt-2">
-            {canAddExpenses
+            {canChange
               ? "Add your first expense to get started."
               : "There are no expenses recorded for this month."}
           </Typography>
@@ -298,7 +301,7 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
         {expenses.map((expense, index) => renderExpenseCard(expense, index))}
       </div>
     );
-  }, [isLoading, expenses, renderExpenseCard, canAddExpenses]);
+  }, [isLoading, expenses, renderExpenseCard, canChange]);
 
   return (
     <div className="flex flex-col gap-4 max-w-6xl mx-auto p-4">
@@ -321,7 +324,7 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
             </div>
           </div>
 
-          {canAddExpenses && (
+          {canChange && (
             <Button onClick={() => setAddExpenseOpen(true)}>
               <Plus className="size-4 mr-1" />
               Expense
