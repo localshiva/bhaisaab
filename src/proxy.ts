@@ -2,10 +2,9 @@ import { auth } from "@bhaisaab/shared/server/auth";
 import { setSecurityHeaders } from "@bhaisaab/shared/server/content-security-policy";
 import { NextResponse } from "next/server";
 
-// Fully public routes that anyone can access regardless of auth status
-const publicRoutes = ["/privacy-policy", "/terms-and-conditions", "/contact"];
-
-// Auth routes that should only be accessible when NOT logged in
+/**
+ * The only public pages. A signed-in visitor is sent away from them.
+ */
 const authRoutes = ["/auth/login", "/auth/error"];
 
 export const proxy = auth(req => {
@@ -19,10 +18,6 @@ export const proxy = auth(req => {
 
   if (!req.auth) {
     if (authRoutes.some(route => pathname.startsWith(route))) {
-      return response;
-    }
-
-    if (publicRoutes.some(route => pathname.startsWith(route))) {
       return response;
     }
 
