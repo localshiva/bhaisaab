@@ -13,11 +13,17 @@ export const AddLoanSchema = z.object({
 
 export type AddLoanRequest = z.infer<typeof AddLoanSchema>;
 
+/**
+ * 1-based sheet row of a loan, as the payment endpoints take it.
+ * Row 1 is the header and holds no loan.
+ */
+const loanRowIndexSchema = z
+  .number()
+  .int("Row index must be an integer")
+  .min(2, "Row index must be at least 2");
+
 export const AddLoanPaymentSchema = z.object({
-  rowIndex: z
-    .number()
-    .int("Row index must be an integer")
-    .positive("Row index must be positive"),
+  rowIndex: loanRowIndexSchema,
   amount: z
     .number()
     .positive("Payment amount must be positive")
@@ -34,10 +40,7 @@ export const DeleteLoanSchema = z.object({
 });
 
 export const LoanPaymentsSchema = z.object({
-  rowIndex: z
-    .number()
-    .int("Row index must be an integer")
-    .positive("Row index must be positive"),
+  rowIndex: loanRowIndexSchema,
 });
 
 export type LoanPaymentsRequest = z.infer<typeof LoanPaymentsSchema>;
