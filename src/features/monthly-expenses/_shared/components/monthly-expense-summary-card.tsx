@@ -33,16 +33,25 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
       ? Number(previousMonthRow.data[4]) || 0
       : 0;
 
-    let expenseChangePercent = 0;
-    if (previousMonthRow) {
-      const previousMonthExpense = Number(previousMonthRow.data[3]) || 0;
-      if (previousMonthExpense > 0) {
-        expenseChangePercent = Math.round(
-          ((currentMonthExpense - previousMonthExpense) /
-            previousMonthExpense) *
-            100,
-        );
-      }
+    const previousMonthExpense = previousMonthRow
+      ? Number(previousMonthRow.data[3]) || 0
+      : 0;
+
+    // Null when there is no earlier total to compare against, which hides the line
+    const expenseChangePercent =
+      previousMonthExpense > 0
+        ? Math.round(
+            ((currentMonthExpense - previousMonthExpense) /
+              previousMonthExpense) *
+              100,
+          )
+        : null;
+
+    let expenseChangeSubtitle: string | undefined;
+    if (expenseChangePercent === 0) {
+      expenseChangeSubtitle = "No change from last month";
+    } else if (expenseChangePercent !== null) {
+      expenseChangeSubtitle = `${expenseChangePercent > 0 ? "+" : ""}${expenseChangePercent}% vs last month`;
     }
 
     const currentMonthLabel = currentMonthRow
@@ -57,10 +66,7 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
       },
       {
         amount: Math.round(currentMonthExpense),
-        subtitle:
-          expenseChangePercent === 0
-            ? "No change from last month"
-            : `${expenseChangePercent > 0 ? "+" : ""}${expenseChangePercent}% vs last month`,
+        subtitle: expenseChangeSubtitle,
         title: "Current Month Expenses",
       },
       {
