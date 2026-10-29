@@ -12,6 +12,10 @@ interface LoginProps {
   error?: string | null;
 }
 
+/**
+ * Sign-in card with a Google button.
+ * It must sit inside a form, since the button only submits it.
+ */
 export const Login: FC<LoginProps> = ({ error }) => {
   /**
    * Show a toast when an error parameter is provided.
@@ -43,7 +47,6 @@ export const Login: FC<LoginProps> = ({ error }) => {
     <div className="container justify-center items-center p-4">
       <ThemeSwitcher className="justify-center" />
       <div className="w-full max-w-md overflow-hidden rounded-lg bg-card shadow-lg dark:bg-card">
-        {/* Colorful header band */}
         <div className="flex h-2">
           <div className="w-1/4 bg-chart-1"></div>
           <div className="w-1/4 bg-chart-2"></div>

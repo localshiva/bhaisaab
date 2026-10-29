@@ -3,11 +3,11 @@
 import { ErrorPageContainer } from "@bhaisaab/shared/components/app/error-page-container";
 import { useSearchParams } from "next/navigation";
 
+/** Explains the Auth.js error named by the `error` query param. */
 export default function ErrorPage() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
-  // Custom error messages based on error type
   let errorMessage = "An error occurred during authentication.";
   let errorDescription = "Please try again or contact support.";
 

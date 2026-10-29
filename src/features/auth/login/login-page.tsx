@@ -3,7 +3,10 @@ import { signIn } from "@bhaisaab/shared/server/auth";
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 
-// Handle the sign in action
+/**
+ * Starts Google sign-in. An Auth.js error sends the user back here
+ * with its type in `?error=`, which the Login component shows as a toast.
+ */
 async function handleSignIn() {
   "use server";
 
@@ -20,6 +23,7 @@ async function handleSignIn() {
   }
 }
 
+/** Login page. The whole card is a form that submits the sign-in action. */
 export default async function LoginPage({
   searchParams,
 }: {
