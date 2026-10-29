@@ -6,9 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 
 /**
  * Fetches the payments of the loan at the 1-based sheet row `rowIndex`.
- * Disabled until `rowIndex` is positive.
+ *
+ * Runs only while `isEnabled` is true and `rowIndex` is positive.
+ * Every loan card mounts its own payments dialog. So, the dialog
+ * passes its open state, and only an open dialog sends a request.
  */
-export function useLoanPayments(rowIndex: number) {
+export function useLoanPayments(rowIndex: number, isEnabled: boolean) {
   return useQuery({
     queryKey: loanPaymentsQueryKey(rowIndex),
     queryFn: async () => {
@@ -17,7 +20,7 @@ export function useLoanPayments(rowIndex: number) {
       );
       return data.data;
     },
-    enabled: rowIndex > 0,
+    enabled: isEnabled && rowIndex > 0,
     meta: {
       toast: true,
     },

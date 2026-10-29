@@ -28,7 +28,7 @@ export const LoanPaymentsDialog: FC<LoanPaymentsDialogProps> = ({
   isOpen,
   toggleOpen,
 }) => {
-  const { data: payments, isLoading } = useLoanPayments(rowIndex);
+  const { data: payments, isLoading } = useLoanPayments(rowIndex, isOpen);
 
   const totalPaid =
     payments?.reduce((sum, payment) => sum + payment.amount, 0) ?? 0;
