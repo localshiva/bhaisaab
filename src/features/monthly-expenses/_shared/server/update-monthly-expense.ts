@@ -1,12 +1,10 @@
 import "server-only";
 
+import { columnIndexToLetter } from "@bhaisaab/shared/server/spreadsheet/column-index-to-letter";
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
-import {
-  columnIndexToLetter,
-  MONTHLY_EXPENSE_SHEET_NAME,
-} from "./monthly-expense-sheet";
+import { MONTHLY_EXPENSE_SHEET_NAME } from "./monthly-expense-sheet";
 
 export interface IUpdateMonthlyExpenseRequest {
   rowIndex: number; // 1-based sheet row of the month
