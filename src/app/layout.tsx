@@ -86,7 +86,7 @@ export const metadata: Metadata = {
         rel: "icon",
       },
       {
-        url: "/logo/ios/96.png",
+        url: "/logo/ios/128.png",
         sizes: "128x128",
         type: "image/png",
         rel: "icon",
