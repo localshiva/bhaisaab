@@ -2,6 +2,7 @@ import "server-only";
 
 import { SESSION_EXPIRED_MESSAGE } from "@bhaisaab/shared/constants/app";
 import { getGoogleTokens } from "@bhaisaab/shared/server/auth";
+import { serverEnv } from "@bhaisaab/shared/server/server.env";
 import { google, sheets_v4 } from "googleapis";
 
 /**
@@ -22,8 +23,8 @@ export async function createSheetsClient(): Promise<sheets_v4.Sheets> {
   }
 
   const oauth2Client = new google.auth.OAuth2({
-    clientId: process.env.AUTH_GOOGLE_ID,
-    clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    clientId: serverEnv.AUTH_GOOGLE_ID,
+    clientSecret: serverEnv.AUTH_GOOGLE_SECRET,
   });
 
   oauth2Client.setCredentials({
