@@ -7,6 +7,7 @@ export const AddLoanSchema = z.object({
       required_error: "Amount is required",
       invalid_type_error: "Amount must be a number",
     })
+    .int("Amount must be a whole number")
     .positive("Amount must be greater than 0")
     .min(1, "Amount must be at least 1"),
 });
@@ -26,6 +27,7 @@ export const AddLoanPaymentSchema = z.object({
   rowIndex: loanRowIndexSchema,
   amount: z
     .number()
+    .int("Payment amount must be a whole number")
     .positive("Payment amount must be positive")
     .min(1, "Payment amount must be at least 1"),
 });

@@ -1,4 +1,5 @@
 import { useAddLoanPayment } from "@bhaisaab/features/loans/_shared/hooks/use-add-loan-payment";
+import { AddLoanPaymentSchema } from "@bhaisaab/features/loans/_shared/schemas/loans";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
   Dialog,
@@ -24,14 +25,13 @@ interface LoanPaymentFormProps {
   toggleOpen: (open: boolean) => void;
 }
 
-export const AddLoanPaymentSchema = z.object({
-  amount: z
-    .number()
-    .positive("Payment amount must be positive")
-    .min(1, "Payment amount must be at least 1"),
-});
+/**
+ * The form collects only the amount. The row index comes from the loan
+ * the dialog was opened for.
+ */
+const PaymentAmountSchema = AddLoanPaymentSchema.pick({ amount: true });
 
-export type AddLoanPaymentRequest = z.infer<typeof AddLoanPaymentSchema>;
+type PaymentAmountValues = z.infer<typeof PaymentAmountSchema>;
 
 export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
   rowIndex,
@@ -42,14 +42,14 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
 }) => {
   const { addPayment, isLoading } = useAddLoanPayment();
 
-  const { control, handleSubmit, reset } = useForm<AddLoanPaymentRequest>({
-    resolver: zodResolver(AddLoanPaymentSchema),
+  const { control, handleSubmit, reset } = useForm<PaymentAmountValues>({
+    resolver: zodResolver(PaymentAmountSchema),
     defaultValues: {
       amount: 0,
     },
   });
 
-  const onSubmit = (data: AddLoanPaymentRequest) => {
+  const onSubmit = (data: PaymentAmountValues) => {
     addPayment(
       { rowIndex, amount: data.amount },
       {
@@ -99,6 +99,7 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
                       type="number"
                       min={1}
                       max={pendingAmount}
+                      step={1}
                       placeholder="Enter payment amount"
                       className={
                         errors.amount

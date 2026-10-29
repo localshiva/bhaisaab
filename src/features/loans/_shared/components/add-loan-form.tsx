@@ -118,6 +118,7 @@ export const AddLoanForm = () => {
                       id="amount"
                       type="number"
                       min={1}
+                      step={1}
                       placeholder="Enter loan amount"
                       className={
                         errors.amount
