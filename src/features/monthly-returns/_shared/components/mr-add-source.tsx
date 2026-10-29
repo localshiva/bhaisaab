@@ -27,10 +27,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { useToggle } from "react-use";
+import { toast } from "sonner";
 
 /**
  * Button and dialog that append an income source.
- * The dialog closes and resets after a successful save.
+ * After a successful save it shows a success toast, then closes and resets.
  */
 export const MRAddSource = () => {
   const [isOpen, toggleOpen] = useToggle(false);
@@ -48,6 +49,7 @@ export const MRAddSource = () => {
   const onSubmit = (data: AddSourceRequest) => {
     addIncomeSource(data, {
       onSuccess: () => {
+        toast.success("Source added successfully");
         toggleOpen(false);
         reset();
       },

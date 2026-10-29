@@ -6,6 +6,7 @@ import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { BanknoteArrowUp, Loader2, Trash2 } from "lucide-react";
 import { FC, useState } from "react";
 import { useToggle } from "react-use";
+import { toast } from "sonner";
 
 interface MRSourceListItemProps {
   index: number;
@@ -36,7 +37,10 @@ export const MRSourceListItem: FC<MRSourceListItemProps> = ({
     deleteSource(
       { id: index, source },
       {
-        onSuccess: () => setIsDeleting(false),
+        onSuccess: () => {
+          toast.success("Source deleted successfully");
+          setIsDeleting(false);
+        },
         onError: () => setIsDeleting(false),
       },
     );
