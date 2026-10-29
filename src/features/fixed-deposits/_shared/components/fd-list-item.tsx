@@ -85,8 +85,8 @@ export const FDListItem: FC<FDListItemProps> = memo(
                 id={originalRowIndex}
                 amount={numAmount}
                 interestRate={numInterestRate}
-                depositDate={formattedDepositDate}
-                maturityDate={formattedMaturityDate}
+                depositDate={depositDate}
+                maturityDate={maturityDate}
               />
             </div>
           </div>
