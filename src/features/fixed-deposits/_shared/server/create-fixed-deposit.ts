@@ -37,7 +37,7 @@ export async function createFixedDeposit(
     });
 
     const sheetId = spreadsheetInfo.data.sheets?.[0]?.properties?.sheetId;
-    if (sheetId === undefined) {
+    if (sheetId === undefined || sheetId === null) {
       throw new Error(`Sheet ${FD_SHEET_NAME} not found`);
     }
 
