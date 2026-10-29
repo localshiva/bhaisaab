@@ -3,12 +3,18 @@ import { MRAddSource } from "@bhaisaab/features/monthly-returns/_shared/componen
 import { MRSourceList } from "@bhaisaab/features/monthly-returns/_shared/components/mr-source-list";
 import { MRSummaryCard } from "@bhaisaab/features/monthly-returns/_shared/components/mr-summary-card";
 import { useMonthlyReturns } from "@bhaisaab/features/monthly-returns/_shared/hooks/use-monthly-returns";
+import { getIncomeSources } from "@bhaisaab/features/monthly-returns/_shared/utils/income";
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
+import { useMemo } from "react";
 
 /** Monthly returns page: income totals by type and the list of sources. */
 export default function MonthlyReturns() {
   const { isLoading, data } = useMonthlyReturns();
+
+  const sources = useMemo(() => {
+    return getIncomeSources(data?.rows ?? []);
+  }, [data?.rows]);
 
   if (isLoading) {
     return <DataLoading />;
@@ -32,9 +38,9 @@ export default function MonthlyReturns() {
         <MRAddSource />
       </div>
 
-      <MRSummaryCard rows={data.rows} />
+      <MRSummaryCard sources={sources} />
 
-      <MRSourceList rows={data.rows} />
+      <MRSourceList sources={sources} />
     </div>
   );
 }

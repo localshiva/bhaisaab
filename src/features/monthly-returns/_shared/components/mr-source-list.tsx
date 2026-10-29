@@ -1,4 +1,4 @@
-import { IMonthlyReturnsRow } from "@bhaisaab/features/monthly-returns/_shared/types/monthly-returns";
+import { IIncomeSource } from "@bhaisaab/features/monthly-returns/_shared/types/monthly-returns";
 import { getTotalIncome } from "@bhaisaab/features/monthly-returns/_shared/utils/income";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
@@ -7,14 +7,14 @@ import { FC, useMemo } from "react";
 import { MRSourceListItem } from "./mr-source-list-item";
 
 interface MRSourceListProps {
-  rows: IMonthlyReturnsRow[];
+  sources: IIncomeSource[];
 }
 
 /** Lists every income source with a delete button, then the total. */
-export const MRSourceList: FC<MRSourceListProps> = ({ rows }) => {
+export const MRSourceList: FC<MRSourceListProps> = ({ sources }) => {
   const totalIncome = useMemo(() => {
-    return getTotalIncome(rows);
-  }, [rows]);
+    return getTotalIncome(sources);
+  }, [sources]);
 
   return (
     <div className="bg-card rounded-lg border shadow-sm p-4 sm:p-6">
@@ -23,13 +23,13 @@ export const MRSourceList: FC<MRSourceListProps> = ({ rows }) => {
       </Typography>
 
       <div className="space-y-3">
-        {rows.map((row, index) => (
+        {sources.map(({ id, type, source, amount }) => (
           <MRSourceListItem
-            key={`${row[1]}-${index}`}
-            index={index + 1} // 0-based sheet row; the header is row 0
-            type={row[0]}
-            source={row[1]}
-            amount={row[2]}
+            key={id}
+            index={id}
+            type={type}
+            source={source}
+            amount={amount}
           />
         ))}
 

@@ -1,47 +1,25 @@
-import { IMonthlyReturnsRow } from "@bhaisaab/features/monthly-returns/_shared/types/monthly-returns";
+import { IIncomeSource } from "@bhaisaab/features/monthly-returns/_shared/types/monthly-returns";
 import { getTotalIncome } from "@bhaisaab/features/monthly-returns/_shared/utils/income";
 import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
 import { FC, useMemo } from "react";
 
 interface Props {
-  rows: IMonthlyReturnsRow[];
+  sources: IIncomeSource[];
 }
 
 /** Totals of all income, salary and rent, with a source count each. */
-export const MRSummaryCard: FC<Props> = ({ rows }) => {
+export const MRSummaryCard: FC<Props> = ({ sources }) => {
   const totalIncome = useMemo(() => {
-    return getTotalIncome(rows);
-  }, [rows]);
+    return getTotalIncome(sources);
+  }, [sources]);
 
   const totalSalary = useMemo(() => {
-    let sum = 0;
-
-    const salariedRows = rows.filter(row => row[0] === "Salary");
-
-    for (const row of salariedRows) {
-      sum += Number(row[2]);
-    }
-
-    return {
-      sum,
-      sources: salariedRows.length,
-    };
-  }, [rows]);
+    return getTotalIncome(sources.filter(({ type }) => type === "Salary"));
+  }, [sources]);
 
   const totalRent = useMemo(() => {
-    let sum = 0;
-
-    const rentedRows = rows.filter(row => row[0] === "Rent");
-
-    for (const row of rentedRows) {
-      sum += Number(row[2]);
-    }
-
-    return {
-      sum,
-      sources: rentedRows.length,
-    };
-  }, [rows]);
+    return getTotalIncome(sources.filter(({ type }) => type === "Rent"));
+  }, [sources]);
 
   const data = useMemo(() => {
     return [

@@ -11,7 +11,7 @@ interface MRSourceListItemProps {
   index: number;
   type: string;
   source: string;
-  amount: string;
+  amount: number;
 }
 
 /**
@@ -61,7 +61,7 @@ export const MRSourceListItem: FC<MRSourceListItemProps> = ({
 
       <div className="flex items-center gap-2">
         <Typography variant={"body"} weight={"semibold"}>
-          {formatCurrency(Number(amount))}
+          {formatCurrency(amount)}
         </Typography>
 
         <Button
