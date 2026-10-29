@@ -18,8 +18,8 @@ Tracks the family's regular monthly income, such as salaries and rent received. 
 | `_shared/components/`      | Add source dialog, summary card, source list and source list item.         |
 | `_shared/hooks/`           | React Query hooks for each API call.                                       |
 | `_shared/schemas/`         | Zod schemas for the request bodies, used by the form and the API handlers. |
-| `_shared/types/`           | The row type, an array of strings in column order.                         |
-| `_shared/utils/`           | The total income calculation.                                              |
+| `_shared/types/`           | The raw row type, and the parsed income source type.                       |
+| `_shared/utils/`           | Row parsing that skips rows without a usable amount, and the totals.       |
 | `_shared/constants/`       | React Query keys.                                                          |
 | `_shared/server/`          | Google Sheets reads and writes, and the sheet tab name.                    |
 

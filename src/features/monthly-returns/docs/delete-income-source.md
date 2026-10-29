@@ -14,12 +14,13 @@ Lets the user remove an income source from the sheet.
 4. The API validates the body with `DeleteSourceSchema`. `id` must be a number of at least 1, and `source` must be a non-empty string. An invalid body gets a 400 response with the error "The delete request data you provided is invalid".
 5. The API looks up the numeric sheet ID of the `Monthly Returns` tab. When the tab is missing, the request fails with "Sheet Monthly Returns not found".
 6. The API reads `A{id + 1}:C{id + 1}`, which is the same row in the sheet's 1-based row numbers.
-7. When that row is empty, the request fails with "Row not found".
-8. When that row's column B is not exactly equal to `source`, the request fails with "Income Source does not match".
+7. When that row is empty, the API answers 404 with the error "Row not found".
+8. When that row's column B is not exactly equal to `source`, the API answers 409 with the error "Income Source does not match".
 9. Otherwise the API deletes the whole row. The rows below move up by one.
 10. A successful delete returns `{ success: true, message: "Source deleted successfully" }`.
 11. While the request runs, that item's delete button is disabled and shows a spinner.
-12. On success, the income list refetches. No success toast appears.
+12. On success, a toast shows "Source deleted successfully" and the income list refetches.
+13. On failure, a toast shows the error. For a 404 or a 409 that is the API's own message.
 
 ## Data
 
@@ -39,12 +40,15 @@ The full layout is in [income-list.md](income-list.md).
 - **`id` is a 0-based sheet row with the header at 0.** The Sheets API deletes rows by 0-based index. So, the API passes `id` straight to the delete call and adds 1 only to build the A1 range it reads.
 - **`id` must be at least 1.** Row 0 is the header row.
 - **`source` must match column B.** Rows shift up after every delete, and the sheet can also be edited outside the app. The check stops a stale `id` from deleting a different source.
+- **A missing row and a mismatched source are client errors.** They answer 404 and 409 with their own message, so that the toast tells the user why the delete failed. Any other failure answers 500, and the toast shows a generic message.
+- **A successful delete shows a short success toast.** Every successful write in the app gives the same feedback.
 - **The API looks up the tab's numeric sheet ID.** The Sheets API addresses a row delete by sheet ID, not by tab name.
 
 ## Edge cases
 
 - **User cancels.** The dialog closes and the row stays.
-- **Row moved since the list loaded.** The source check fails and nothing is deleted.
+- **Row moved since the list loaded.** The source check answers 409, a toast shows "Income Source does not match", and nothing is deleted.
+- **Row emptied since the list loaded.** The API answers 404, a toast shows "Row not found", and nothing is deleted.
 - **`id` of 0.** The API answers 400 and the header row stays.
 - **Invalid input.** The API answers 400 and a toast shows the error.
 - **Failed request.** A toast shows the error and the list stays as it was.
