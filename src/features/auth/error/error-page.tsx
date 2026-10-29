@@ -21,7 +21,7 @@ export default function ErrorPage() {
     }
     default: {
       errorMessage = "An unknown error occurred.";
-      errorDescription = "Please try again or contact support.";
+      errorDescription = "Please try again.";
     }
   }
 
