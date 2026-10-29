@@ -1,6 +1,7 @@
 import "server-only";
 
 import { IAddLoanPaymentRequest } from "@bhaisaab/features/loans/_shared/types/loans";
+import { columnIndexToLetter } from "@bhaisaab/shared/server/spreadsheet/column-index-to-letter";
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
@@ -37,8 +38,7 @@ export async function addLoanPayment(
     // Payments start at column E, which is 0-based column 4.
     const nextEmptyColumnIndex = 4 + filledCellCount;
 
-    // Only single letters A to Z are produced.
-    const columnLetter = String.fromCodePoint(65 + nextEmptyColumnIndex);
+    const columnLetter = columnIndexToLetter(nextEmptyColumnIndex);
 
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
