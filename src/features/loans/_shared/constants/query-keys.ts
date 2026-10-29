@@ -4,7 +4,13 @@
  */
 export const loansQueryKey = ["loans"];
 
+/**
+ * Prefix of every loan's payments key. Matching on it reaches the
+ * payments of all loans at once.
+ */
+export const allLoanPaymentsQueryKey = ["loanPayments"];
+
 export const loanPaymentsQueryKey = (rowIndex: number) => [
-  "loanPayments",
+  ...allLoanPaymentsQueryKey,
   rowIndex,
 ];
