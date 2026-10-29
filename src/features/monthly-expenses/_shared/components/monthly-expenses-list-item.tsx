@@ -1,5 +1,6 @@
 import {
   isCurrentIndiaMonth,
+  isUpcomingIndiaMonth,
   parseMonthYear,
 } from "@bhaisaab/features/monthly-expenses/_shared/utils/current-month";
 import { Badge } from "@bhaisaab/shared/components/core/badge";
@@ -37,7 +38,8 @@ const lockedButtonClass =
  * Card for one month. Clicking it opens the month's expense details.
  *
  * Only the current month accepts new expenses and payments.
- * For past months the buttons stay clickable and explain the lock in a toast.
+ * For past and upcoming months the buttons stay clickable
+ * and explain the lock in a toast.
  */
 export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
   ({
@@ -64,6 +66,17 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
       : format(expenseDate, "MMM, yyyy");
 
     const isCurrentMonth = isCurrentIndiaMonth(date);
+    const isUpcomingMonth = isUpcomingIndiaMonth(date);
+    const lockedMonthPhrase = isUpcomingMonth
+      ? "an upcoming month"
+      : "a past month";
+
+    let badgeLabel = "Past";
+    if (isCurrentMonth) {
+      badgeLabel = "Current";
+    } else if (isUpcomingMonth) {
+      badgeLabel = "Upcoming";
+    }
 
     const expensePercentage =
       numInHand > 0
@@ -77,9 +90,9 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
 
     const showLockedToast = useCallback(() => {
       toast.info(
-        `${monthLabel} is a past month. You can only add payments and expenses for the current month.`,
+        `${monthLabel} is ${lockedMonthPhrase}. You can only add payments and expenses for the current month.`,
       );
-    }, [monthLabel]);
+    }, [lockedMonthPhrase, monthLabel]);
 
     const onAddExpense = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -137,7 +150,7 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
                       : "bg-gray-500/15 text-gray-700 hover:bg-gray-500/20 border-gray-200",
                   )}
                 >
-                  {isCurrentMonth ? "Current" : "Past"}
+                  {badgeLabel}
                 </Badge>
               </div>
             </div>
@@ -223,7 +236,7 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               <Typography variant="small">
                 {isCurrentMonth
                   ? "You can add expenses for this month."
-                  : "This is a past month, expenses are locked."}
+                  : `This is ${lockedMonthPhrase}, expenses are locked.`}
               </Typography>
             </div>
 

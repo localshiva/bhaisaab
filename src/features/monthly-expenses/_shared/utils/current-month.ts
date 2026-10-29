@@ -65,3 +65,30 @@ export function isCurrentIndiaMonth(dateStr: string | undefined): boolean {
     monthDate.getFullYear() === today.year
   );
 }
+
+/**
+ * Whether a column A month falls after today's month in India time.
+ *
+ * An upcoming month is not current. So, it stays locked
+ * until it becomes the current month.
+ * An empty or unreadable month is never upcoming.
+ */
+export function isUpcomingIndiaMonth(dateStr: string | undefined): boolean {
+  if (!dateStr) {
+    return false;
+  }
+
+  const monthDate = parseMonthYear(dateStr);
+
+  if (Number.isNaN(monthDate.getTime())) {
+    return false;
+  }
+
+  const today = getIndiaMonthYear();
+
+  return (
+    monthDate.getFullYear() > today.year ||
+    (monthDate.getFullYear() === today.year &&
+      monthDate.getMonth() > today.month)
+  );
+}
