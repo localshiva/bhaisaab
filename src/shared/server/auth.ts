@@ -82,9 +82,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     signIn({ user }) {
       return isAllowedEmail(user.email);
     },
-    authorized({ auth }) {
-      return !!auth;
-    },
     /**
      * Runs on every session read, not only at sign-in.
      *
