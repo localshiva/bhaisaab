@@ -11,6 +11,17 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 export const SHEET_NAME = "Monthly Returns";
 
 /**
+ * An error that `getServerError` answers with `status` and this message,
+ * instead of a 500 with a generic message.
+ */
+function createStatusError(message: string, status: number): Error {
+  const error = new Error(message);
+  (error as { status?: number }).status = status;
+
+  return error;
+}
+
+/**
  * Reads a range as formatted strings, or an empty array when it is empty.
  *
  * @param range A1 notation including the sheet name, e.g. "Sheet1!A1:Z".
@@ -121,11 +132,11 @@ export async function deleteMonthlyIncomeSource(
     const rowValue = response.data.values?.[0];
 
     if (!rowValue) {
-      throw new Error("Row not found");
+      throw createStatusError("Row not found", 404);
     }
 
     if (rowValue[1] !== deleteData.source) {
-      throw new Error("Income Source does not match");
+      throw createStatusError("Income Source does not match", 409);
     }
 
     await deleteSingleRow(sheetsClient, spreadsheetId, sheetId, deleteData.id);
