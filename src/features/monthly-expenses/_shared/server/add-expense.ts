@@ -24,7 +24,7 @@ export async function addMonthlyExpense(
 
     const rowResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
-      range: `${MONTHLY_EXPENSE_SHEET_NAME}!F${expenseData.rowIndex}:ZZ${expenseData.rowIndex}`,
+      range: `${MONTHLY_EXPENSE_SHEET_NAME}!F${expenseData.rowIndex}:ZZZ${expenseData.rowIndex}`,
       valueRenderOption: "UNFORMATTED_VALUE",
     });
 
