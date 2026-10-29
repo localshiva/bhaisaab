@@ -62,7 +62,7 @@ export async function addMonthlyIncomeSource(
 
     const nextRowAfterLast = valuesResponse.data.values?.length
       ? valuesResponse.data.values.length + 1
-      : 0;
+      : 2; // Row 1 is the header.
 
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
