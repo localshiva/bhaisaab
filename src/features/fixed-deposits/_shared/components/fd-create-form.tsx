@@ -1,5 +1,5 @@
-import { useCreateFixedDeposit } from "@bhaisaab/features/fixed-deposits/_shared/hooks/fixed-deposits";
 import { useAddFDStore } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-add-fd-store";
+import { useCreateFixedDeposit } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-create-fixed-deposit";
 import {
   CreateFixedDepositRequest,
   CreateFixedDepositSchema,

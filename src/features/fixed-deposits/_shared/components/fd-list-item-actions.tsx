@@ -1,5 +1,5 @@
-import { useDeleteFixedDeposit } from "@bhaisaab/features/fixed-deposits/_shared/hooks/fixed-deposits";
 import { useAddFDStore } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-add-fd-store";
+import { useDeleteFixedDeposit } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-delete-fixed-deposit";
 import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {

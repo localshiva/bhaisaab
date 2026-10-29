@@ -2,7 +2,7 @@ import {
   calculateMonthlyInterest,
   calculateTotalInterest,
   isMatured,
-} from "@bhaisaab/features/fixed-deposits/_shared/hooks/fixed-deposits";
+} from "@bhaisaab/features/fixed-deposits/_shared/utils/fd-calculations";
 import { Badge } from "@bhaisaab/shared/components/core/badge";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";

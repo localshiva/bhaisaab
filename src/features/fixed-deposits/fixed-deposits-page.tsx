@@ -3,7 +3,7 @@ import { FDCreateForm } from "@bhaisaab/features/fixed-deposits/_shared/componen
 import { FDEmptyList } from "@bhaisaab/features/fixed-deposits/_shared/components/fd-empty-list";
 import { FDList } from "@bhaisaab/features/fixed-deposits/_shared/components/fd-list";
 import { FDSummaryCard } from "@bhaisaab/features/fixed-deposits/_shared/components/fd-summary-card";
-import { useFixedDeposits } from "@bhaisaab/features/fixed-deposits/_shared/hooks/fixed-deposits";
+import { useFixedDeposits } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-fixed-deposits";
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 
