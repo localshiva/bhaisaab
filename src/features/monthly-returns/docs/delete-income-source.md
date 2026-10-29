@@ -1,0 +1,50 @@
+# Delete an income source
+
+## Purpose
+
+Lets the user remove an income source from the sheet.
+
+## Requirements
+
+1. Clicking an item's delete button opens a confirmation dialog with the message "Are you sure you want to delete {source}? This action cannot be undone.", a "Cancel" button and a "Delete" button.
+2. "Cancel" closes the dialog and sends nothing.
+3. "Delete" sends `DELETE /api/spreadsheet/monthly-returns` with `{ id, source }`.
+   - `id` is the source's 0-based sheet row, where the header row is 0. The first source has id 1.
+   - `source` is the item's source name.
+4. The API validates the body with `DeleteSourceSchema`. `id` must be a number of at least 1, and `source` must be a non-empty string. An invalid body gets a 400 response with the error "The delete request data you provided is invalid".
+5. The API looks up the numeric sheet ID of the `Monthly Returns` tab. When the tab is missing, the request fails with "Sheet Monthly Returns not found".
+6. The API reads `A{id + 1}:C{id + 1}`, which is the same row in the sheet's 1-based row numbers.
+7. When that row is empty, the request fails with "Row not found".
+8. When that row's column B is not exactly equal to `source`, the request fails with "Income Source does not match".
+9. Otherwise the API deletes the whole row. The rows below move up by one.
+10. A successful delete returns `{ success: true, message: "Source deleted successfully" }`.
+11. While the request runs, that item's delete button is disabled and shows a spinner.
+12. On success, the income list refetches. No success toast appears.
+
+## Data
+
+Sheet tab `Monthly Returns`. The API reads `A{id + 1}:C{id + 1}` and compares column B, then deletes the row at 0-based index `id`.
+
+| Column | Use in this capability      |
+| ------ | --------------------------- |
+| A      | read, not checked           |
+| B      | must equal `source` exactly |
+| C      | read, not checked           |
+
+The full layout is in [income-list.md](income-list.md).
+
+## Decisions
+
+- **A delete asks for confirmation first.** A delete cannot be undone and shifts the rows below it. Loans, fixed deposits and expenses confirm their deletes the same way.
+- **`id` is a 0-based sheet row with the header at 0.** The Sheets API deletes rows by 0-based index. So, the API passes `id` straight to the delete call and adds 1 only to build the A1 range it reads.
+- **`id` must be at least 1.** Row 0 is the header row.
+- **`source` must match column B.** Rows shift up after every delete, and the sheet can also be edited outside the app. The check stops a stale `id` from deleting a different source.
+- **The API looks up the tab's numeric sheet ID.** The Sheets API addresses a row delete by sheet ID, not by tab name.
+
+## Edge cases
+
+- **User cancels.** The dialog closes and the row stays.
+- **Row moved since the list loaded.** The source check fails and nothing is deleted.
+- **`id` of 0.** The API answers 400 and the header row stays.
+- **Invalid input.** The API answers 400 and a toast shows the error.
+- **Failed request.** A toast shows the error and the list stays as it was.
