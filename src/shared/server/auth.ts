@@ -97,6 +97,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (account && user) {
         return {
           ...token,
+          // Without an adapter, Auth.js gives `sub` a new random id per sign-in
+          sub: account.providerAccountId,
           access_token: account.access_token,
           refresh_token: account.refresh_token,
           expires_at: account.expires_at,
