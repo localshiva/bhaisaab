@@ -98,6 +98,7 @@ export const FDListItemActions: FC<FDListItemActionsProps> = ({
       <ConfirmAlertDialog
         isOpen={isDeleteOpen}
         onOpenChange={toggleDeleteOpen}
+        title="Delete Fixed Deposit"
         message={`Are you sure you want to delete this fixed deposit of ${formatCurrency(amount)}? This action cannot be undone.`}
         actionLabel={isDeleting ? "Deleting..." : "Delete"}
         onConfirm={handleDelete}

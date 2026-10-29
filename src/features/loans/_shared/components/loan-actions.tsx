@@ -144,6 +144,7 @@ export const LoanActions: FC<LoanActionsProps> = ({
       />
 
       <ConfirmAlertDialog
+        title="Delete Loan"
         message={`Are you sure you want to delete this loan from ${provider}? This action cannot be undone.`}
         actionLabel="Delete"
         onConfirm={handleDelete}

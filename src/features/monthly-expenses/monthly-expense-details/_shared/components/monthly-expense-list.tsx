@@ -342,6 +342,7 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
       <ConfirmAlertDialog
         isOpen={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
+        title="Delete Expense"
         message="Are you sure you want to delete this expense? This action cannot be undone."
         actionLabel={isDeleting ? "Deleting..." : "Delete"}
         onConfirm={handleConfirmDelete}

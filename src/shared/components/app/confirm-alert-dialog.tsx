@@ -12,6 +12,7 @@ import {
 import { FC, useCallback } from "react";
 
 interface ConfirmAlertDialogProps {
+  title: string;
   message: string;
   actionLabel?: string;
   onConfirm: () => void;
@@ -21,6 +22,7 @@ interface ConfirmAlertDialogProps {
 }
 
 export const ConfirmAlertDialog: FC<ConfirmAlertDialogProps> = ({
+  title,
   message,
   actionLabel = "Confirm",
   onConfirm,
@@ -32,7 +34,7 @@ export const ConfirmAlertDialog: FC<ConfirmAlertDialogProps> = ({
     () => (
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Fixed Deposit</AlertDialogTitle>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{message}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -46,7 +48,7 @@ export const ConfirmAlertDialog: FC<ConfirmAlertDialogProps> = ({
         </AlertDialogFooter>
       </AlertDialogContent>
     ),
-    [actionLabel, message, onConfirm],
+    [actionLabel, message, onConfirm, title],
   );
 
   if (!buttonContent) {
