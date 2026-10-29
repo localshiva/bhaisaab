@@ -1,5 +1,6 @@
 import "server-only";
 
+import { ILoanPayment } from "@bhaisaab/features/loans/_shared/types/loans";
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
@@ -8,15 +9,6 @@ import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 export interface ILoanPaymentsRequest {
   /** 1-based sheet row of the loan, header row included. */
   rowIndex: number;
-}
-
-/**
- * One filled payment cell. `columnIndex` is the cell's 0-based sheet
- * column, so the first payment (column E) is 4.
- */
-export interface ILoanPayment {
-  amount: number;
-  columnIndex: number;
 }
 
 /**
