@@ -8,9 +8,9 @@ import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 /**
  * Appends a loan row to the Loan Report sheet.
  *
- * Columns A and B get the provider and amount. Column C gets a formula
- * that sums the payments from column E onwards, and column D gets the
- * pending amount (B - C).
+ * Columns A and B get the provider and amount, written as RAW values.
+ * Column C gets a formula that sums the payments from column E onwards,
+ * and column D gets the pending amount (B - C).
  */
 export async function addLoan(loanData: {
   provider: string;
@@ -33,7 +33,12 @@ export async function addLoan(loanData: {
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
       range: `${LOAN_REPORT_SHEET_NAME}!A${nextRowAfterLast}:B${nextRowAfterLast}`,
-      valueInputOption: "USER_ENTERED",
+      /**
+       * RAW stores the provider as the text the user typed. USER_ENTERED
+       * would turn a name starting with "=" into a formula. The amount is
+       * sent as a number, so it is still stored as a number.
+       */
+      valueInputOption: "RAW",
       requestBody: {
         values: [[loanData.provider, loanData.amount]],
       },
