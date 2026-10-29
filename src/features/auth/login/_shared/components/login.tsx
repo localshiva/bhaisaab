@@ -35,12 +35,9 @@ export const Login: FC<LoginProps> = ({ error }) => {
       return;
     }
 
-    const errorMessage =
-      error === "AccessDenied"
-        ? "Your email is not authorized to access this application."
-        : "An error occurred during sign in. Please try again.";
-
-    toast.error(errorMessage, { id: "login-error" });
+    toast.error("An error occurred during sign in. Please try again.", {
+      id: "login-error",
+    });
   }, [error]);
 
   return (
