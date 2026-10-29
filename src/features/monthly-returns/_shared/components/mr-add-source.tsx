@@ -28,6 +28,10 @@ import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { useToggle } from "react-use";
 
+/**
+ * Button and dialog that append an income source.
+ * The dialog closes and resets after a successful save.
+ */
 export const MRAddSource = () => {
   const [isOpen, toggleOpen] = useToggle(false);
   const { addIncomeSource, isLoading } = useAddMonthlyIncomeSource();
@@ -37,20 +41,19 @@ export const MRAddSource = () => {
     defaultValues: {
       type: undefined,
       source: "",
-      amount: 0, // Default to 0 instead of undefined
+      amount: 0,
     },
   });
 
   const onSubmit = (data: AddSourceRequest) => {
     addIncomeSource(data, {
       onSuccess: () => {
-        // Close dialog and reset form on success
         toggleOpen(false);
         reset();
       },
       onError: err => {
+        // The mutation cache shows the error toast.
         console.error("Failed to add source:", err);
-        // Error handling is done by the hook and toast notifications
       },
     });
   };
@@ -65,7 +68,6 @@ export const MRAddSource = () => {
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">
-        {/* Header */}
         <DialogHeader>
           <DialogTitle>Add new source</DialogTitle>
           <DialogDescription>
@@ -74,9 +76,7 @@ export const MRAddSource = () => {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Form */}
           <div className="grid gap-4 py-4">
-            {/* Type */}
             <div className="grid gap-2">
               <Controller
                 name="type"
@@ -115,7 +115,6 @@ export const MRAddSource = () => {
               />
             </div>
 
-            {/* Income Source */}
             <div className="grid gap-2">
               <Controller
                 name="source"
@@ -150,7 +149,6 @@ export const MRAddSource = () => {
               />
             </div>
 
-            {/* Amount */}
             <div className="grid gap-2">
               <Controller
                 name="amount"
@@ -179,7 +177,6 @@ export const MRAddSource = () => {
                           : ""
                       }
                       onChange={e => {
-                        // Ensure we always have a non-negative number
                         const inputValue = e.target.value;
                         const numValue =
                           inputValue === ""

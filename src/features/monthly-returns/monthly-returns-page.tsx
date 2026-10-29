@@ -6,6 +6,7 @@ import { useMonthlyReturns } from "@bhaisaab/features/monthly-returns/_shared/ho
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 
+/** Monthly returns page: income totals by type and the list of sources. */
 export default function MonthlyReturns() {
   const { isLoading, data } = useMonthlyReturns();
 
@@ -31,10 +32,8 @@ export default function MonthlyReturns() {
         <MRAddSource />
       </div>
 
-      {/* Main summary card */}
       <MRSummaryCard rows={data.rows} />
 
-      {/* List of sources */}
       <MRSourceList rows={data.rows} />
     </div>
   );

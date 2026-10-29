@@ -11,11 +11,11 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * GET handler for fetching monthly returns data
+ * Lists the Monthly Returns sheet with the header row split out.
+ * Rows keep sheet order, so list index i is 0-based sheet row i + 1.
  */
 export async function GET() {
   try {
-    // Get monthly returns data using the service
     const values = await getAllMonthlyReturns();
 
     if (values.length === 0) {
@@ -38,16 +38,13 @@ export async function GET() {
 }
 
 /**
- * POST handler for adding a new source to the monthly returns
- * This is an idempotent operation - if the same source is added multiple times,
- * it will only be added once to the current month's sheet
+ * Appends an income source as a new row below the last filled row.
+ * It does not check for duplicates.
  */
 export async function POST(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = (await request.json()) as unknown;
 
-    // Validate against schema
     const result = AddSourceSchema.safeParse(body);
 
     if (!result.success) {
@@ -61,11 +58,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call service to add the source
     const success = await addMonthlyIncomeSource(result.data);
 
     if (!success) {
-      // status and error message
       return NextResponse.json(
         {
           success: false,
@@ -80,20 +75,18 @@ export async function POST(request: NextRequest) {
       message: "Source added successfully",
     });
   } catch (error) {
-    // Return appropriate error response
     return getServerError(error);
   }
 }
 
 /**
- * DELETE handler for removing a source from monthly returns
+ * Deletes a source's row from the sheet.
+ * It fails if the named row holds a different source than the request.
  */
 export async function DELETE(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = (await request.json()) as unknown;
 
-    // Validate against schema
     const result = DeleteSourceSchema.safeParse(body);
 
     if (!result.success) {
@@ -107,11 +100,9 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Call service to delete the source
     const success = await deleteMonthlyIncomeSource(result.data);
 
     if (!success) {
-      // status and error message
       return NextResponse.json(
         {
           success: false,

@@ -11,28 +11,22 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 export const SHEET_NAME = "Monthly Returns";
 
 /**
- * Fetches data from the monthly returns spreadsheet
+ * Reads a range as formatted strings, or an empty array when it is empty.
  *
- * @param range The A2 notation range to fetch (e.g., "Sheet1!A2:Z")
- * @returns The values from the specified range
+ * @param range A1 notation including the sheet name, e.g. "Sheet1!A1:Z".
  */
 export async function fetchMonthlyReturnsData(
   range: string,
 ): Promise<string[][]> {
   try {
-    // Create the Google Sheets client
     const sheetsClient = await createSheetsClient();
-
-    // Get the configured spreadsheet ID
     const { spreadsheetId } = googleServiceConfig;
 
-    // Fetch the data from the spreadsheet
     const response = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range,
     });
 
-    // Return the values or an empty array if none found
     return response.data.values ?? [];
   } catch (error) {
     console.error("Error fetching monthly returns data:", error);
@@ -40,18 +34,17 @@ export async function fetchMonthlyReturnsData(
   }
 }
 
+/**
+ * Reads the whole Monthly Returns sheet, header row first.
+ * Each row is [type, source, amount].
+ */
 export async function getAllMonthlyReturns(): Promise<string[][]> {
   const range = `${SHEET_NAME}!A1:Z`;
 
   return fetchMonthlyReturnsData(range);
 }
 
-/**
- * Adds a new source to the monthly returns sheet
- *
- * @param sourceData Data for the new source to be added
- * @returns Boolean indicating success
- */
+/** Writes [type, source, amount] into the row below the last filled row. */
 export async function addMonthlyIncomeSource(
   sourceData: AddSourceRequest,
 ): Promise<boolean> {
@@ -60,8 +53,7 @@ export async function addMonthlyIncomeSource(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // First, get the current month's sheet or create it if it doesn't exist
-    // Get only the metadata about the sheet to find the row count
+    // Column A is read only to find the last filled row.
     const valuesResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range: `${SHEET_NAME}!A:A`,
@@ -89,10 +81,11 @@ export async function addMonthlyIncomeSource(
 }
 
 /**
- * Deletes a source from the monthly returns sheet by row ID
+ * Deletes a whole row, so the rows below shift up.
  *
- * @param deleteData Data identifying which source to delete
- * @returns Boolean indicating success
+ * @param deleteData `id` is the 0-based sheet row, where the header is 0.
+ *                   `source` must match the row's column B,
+ *                   which guards against deleting a row that moved.
  */
 export async function deleteMonthlyIncomeSource(
   deleteData: DeleteSourceRequest,
@@ -101,10 +94,10 @@ export async function deleteMonthlyIncomeSource(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Get the sheet ID needed for the deleteRows request
+    // deleteDimension addresses the sheet by numeric ID, not by name.
     const spreadsheetInfo = await sheetsClient.spreadsheets.get({
       spreadsheetId,
-      ranges: [SHEET_NAME], // This filters to just this sheet
+      ranges: [SHEET_NAME], // Limits the response so sheets[0] is this sheet
       fields: "sheets.properties(sheetId,title)",
     });
 
@@ -114,7 +107,7 @@ export async function deleteMonthlyIncomeSource(
       throw new Error(`Sheet ${SHEET_NAME} not found`);
     }
 
-    // We need to get the actual values to verify we're deleting the right row
+    // A1 rows are 1-based, hence id + 1.
     const response = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range: `${SHEET_NAME}!A${deleteData.id + 1}:C${deleteData.id + 1}`,
@@ -130,7 +123,6 @@ export async function deleteMonthlyIncomeSource(
       throw new Error("Income Source does not match");
     }
 
-    // Don't empty but instead delete the entire row
     await deleteSingleRow(sheetsClient, spreadsheetId, sheetId, deleteData.id);
 
     return true;

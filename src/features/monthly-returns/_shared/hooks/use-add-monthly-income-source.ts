@@ -4,7 +4,11 @@ import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-// Hook for adding a new source to monthly returns
+/**
+ * Appends an income source row to the Monthly Returns sheet.
+ *
+ * On success it invalidates the monthly returns list.
+ */
 export function useAddMonthlyIncomeSource() {
   const queryClient = useQueryClient();
 
@@ -17,7 +21,6 @@ export function useAddMonthlyIncomeSource() {
       return data;
     },
     onSuccess: () => {
-      // Invalidate and refetch monthly returns query after successful mutation
       void queryClient.invalidateQueries({ queryKey: monthlyReturnsQueryKey });
     },
     meta: {

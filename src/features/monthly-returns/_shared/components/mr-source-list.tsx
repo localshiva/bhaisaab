@@ -9,6 +9,7 @@ interface MRSourceListProps {
   rows: IMonthlyReturnsRow[];
 }
 
+/** Lists every income source with a delete button, then the total. */
 export const MRSourceList: FC<MRSourceListProps> = ({ rows }) => {
   const totalIncome = useMemo(() => {
     return getTotalIncome(rows);
@@ -24,14 +25,13 @@ export const MRSourceList: FC<MRSourceListProps> = ({ rows }) => {
         {rows.map((row, index) => (
           <MRSourceListItem
             key={`${row[1]}-${index}`}
-            index={index + 1} // Convert to 1-based for API
+            index={index + 1} // 0-based sheet row; the header is row 0
             type={row[0]}
             source={row[1]}
             amount={row[2]}
           />
         ))}
 
-        {/* Total Income */}
         <div className="flex items-center justify-between pt-2">
           <Typography variant={"body"} weight={"bold"}>
             Total{" "}

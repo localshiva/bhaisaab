@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Define a Zod schema for the request body
+/** Body of the add source request, validated by the form and the route. */
 export const AddSourceSchema = z.object({
   type: z.union([z.literal("Salary"), z.literal("Rent")], {
     required_error: "Type is required",
@@ -16,10 +16,12 @@ export const AddSourceSchema = z.object({
     .min(0, "Amount must be zero or greater"),
 });
 
-// Type inference from the Zod schema
 export type AddSourceRequest = z.infer<typeof AddSourceSchema>;
 
-// Add this to your existing file where AddSourceSchema is defined
+/**
+ * Body of the delete source request.
+ * `id` is the 0-based sheet row, where the header is 0.
+ */
 export const DeleteSourceSchema = z.object(
   {
     id: z.number().min(0, "Row ID is required"),
@@ -30,5 +32,4 @@ export const DeleteSourceSchema = z.object(
   },
 );
 
-// Type inference from the Zod schema
 export type DeleteSourceRequest = z.infer<typeof DeleteSourceSchema>;

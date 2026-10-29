@@ -7,6 +7,7 @@ interface Props {
   rows: IMonthlyReturnsRow[];
 }
 
+/** Totals of all income, salary and rent, with a source count each. */
 export const MRSummaryCard: FC<Props> = ({ rows }) => {
   const totalIncome = useMemo(() => {
     return getTotalIncome(rows);

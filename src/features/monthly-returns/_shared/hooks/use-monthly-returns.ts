@@ -4,7 +4,10 @@ import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useQuery } from "@tanstack/react-query";
 
-// Query key for fetching monthly returns data
+/**
+ * Fetches the Monthly Returns sheet.
+ * Each row is [type, source, amount], in sheet order.
+ */
 export function useMonthlyReturns() {
   return useQuery({
     queryKey: monthlyReturnsQueryKey,

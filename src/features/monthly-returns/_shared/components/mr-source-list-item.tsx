@@ -11,6 +11,11 @@ interface MRSourceListItemProps {
   amount: string;
 }
 
+/**
+ * One income source row.
+ *
+ * `index` is the source's 0-based sheet row, sent as the delete request's id.
+ */
 export const MRSourceListItem: FC<MRSourceListItemProps> = ({
   index,
   type,
