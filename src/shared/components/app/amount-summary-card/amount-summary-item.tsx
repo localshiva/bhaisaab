@@ -1,4 +1,5 @@
 import { Typography } from "@bhaisaab/shared/components/core/typography";
+import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { FC } from "react";
 
 export interface AmountSummaryItemProps {
@@ -19,7 +20,7 @@ export const AmountSummaryItem: FC<AmountSummaryItemProps> = ({
       </Typography>
 
       <Typography variant={"h3"} weight={"bold"}>
-        ₹{amount}
+        {formatCurrency(amount)}
       </Typography>
 
       {!!subtitle && (
