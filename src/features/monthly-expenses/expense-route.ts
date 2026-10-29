@@ -1,5 +1,9 @@
 import { AddMonthlyExpenseSchema } from "@bhaisaab/features/monthly-expenses/_shared/schemas/monthly-expenses";
 import { addMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/server/add-expense";
+import {
+  getLockedMonthResponse,
+  isRowCurrentMonth,
+} from "@bhaisaab/features/monthly-expenses/_shared/server/current-month-lock";
 import { deleteMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/server/delete-monthly-expense";
 import { getMonthlyExpenses } from "@bhaisaab/features/monthly-expenses/_shared/server/get-expenses";
 import { updateMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/server/update-monthly-expense";
@@ -22,6 +26,8 @@ const DeleteExpenseSchema = z.object({
 /**
  * Writes an expense into the first empty cell from column F onward
  * in the month's row, and stores the comment as that cell's note.
+ *
+ * Only the current month accepts it. Any other month gets a 403.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -38,6 +44,10 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 },
       );
+    }
+
+    if (!(await isRowCurrentMonth(result.data.rowIndex))) {
+      return getLockedMonthResponse();
     }
 
     const success = await addMonthlyExpense(result.data);
@@ -114,6 +124,8 @@ export async function GET(request: NextRequest) {
 /**
  * Overwrites one expense cell and replaces its note.
  * A missing comment clears the note.
+ *
+ * Only the current month accepts it. Any other month gets a 403.
  */
 export async function PUT(request: NextRequest) {
   try {
@@ -130,6 +142,10 @@ export async function PUT(request: NextRequest) {
         },
         { status: 400 },
       );
+    }
+
+    if (!(await isRowCurrentMonth(result.data.rowIndex))) {
+      return getLockedMonthResponse();
     }
 
     const success = await updateMonthlyExpense(result.data);
@@ -156,6 +172,8 @@ export async function PUT(request: NextRequest) {
 /**
  * Clears one expense cell and its note. The cell is emptied, not removed,
  * so the other expenses keep their columns.
+ *
+ * Only the current month accepts it. Any other month gets a 403.
  */
 export async function DELETE(request: NextRequest) {
   try {
@@ -187,6 +205,10 @@ export async function DELETE(request: NextRequest) {
         },
         { status: 400 },
       );
+    }
+
+    if (!(await isRowCurrentMonth(result.data.rowIndex))) {
+      return getLockedMonthResponse();
     }
 
     const success = await deleteMonthlyExpense(result.data);
