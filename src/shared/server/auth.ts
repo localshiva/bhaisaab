@@ -108,7 +108,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       return isTokenExpired(token) ? refreshToken(token) : token;
     },
-    session({ session }) {
+    /**
+     * Adds the user's id, which is the JWT's `sub`, to the session
+     * and tags Sentry with it.
+     */
+    session({ session, token }) {
+      if (token.sub) {
+        session.user.id = token.sub;
+      }
+
       const scope = getCurrentScope();
       scope.setUser({
         id: session.user.id,
