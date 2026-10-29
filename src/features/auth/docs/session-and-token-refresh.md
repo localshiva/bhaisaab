@@ -14,9 +14,9 @@ A few terms used below.
 
 1. Auth.js uses its JWT session strategy. There is no session database.
 2. The JWT lives in the cookie `authjs.session-token`, or `__Secure-authjs.session-token` on HTTPS. Auth.js may split a large JWT into numbered chunks of that cookie.
-3. On sign-in, the `jwt` callback stores Google's `access_token`, `refresh_token` and `expires_at` in the JWT. `expires_at` is in seconds since 1 January 1970.
+3. On sign-in, the `jwt` callback stores Google's `access_token`, `refresh_token` and `expires_at` in the JWT, and sets the JWT's `sub` to the Google account id (`account.providerAccountId`). `expires_at` is in seconds since 1 January 1970.
 4. The session object holds what Auth.js puts there by default, plus the user's id.
-   - `user.id`, which the `session` callback copies from the JWT's `sub`
+   - `user.id`, the user's Google account id, which the `session` callback copies from the JWT's `sub`
    - `user.name`
    - `user.email`
    - `user.image`
@@ -57,7 +57,7 @@ The JWT is encrypted with `AUTH_SECRET`. Browser code cannot read it.
 ## Decisions
 
 - **The allowed list is checked on every session check.** Removing someone from the list must take effect without waiting 30 days. So, a removed email ends that user's session on their next request, whether it is a page request or an API call.
-- **The user's id is the JWT's `sub`, not the Google account id.** The app has no adapter (a database for users and accounts). So, Auth.js sets `sub` to a new random id at each sign-in. `user.id` and the Sentry user id stay the same for one session and change when the user signs in again. The email is the value that stays the same across sign-ins.
+- **The user's id is the Google account id.** The app has no adapter (a database for users and accounts). Without one, Auth.js sets `sub` to a new random id at each sign-in. So, the `jwt` callback replaces it with the Google account id at sign-in, which stays the same across sign-ins and lets Sentry group one person's errors together. The id is not secret and is safe in the session sent to the browser.
 - **Google tokens stay out of the session object.** Auth.js sends the session object to the browser. So, server code reads the tokens from the encrypted cookie instead.
 - **`getGoogleTokens()` tries both cookie names.** The cookie name has the `__Secure-` prefix on HTTPS only.
 - **A token counts as expired 10 seconds early.** A request then never starts with a token that is about to expire.
@@ -69,6 +69,7 @@ The JWT is encrypted with `AUTH_SECRET`. Browser code cannot read it.
 ## Edge cases
 
 - **Email removed from `ALLOWED_EMAILS`.** The user's next page request goes to `/auth/login?error=SessionExpired`. Their next API call gets the session-expired 401, and the browser signs them out. Signing in again goes to `/auth/error?error=AccessDenied`.
+- **Session started before this rule.** It keeps its random `sub` until the user signs in again.
 - **No refresh token in the JWT.** The refresh fails and the user is signed out.
 - **Refresh token revoked by the user in their Google account.** Google answers `invalid_grant` and the user is signed out.
 - **Cookie already expired.** The browser no longer sends it. So, the proxy sends the user to `/auth/login` with no session-expired toast.
