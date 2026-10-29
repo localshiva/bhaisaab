@@ -11,7 +11,7 @@ export const BaseMonthlyExpenseSchema = z.object({
       invalid_type_error: "Amount must be a number",
     })
     .positive("Amount must be greater than 0")
-    .min(100, "Amount must be greater than 0"),
+    .min(1, "Amount must be at least 1"),
   comment: z.string().optional(),
 });
 
