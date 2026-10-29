@@ -27,7 +27,7 @@ export async function DELETE(
 
     const rowId = Number(id);
 
-    if (typeof rowId !== "number") {
+    if (!Number.isInteger(rowId) || rowId < 1) {
       return NextResponse.json(
         {
           success: false,
