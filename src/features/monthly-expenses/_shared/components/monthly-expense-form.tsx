@@ -15,6 +15,7 @@ import { Textarea } from "@bhaisaab/shared/components/core/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 interface MonthlyExpenseFormProps {
@@ -52,6 +53,7 @@ export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
       { rowIndex: data.rowIndex, amount: data.amount, comment: data.comment },
       {
         onSuccess: () => {
+          toast.success("Expense added successfully");
           toggleOpen(false);
           reset({ rowIndex, amount: 0, comment: "" });
         },

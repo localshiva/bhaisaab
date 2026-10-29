@@ -14,6 +14,7 @@ import { Label } from "@bhaisaab/shared/components/core/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 interface IAdditionalPaymentFormProps {
@@ -50,6 +51,7 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
       { rowIndex: data.rowIndex, amount: data.amount },
       {
         onSuccess: () => {
+          toast.success("Additional payment saved successfully");
           toggleOpen(false);
           reset({ rowIndex, amount: 0 });
         },
