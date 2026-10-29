@@ -6,6 +6,15 @@ Family finance tracker built with Next.js (App Router), Tailwind and shadcn/ui. 
 
 `pnpm check-types`, `pnpm lint` and `pnpm build` all pass. There are no tests. Only the build catches server code imported into the browser bundle.
 
+## Git workflow
+
+Trunk-based. `main` is the only long-lived branch and Vercel deploys it to production.
+
+- Start each change on a short-lived branch off an up-to-date `main`, named `<type>/<short-topic>` (for example `fix/fd-total`).
+- Open a PR into `main` and check the change on its Vercel preview URL before merging.
+- Merge within a day or two. Rebase on `main` instead of letting the branch drift.
+- Never recreate a `dev`, `staging` or release branch. Previews replace them.
+
 ## Feature docs are the requirements
 
 Each feature's `docs/` folder holds its requirements. The doc defines what gets built, and the code follows it.
