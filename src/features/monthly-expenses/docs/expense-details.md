@@ -87,6 +87,7 @@ DELETE query params:
 
 - **Edit and delete are hidden for past months.** Past months are closed, and changing an expense would change a closed month's totals.
 - **The lock state comes from the server, not from the URL.** A browser-only lock can be bypassed by an edited URL. The server works out `isCurrentMonth` from the sheet itself.
+- **A malformed `rowIndex` counts as a missing one.** The page has no month to read, and it would otherwise show "No expenses recorded" for a month it never read.
 - **The "+ Expense" button opens the same add expense dialog as the list page.** Adding from either page then runs the same checks and writes to the same cell.
 - **Edit amounts are whole numbers of at least 1, the same as adding.** The family tracks whole rupees, and paise only add noise. There is no business minimum beyond 1, and any real amount from 1 upward is allowed.
 - **Delete empties the cell instead of removing it.** Removing a cell would shift every later expense one column left. The `columnIndex` values the page already holds would then point at the wrong expenses, and the next add reuses the gap anyway.
@@ -97,7 +98,7 @@ DELETE query params:
 
 ## Edge cases
 
-- **Missing `rowIndex` or `date` in the page URL.** The page sends no request. It shows "No month selected." with a "Back to monthly expenses" link to `/monthly-expenses`.
+- **Missing `rowIndex` or `date` in the page URL, or a `rowIndex` that is not a whole number of 1 or more.** The page sends no request. It shows "No month selected." with a "Back to monthly expenses" link to `/monthly-expenses`.
 - **Text in an expense cell.** The cell does not show as a card and does not count towards the count or the total.
 
 - **Month with no expenses.** The page shows "No expenses recorded". Underneath, it reads "Add your first expense to get started." when `isCurrentMonth` is `true`, and "There are no expenses recorded for this month." otherwise. The count and total line does not show.
