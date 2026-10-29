@@ -28,7 +28,7 @@ export const AddLoanPaymentSchema = z.object({
   amount: z
     .number()
     .positive("Payment amount must be positive")
-    .min(100, "Payment amount must be at least 1"),
+    .min(1, "Payment amount must be at least 1"),
 });
 
 export type AddLoanPaymentRequest = z.infer<typeof AddLoanPaymentSchema>;
@@ -97,7 +97,7 @@ export const LoanPaymentForm: FC<LoanPaymentFormProps> = ({
                     <Input
                       id="amount"
                       type="number"
-                      min={100}
+                      min={1}
                       max={pendingAmount}
                       placeholder="Enter payment amount"
                       className={

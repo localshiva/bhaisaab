@@ -8,7 +8,7 @@ export const AddLoanSchema = z.object({
       invalid_type_error: "Amount must be a number",
     })
     .positive("Amount must be greater than 0")
-    .min(100, "Amount must be greater than 0"),
+    .min(1, "Amount must be at least 1"),
 });
 
 export type AddLoanRequest = z.infer<typeof AddLoanSchema>;
@@ -21,7 +21,7 @@ export const AddLoanPaymentSchema = z.object({
   amount: z
     .number()
     .positive("Payment amount must be positive")
-    .min(100, "Payment amount must be at least 1"),
+    .min(1, "Payment amount must be at least 1"),
 });
 
 export type AddLoanPaymentRequest = z.infer<typeof AddLoanPaymentSchema>;

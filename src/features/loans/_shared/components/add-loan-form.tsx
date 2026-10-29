@@ -117,7 +117,7 @@ export const AddLoanForm = () => {
                     <Input
                       id="amount"
                       type="number"
-                      min={100}
+                      min={1}
                       placeholder="Enter loan amount"
                       className={
                         errors.amount
