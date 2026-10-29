@@ -1,3 +1,4 @@
+import { MonthlyExpenseForm } from "@bhaisaab/features/monthly-expenses/_shared/components/monthly-expense-form";
 import { useExpenseDelete } from "@bhaisaab/features/monthly-expenses/_shared/hooks/use-expense-delete";
 import { useExpenseEdit } from "@bhaisaab/features/monthly-expenses/_shared/hooks/use-expense-edit";
 import { useMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/hooks/use-monthly-expense";
@@ -57,6 +58,7 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
   const [editAmount, setEditAmount] = useState<string>("");
   const [editComment, setEditComment] = useState<string>("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [addExpenseOpen, setAddExpenseOpen] = useState(false);
   const [expenseToDelete, setExpenseToDelete] =
     useState<IEditableExpense | null>(null);
 
@@ -320,7 +322,7 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
           </div>
 
           {canAddExpenses && (
-            <Button>
+            <Button onClick={() => setAddExpenseOpen(true)}>
               <Plus className="size-4 mr-1" />
               Expense
             </Button>
@@ -329,6 +331,13 @@ export const MonthlyExpenseList: FC<IMonthlyExpenseListProps> = ({
 
         {renderContent()}
       </div>
+
+      <MonthlyExpenseForm
+        rowIndex={rowIndex}
+        date={date}
+        isOpen={addExpenseOpen}
+        toggleOpen={setAddExpenseOpen}
+      />
 
       <ConfirmAlertDialog
         isOpen={deleteConfirmOpen}
