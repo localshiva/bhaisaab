@@ -11,8 +11,10 @@ export interface IMonthlyExpenseRequest {
 }
 
 /**
- * Reads the non-empty cells from column F onward in a month's row,
+ * Reads the cells holding a number from column F onward in a month's row,
  * each with its note as the comment and its 0-based column index.
+ *
+ * Empty cells and cells holding text are skipped.
  */
 export async function getMonthlyExpenses(
   requestData: IMonthlyExpenseRequest,
@@ -57,9 +59,10 @@ export async function getMonthlyExpenses(
     }
 
     for (const [index, value] of rowValues.entries()) {
-      if (value !== null && value !== undefined && value !== "") {
+      // Text has no amount and would show as ₹NaN, so only numbers are expenses
+      if (typeof value === "number" && Number.isFinite(value)) {
         expenses.push({
-          amount: Number(value),
+          amount: value,
           comment: notes[index],
           columnIndex: index + EXPENSE_START_INDEX,
         });
