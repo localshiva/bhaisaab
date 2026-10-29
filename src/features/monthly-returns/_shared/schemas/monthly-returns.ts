@@ -21,10 +21,11 @@ export type AddSourceRequest = z.infer<typeof AddSourceSchema>;
 /**
  * Body of the delete source request.
  * `id` is the 0-based sheet row, where the header is 0.
+ * So, the first source is 1 and the header row can never be deleted.
  */
 export const DeleteSourceSchema = z.object(
   {
-    id: z.number().min(0, "Row ID is required"),
+    id: z.number().min(1, "Row ID must be at least 1"),
     source: z.string().min(1, "Source is required"),
   },
   {
