@@ -4,7 +4,6 @@ import {
   AddSourceRequest,
   DeleteSourceRequest,
 } from "@bhaisaab/features/monthly-returns/_shared/schemas/monthly-returns";
-import { deleteSingleRow } from "@bhaisaab/shared/server/spreadsheet/delete-single-row";
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
@@ -97,7 +96,10 @@ export async function addMonthlyIncomeSource(
 }
 
 /**
- * Deletes a whole row, so the rows below shift up.
+ * Deletes the source's A:C cells and shifts the A:C cells below up.
+ *
+ * It never deletes the whole row, because row 2 also holds the sheet's
+ * total formulas in G2:I2, and they would go with the first source.
  *
  * @param deleteData `id` is the 0-based sheet row, where the header is 0.
  *                   `source` must match the row's column B,
@@ -112,7 +114,7 @@ export async function deleteMonthlyIncomeSource(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // deleteDimension addresses the sheet by numeric ID, not by name.
+    // deleteRange addresses the sheet by numeric ID, not by name.
     const spreadsheetInfo = await sheetsClient.spreadsheets.get({
       spreadsheetId,
       ranges: [SHEET_NAME], // Limits the response so sheets[0] is this sheet
@@ -141,7 +143,25 @@ export async function deleteMonthlyIncomeSource(
       throw createStatusError("Income Source does not match", 409);
     }
 
-    await deleteSingleRow(sheetsClient, spreadsheetId, sheetId, deleteData.id);
+    await sheetsClient.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [
+          {
+            deleteRange: {
+              range: {
+                sheetId,
+                startRowIndex: deleteData.id,
+                endRowIndex: deleteData.id + 1,
+                startColumnIndex: 0,
+                endColumnIndex: 3,
+              },
+              shiftDimension: "ROWS",
+            },
+          },
+        ],
+      },
+    });
   } catch (error) {
     console.error("Error deleting source:", error);
     throw error;
