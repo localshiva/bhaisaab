@@ -1,10 +1,6 @@
-// @bhaisaab/shared/utils/currency.ts
-
 /**
- * Formats a number as Indian Rupees
- *
- * @param amount Number to format
- * @returns Formatted currency string with ₹ symbol
+ * Formats an amount as Indian Rupees with Indian digit grouping,
+ * for example ₹1,25,000.
  */
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-IN", {

@@ -1,5 +1,5 @@
 "use client";
-import { ErrorPageContainer } from "@bhaisaab/shared/pages/error";
+import { ErrorPageContainer } from "@bhaisaab/shared/components/app/error-page-container";
 
 interface ErrorPageProps {
   error: Error;

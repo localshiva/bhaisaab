@@ -1,0 +1,394 @@
+import { useAddFDStore } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-add-fd-store";
+import { useCreateFixedDeposit } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-create-fixed-deposit";
+import {
+  CreateFixedDepositRequest,
+  CreateFixedDepositSchema,
+} from "@bhaisaab/features/fixed-deposits/_shared/schemas/fixed-deposits";
+import { toDateInputValue } from "@bhaisaab/features/fixed-deposits/_shared/utils/date-input";
+import { Button } from "@bhaisaab/shared/components/core/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@bhaisaab/shared/components/core/dialog";
+import { Input } from "@bhaisaab/shared/components/core/input";
+import { Label } from "@bhaisaab/shared/components/core/label";
+import { formatCurrency } from "@bhaisaab/shared/utils/currency";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { addMonths } from "date-fns/addMonths";
+import { addYears } from "date-fns/addYears";
+import { format } from "date-fns/format";
+import { intervalToDuration } from "date-fns/intervalToDuration";
+import { isValid } from "date-fns/isValid";
+import { Plus } from "lucide-react";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+/**
+ * The blank form: today's deposit date and a one-year term.
+ *
+ * A function, not a constant, so that "today" is worked out each time
+ * the form opens or resets. A constant would keep the date the page
+ * loaded on, which goes stale past midnight.
+ */
+const getBlankValues = (): CreateFixedDepositRequest => {
+  const today = new Date();
+
+  return {
+    amount: 0,
+    interestRate: 0,
+    depositDate: format(today, "yyyy-MM-dd"),
+    maturityDate: format(addYears(today, 1), "yyyy-MM-dd"),
+  };
+};
+
+export const FDCreateForm = () => {
+  const {
+    isAddFDOpen,
+    toggleAddFD,
+    closeAddFD,
+    defaultValues,
+    clearDefaultValues,
+  } = useAddFDStore();
+  const { createFixedDeposit, isLoading } = useCreateFixedDeposit();
+
+  const { control, handleSubmit, reset, setValue, getValues } =
+    useForm<CreateFixedDepositRequest>({
+      resolver: zodResolver(CreateFixedDepositSchema),
+      defaultValues: getBlankValues(),
+    });
+
+  const onSubmit = (data: CreateFixedDepositRequest) => {
+    createFixedDeposit(data, {
+      onSuccess: () => {
+        toast.success(
+          `Fixed deposit of ${formatCurrency(data.amount)} was created successfully`,
+        );
+        closeAddFD();
+        reset(getBlankValues());
+        clearDefaultValues();
+      },
+      onError: err => {
+        console.error("Failed to create fixed deposit:", err);
+        // The mutation's toast meta shows the error to the user.
+      },
+    });
+  };
+
+  /**
+   * Opening the dialog starts from today's blank values, with any values
+   * copied from another deposit on top.
+   */
+  useEffect(() => {
+    if (!isAddFDOpen) {
+      return;
+    }
+
+    const blankValues = getBlankValues();
+
+    if (!defaultValues) {
+      reset(blankValues);
+      return;
+    }
+
+    // An unparseable sheet date keeps the blank form's value.
+    reset({
+      amount: defaultValues.amount,
+      interestRate: defaultValues.interestRate,
+      depositDate:
+        toDateInputValue(defaultValues.depositDate) ?? blankValues.depositDate,
+      maturityDate:
+        toDateInputValue(defaultValues.maturityDate) ??
+        blankValues.maturityDate,
+    });
+  }, [defaultValues, isAddFDOpen, reset]);
+
+  // Closing the dialog drops any values copied from another deposit.
+  useEffect(() => {
+    if (!isAddFDOpen) {
+      reset(getBlankValues());
+      clearDefaultValues();
+    }
+  }, [isAddFDOpen, clearDefaultValues, reset]);
+
+  return (
+    <Dialog open={isAddFDOpen} onOpenChange={toggleAddFD}>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <Plus className="size-4" />
+          <span>Add new</span>
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Add new fixed deposit</DialogTitle>
+          <DialogDescription>
+            Add a new fixed deposit to track interest and maturity.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Controller
+                name="amount"
+                control={control}
+                render={({
+                  field: { onChange, value, ...field },
+                  formState: { errors },
+                }) => (
+                  <>
+                    <Label
+                      htmlFor="amount"
+                      className={errors.amount ? "text-destructive" : ""}
+                    >
+                      Deposit Amount
+                    </Label>
+
+                    <Input
+                      id="amount"
+                      type="number"
+                      min="1"
+                      step="1"
+                      placeholder="Enter amount"
+                      aria-invalid={!!errors.amount}
+                      onChange={e => {
+                        const inputValue = e.target.value;
+                        const numValue =
+                          inputValue === ""
+                            ? 0
+                            : Math.max(1, Number(inputValue));
+                        onChange(numValue);
+                      }}
+                      value={value || ""}
+                      {...field}
+                    />
+
+                    {errors.amount && (
+                      <p className="text-destructive text-sm">
+                        {errors.amount.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Controller
+                name="interestRate"
+                control={control}
+                render={({
+                  field: { onChange, value, ...field },
+                  formState: { errors },
+                }) => (
+                  <>
+                    <Label
+                      htmlFor="interestRate"
+                      className={errors.interestRate ? "text-destructive" : ""}
+                    >
+                      Interest Rate (%)
+                    </Label>
+                    <Input
+                      id="interestRate"
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      placeholder="Enter interest rate"
+                      aria-invalid={!!errors.interestRate}
+                      onChange={e => {
+                        const inputValue = e.target.value;
+                        const numValue =
+                          inputValue === ""
+                            ? 0
+                            : Math.min(100, Math.max(0.01, Number(inputValue)));
+                        onChange(numValue);
+                      }}
+                      value={value || ""}
+                      {...field}
+                    />
+                    {errors.interestRate && (
+                      <p className="text-destructive text-sm">
+                        {errors.interestRate.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Controller
+                name="depositDate"
+                control={control}
+                render={({
+                  field: { onChange, ...restField },
+                  formState: { errors },
+                }) => (
+                  <>
+                    <Label
+                      htmlFor="depositDate"
+                      className={errors.depositDate ? "text-destructive" : ""}
+                    >
+                      Deposit Date
+                    </Label>
+
+                    <Input
+                      id="depositDate"
+                      type="date"
+                      readOnly={false}
+                      onClick={e => e.currentTarget.showPicker()}
+                      aria-invalid={errors.depositDate ? "true" : "false"}
+                      onChange={e => {
+                        onChange(e);
+
+                        /**
+                         * Default to a one-year term. A cleared or invalid
+                         * deposit date leaves the maturity date as it is.
+                         */
+                        const maturityDate = toDateInputValue(
+                          addYears(new Date(e.target.value), 1),
+                        );
+                        if (maturityDate) {
+                          setValue("maturityDate", maturityDate);
+                        }
+                      }}
+                      {...restField}
+                    />
+
+                    {errors.depositDate && (
+                      <p className="text-destructive text-sm">
+                        {errors.depositDate.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Controller
+                name="maturityDate"
+                control={control}
+                render={({ field, formState: { errors } }) => {
+                  const depositDate = new Date(getValues("depositDate"));
+                  const maturityDate = new Date(field.value);
+                  const interval = intervalToDuration({
+                    start: depositDate,
+                    end: maturityDate,
+                  });
+
+                  /**
+                   * Sets the maturity date to the deposit date plus the
+                   * term. Does nothing while the deposit date is cleared
+                   * or invalid, as there is no date to add the term to.
+                   */
+                  const setTerm = (years: number, months: number) => {
+                    const newDate = toDateInputValue(
+                      addMonths(addYears(depositDate, years), months),
+                    );
+                    if (newDate) {
+                      field.onChange(newDate);
+                    }
+                  };
+
+                  return (
+                    <>
+                      <Label
+                        htmlFor="maturityDate"
+                        className={
+                          errors.maturityDate ? "text-destructive" : ""
+                        }
+                      >
+                        Maturity Date
+                      </Label>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <Label
+                            htmlFor="maturityYears"
+                            className="text-sm mb-1 block"
+                          >
+                            Years
+                          </Label>
+                          <Input
+                            id="maturityYears"
+                            type="number"
+                            min="0"
+                            max="20"
+                            value={interval.years ?? 0}
+                            onChange={e => {
+                              setTerm(
+                                Number(e.target.value || 0),
+                                interval.months ?? 0,
+                              );
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <Label
+                            htmlFor="maturityMonths"
+                            className="text-sm mb-1 block"
+                          >
+                            Months
+                          </Label>
+                          <Input
+                            id="maturityMonths"
+                            type="number"
+                            min="0"
+                            max="11"
+                            value={interval.months ?? 0}
+                            onChange={e => {
+                              setTerm(
+                                interval.years ?? 0,
+                                Number(e.target.value || 0),
+                              );
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {isValid(maturityDate) && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Matures on {format(maturityDate, "MMM d, yyyy")}
+                        </p>
+                      )}
+
+                      <Input id="maturityDate" type="hidden" {...field} />
+
+                      {errors.maturityDate && (
+                        <p className="text-destructive text-sm">
+                          {errors.maturityDate.message}
+                        </p>
+                      )}
+                    </>
+                  );
+                }}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={closeAddFD}
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Creating..." : "Create Deposit"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};

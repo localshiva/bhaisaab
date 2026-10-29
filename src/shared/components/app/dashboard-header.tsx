@@ -1,7 +1,7 @@
 "use client";
 import { SidebarTrigger } from "@bhaisaab/shared/components/core/sidebar";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import { useSpreadsheetInfo } from "@bhaisaab/shared/hooks/services/spreadsheet-info";
+import { useSpreadsheetInfo } from "@bhaisaab/shared/hooks/use-spreadsheet-info";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const DEFAULT_SPREADSHEET_TITLE = "Bhaisaab";
@@ -22,17 +22,12 @@ export function DashboardHeader() {
 
     if (!ticking.current) {
       globalThis.requestAnimationFrame(() => {
-        // Always show at top
         if (currentScrollY <= 0) {
           setVisible(true);
-        }
-        // Scrolling up significantly
-        else if (lastScrollY.current - currentScrollY > SCROLL_THRESHOLD) {
+        } else if (lastScrollY.current - currentScrollY > SCROLL_THRESHOLD) {
           setVisible(true);
           lastScrollY.current = currentScrollY;
-        }
-        // Scrolling down significantly
-        else if (currentScrollY - lastScrollY.current > SCROLL_THRESHOLD) {
+        } else if (currentScrollY - lastScrollY.current > SCROLL_THRESHOLD) {
           setVisible(false);
           lastScrollY.current = currentScrollY;
         }

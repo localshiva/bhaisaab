@@ -8,24 +8,24 @@ import { Mulish, Nunito_Sans, Varela } from "next/font/google";
 import { headers } from "next/headers";
 
 const varela = Varela({
-  weight: "400", // This line was missing in your implementation
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
   variable: "--font-varela",
 });
 
 const mulish = Mulish({
-  weight: ["600"], // Semibold weight
+  weight: ["600"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-mulish", // Optional: for CSS variable usage
+  variable: "--font-mulish",
 });
 
 const nunitoSans = Nunito_Sans({
-  weight: ["600"], // Semibold weight
+  weight: ["600"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-nunito-sans", // Optional: for CSS variable usage
+  variable: "--font-nunito-sans",
 });
 
 const APP_TITLE_TEMPLATE = "%s | Bhaisaab";
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
         rel: "icon",
       },
       {
-        url: "/logo/ios/96.png",
+        url: "/logo/ios/128.png",
         sizes: "128x128",
         type: "image/png",
         rel: "icon",

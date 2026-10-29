@@ -19,7 +19,7 @@ const themes = [
 export function ThemeSwitcher({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme();
 
-  // Avoid SSR issues
+  // next-themes has no theme on the server; show System as selected there
   const effectiveTheme = globalThis.window === undefined ? "system" : theme;
 
   return (

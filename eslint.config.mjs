@@ -1,11 +1,11 @@
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import eslintConfigPrettier from "eslint-config-prettier";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import eslintPluginImportX from "eslint-plugin-import-x";
 import noSecrets from "eslint-plugin-no-secrets";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
-import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
-import nextTypescript from "eslint-config-next/typescript";
 import { config, configs } from "typescript-eslint";
 
 const eslintConfig = [
@@ -153,6 +153,37 @@ const eslintConfig = [
       "import-x/no-duplicates": "error",
       "import-x/no-extraneous-dependencies": "error",
       "import-x/no-anonymous-default-export": "error",
+
+      // Cross-directory imports use the @bhaisaab/ alias
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: String.raw`^\.\.?/.*/|^\.\./`,
+              message:
+                "Use the @bhaisaab/ alias. Relative imports are only for siblings in the same directory.",
+            },
+          ],
+        },
+      ],
+
+      // No barrel files: import from the file that defines the symbol
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "ExportAllDeclaration, ExportNamedDeclaration[source]",
+          message:
+            "No re-exports. Import from the file that defines the symbol.",
+        },
+      ],
+    },
+  },
+  {
+    // Next.js entry files re-export from features
+    files: ["src/app/**"],
+    rules: {
+      "no-restricted-syntax": "off",
     },
   },
   {

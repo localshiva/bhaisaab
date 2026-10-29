@@ -1,4 +1,4 @@
-import FixedDeposits from "@bhaisaab/shared/pages/dashboard/fixed-deposits/fixed-deposits";
+import FixedDeposits from "@bhaisaab/features/fixed-deposits/fixed-deposits-page";
 
 export default function DepositsPage() {
   return <FixedDeposits />;

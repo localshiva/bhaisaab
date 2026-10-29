@@ -1,11 +1,9 @@
-// app/auth/login/loading.tsx
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 
 export default function LoginLoading() {
   return (
     <div className="container flex justify-center items-center min-h-screen">
       <div className="w-full max-w-md overflow-hidden rounded-xl bg-white shadow-xl dark:bg-charcoal-300">
-        {/* Colorful header band */}
         <div className="flex h-2">
           <div className="w-1/4 bg-persian-green-500"></div>
           <div className="w-1/4 bg-saffron-500"></div>

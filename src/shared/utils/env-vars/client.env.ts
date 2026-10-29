@@ -1,4 +1,3 @@
-// env.server.ts
 import { z } from "zod";
 
 const clientSchema = z.object({
@@ -6,7 +5,6 @@ const clientSchema = z.object({
   isDev: z.boolean(),
 });
 
-// Client-side env
 export const clientEnv = clientSchema.parse({
   isProduction: process.env.NODE_ENV === "production",
   isDev: process.env.NODE_ENV === "development",

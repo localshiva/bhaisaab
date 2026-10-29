@@ -1,1 +1,1 @@
-export { default } from "@bhaisaab/shared/pages/not-found";
+export { default } from "@bhaisaab/shared/components/app/not-found";

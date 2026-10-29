@@ -1,7 +1,6 @@
 import {
   SidebarContent,
   SidebarGroup,
-  // SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
@@ -11,13 +10,7 @@ import {
 } from "@bhaisaab/shared/components/core/sidebar";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useIsMobile } from "@bhaisaab/shared/hooks/use-mobile";
-import {
-  Banknote,
-  BanknoteArrowUp,
-  BarChart3,
-  // Plus,
-  Receipt,
-} from "lucide-react";
+import { Banknote, BanknoteArrowUp, BarChart3, Receipt } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
@@ -84,7 +77,6 @@ export default function SidebarNav() {
 
   return (
     <SidebarContent>
-      {/* Nav links */}
       <SidebarGroup>
         <SidebarGroupLabel>
           <Typography textColor="muted" variant={"small"}>

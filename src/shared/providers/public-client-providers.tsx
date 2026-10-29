@@ -1,6 +1,7 @@
 "use client";
 import { SidebarProvider } from "@bhaisaab/shared/components/core/sidebar";
 import { SESSION_EXPIRED_MESSAGE } from "@bhaisaab/shared/constants/app";
+import { getErrorMessage } from "@bhaisaab/shared/utils/error";
 import {
   MutationCache,
   QueryCache,
@@ -13,8 +14,6 @@ import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
 import { toast } from "sonner";
 
-import { getErrorMessage } from "../utils/error";
-
 interface PublicClientProvidersProps {
   nonce: string | null;
 }
@@ -22,7 +21,7 @@ interface PublicClientProvidersProps {
 /**
  * Sends the user to the login page when an API call reports an expired session.
  *
- * Returns true when it did, so the caller can skip its own error toast.
+ * Returns true when it did, so that the caller can skip its own error toast.
  */
 function handleSessionExpired(error: unknown): boolean {
   const isSessionExpired =
@@ -39,7 +38,6 @@ function handleSessionExpired(error: unknown): boolean {
   return isSessionExpired;
 }
 
-// Create a client
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {

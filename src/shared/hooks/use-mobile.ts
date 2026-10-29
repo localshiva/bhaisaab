@@ -20,8 +20,9 @@ function getServerSnapshot() {
 /**
  * Reports whether the viewport is narrower than the mobile breakpoint.
  *
- * Reads the width through useSyncExternalStore, so it stays in sync
- * with resizes without setting state inside an effect.
+ * Reads the width through useSyncExternalStore.
+ * It then follows resizes without setting state inside an effect.
+ *
  * Returns false during server rendering.
  */
 export function useIsMobile() {

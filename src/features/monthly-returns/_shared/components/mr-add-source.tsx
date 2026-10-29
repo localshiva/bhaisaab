@@ -1,0 +1,221 @@
+import { useAddMonthlyIncomeSource } from "@bhaisaab/features/monthly-returns/_shared/hooks/use-add-monthly-income-source";
+import {
+  AddSourceRequest,
+  AddSourceSchema,
+} from "@bhaisaab/features/monthly-returns/_shared/schemas/monthly-returns";
+import { Button } from "@bhaisaab/shared/components/core/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@bhaisaab/shared/components/core/dialog";
+import { Input } from "@bhaisaab/shared/components/core/input";
+import { Label } from "@bhaisaab/shared/components/core/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@bhaisaab/shared/components/core/select";
+import { cn } from "@bhaisaab/shared/utils/shadcn";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { useToggle } from "react-use";
+import { toast } from "sonner";
+
+/**
+ * Button and dialog that append an income source.
+ * After a successful save it shows a success toast, then closes and resets.
+ */
+export const MRAddSource = () => {
+  const [isOpen, toggleOpen] = useToggle(false);
+  const { addIncomeSource, isLoading } = useAddMonthlyIncomeSource();
+
+  const { control, handleSubmit, reset } = useForm<AddSourceRequest>({
+    resolver: zodResolver(AddSourceSchema),
+    defaultValues: {
+      type: undefined,
+      source: "",
+      amount: 0,
+    },
+  });
+
+  const onSubmit = (data: AddSourceRequest) => {
+    addIncomeSource(data, {
+      onSuccess: () => {
+        toast.success("Source added successfully");
+        toggleOpen(false);
+        reset();
+      },
+      onError: err => {
+        // The mutation cache shows the error toast.
+        console.error("Failed to add source:", err);
+      },
+    });
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={toggleOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <Plus className="size-4" />
+          <span>Add new</span>
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Add new source</DialogTitle>
+          <DialogDescription>
+            Add new source of income to your monthly returns.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Controller
+                name="type"
+                control={control}
+                render={({ field, formState: { errors } }) => (
+                  <>
+                    <Label
+                      htmlFor="type"
+                      className={errors.type ? "text-destructive" : ""}
+                    >
+                      Type
+                    </Label>
+
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger
+                        id="type"
+                        className={cn("w-full", {
+                          "border-destructive ring-destructive/20": errors.type,
+                        })}
+                      >
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Salary">Salary</SelectItem>
+                        <SelectItem value="Rent">Rent</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    {errors.type && (
+                      <p className="text-destructive text-sm">
+                        {errors.type.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Controller
+                name="source"
+                control={control}
+                render={({ field, formState: { errors } }) => (
+                  <>
+                    <Label
+                      htmlFor="source"
+                      className={errors.source ? "text-destructive" : ""}
+                    >
+                      Income Source
+                    </Label>
+
+                    <Input
+                      id="source"
+                      placeholder="Enter source name"
+                      className={
+                        errors.source
+                          ? "border-destructive ring-destructive/20"
+                          : ""
+                      }
+                      {...field}
+                    />
+
+                    {errors.source && (
+                      <p className="text-destructive text-sm">
+                        {errors.source.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Controller
+                name="amount"
+                control={control}
+                render={({
+                  field: { onChange, value, ...field },
+                  formState: { errors },
+                }) => (
+                  <>
+                    <Label
+                      htmlFor="amount"
+                      className={errors.amount ? "text-destructive" : ""}
+                    >
+                      Amount
+                    </Label>
+
+                    <Input
+                      id="amount"
+                      type="number"
+                      min="1"
+                      step="1"
+                      placeholder="Enter amount"
+                      className={
+                        errors.amount
+                          ? "border-destructive ring-destructive/20"
+                          : ""
+                      }
+                      onChange={e => {
+                        const inputValue = e.target.value;
+                        const numValue =
+                          inputValue === ""
+                            ? 0
+                            : Math.max(0, Number(inputValue));
+                        onChange(numValue);
+                      }}
+                      value={value}
+                      {...field}
+                    />
+
+                    {errors.amount && (
+                      <p className="text-destructive text-sm">
+                        {errors.amount.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={toggleOpen}
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Adding..." : "Add Source"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};

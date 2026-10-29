@@ -16,7 +16,8 @@ export interface IAmountSummaryCardProps {
   rows: AmountSummaryItemProps[];
   title: string;
   defaultOpen?: boolean;
-  collapsedStateId: string; // Used to store the collapsed state in localStorage
+  /** Makes the localStorage key that remembers whether the card is open. */
+  collapsedStateId: string;
 }
 
 export const AmountSummaryCard = ({

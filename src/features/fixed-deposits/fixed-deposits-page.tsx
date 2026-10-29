@@ -1,0 +1,36 @@
+"use client";
+import { FDCreateForm } from "@bhaisaab/features/fixed-deposits/_shared/components/fd-create-form";
+import { FDEmptyList } from "@bhaisaab/features/fixed-deposits/_shared/components/fd-empty-list";
+import { FDList } from "@bhaisaab/features/fixed-deposits/_shared/components/fd-list";
+import { FDSummaryCard } from "@bhaisaab/features/fixed-deposits/_shared/components/fd-summary-card";
+import { useFixedDeposits } from "@bhaisaab/features/fixed-deposits/_shared/hooks/use-fixed-deposits";
+import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
+import { Typography } from "@bhaisaab/shared/components/core/typography";
+
+export default function FixedDeposits() {
+  const { isLoading, data } = useFixedDeposits();
+
+  if (isLoading) {
+    return <DataLoading />;
+  }
+
+  const { rows = [] } = data ?? {};
+
+  return (
+    <div className="flex flex-col gap-4 max-w-6xl mx-auto p-4">
+      <div className="w-full flex justify-between items-center">
+        <div className="flex items-center">
+          <Typography variant="h4" weight="semibold">
+            Fixed Deposits
+          </Typography>
+        </div>
+
+        <FDCreateForm />
+      </div>
+
+      <FDSummaryCard rows={rows} />
+
+      {rows.length === 0 ? <FDEmptyList /> : <FDList rows={rows} />}
+    </div>
+  );
+}
