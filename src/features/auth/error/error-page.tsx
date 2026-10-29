@@ -19,20 +19,6 @@ export default function ErrorPage() {
 
       break;
     }
-    case "OAuthSignin": {
-      errorMessage = "Sign-in Error";
-      errorDescription =
-        "There was an issue starting the sign-in process. Please try again.";
-
-      break;
-    }
-    case "OAuthCallback": {
-      errorMessage = "Authentication Failed";
-      errorDescription =
-        "There was an error during the authentication process.";
-
-      break;
-    }
     default: {
       errorMessage = "An unknown error occurred.";
       errorDescription = "Please try again or contact support.";
