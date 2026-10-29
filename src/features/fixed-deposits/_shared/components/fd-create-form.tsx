@@ -27,11 +27,22 @@ import { Plus } from "lucide-react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-const INITIAL_VALUES: CreateFixedDepositRequest = {
-  amount: 0,
-  interestRate: 0,
-  depositDate: format(new Date(), "yyyy-MM-dd"),
-  maturityDate: format(addYears(new Date(), 1), "yyyy-MM-dd"),
+/**
+ * The blank form: today's deposit date and a one-year term.
+ *
+ * A function, not a constant, so that "today" is worked out each time
+ * the form opens or resets. A constant would keep the date the page
+ * loaded on, which goes stale past midnight.
+ */
+const getBlankValues = (): CreateFixedDepositRequest => {
+  const today = new Date();
+
+  return {
+    amount: 0,
+    interestRate: 0,
+    depositDate: format(today, "yyyy-MM-dd"),
+    maturityDate: format(addYears(today, 1), "yyyy-MM-dd"),
+  };
 };
 
 export const FDCreateForm = () => {
@@ -47,16 +58,14 @@ export const FDCreateForm = () => {
   const { control, handleSubmit, reset, setValue, getValues } =
     useForm<CreateFixedDepositRequest>({
       resolver: zodResolver(CreateFixedDepositSchema),
-      defaultValues: {
-        ...INITIAL_VALUES,
-      },
+      defaultValues: getBlankValues(),
     });
 
   const onSubmit = (data: CreateFixedDepositRequest) => {
     createFixedDeposit(data, {
       onSuccess: () => {
         closeAddFD();
-        reset(INITIAL_VALUES);
+        reset(getBlankValues());
         clearDefaultValues();
       },
       onError: err => {
@@ -66,28 +75,38 @@ export const FDCreateForm = () => {
     });
   };
 
+  /**
+   * Opening the dialog starts from today's blank values, with any values
+   * copied from another deposit on top.
+   */
   useEffect(() => {
-    if (defaultValues && isAddFDOpen) {
-      setValue("amount", defaultValues.amount);
-      setValue("interestRate", defaultValues.interestRate);
-
-      // An unparseable sheet date keeps the blank form's value.
-      const depositDate = toDateInputValue(defaultValues.depositDate);
-      if (depositDate) {
-        setValue("depositDate", depositDate);
-      }
-
-      const maturityDate = toDateInputValue(defaultValues.maturityDate);
-      if (maturityDate) {
-        setValue("maturityDate", maturityDate);
-      }
+    if (!isAddFDOpen) {
+      return;
     }
-  }, [defaultValues, isAddFDOpen, setValue]);
+
+    const blankValues = getBlankValues();
+
+    if (!defaultValues) {
+      reset(blankValues);
+      return;
+    }
+
+    // An unparseable sheet date keeps the blank form's value.
+    reset({
+      amount: defaultValues.amount,
+      interestRate: defaultValues.interestRate,
+      depositDate:
+        toDateInputValue(defaultValues.depositDate) ?? blankValues.depositDate,
+      maturityDate:
+        toDateInputValue(defaultValues.maturityDate) ??
+        blankValues.maturityDate,
+    });
+  }, [defaultValues, isAddFDOpen, reset]);
 
   // Closing the dialog drops any values copied from another deposit.
   useEffect(() => {
     if (!isAddFDOpen) {
-      reset(INITIAL_VALUES);
+      reset(getBlankValues());
       clearDefaultValues();
     }
   }, [isAddFDOpen, clearDefaultValues, reset]);
