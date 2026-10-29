@@ -1,23 +1,16 @@
-// @bhaisaab/shared/services/spreadsheet/monthly-expense/view-monthly-expense.ts
+import "server-only";
+
+import { IMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/types/monthly-expenses";
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
-import { MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
+import { MONTHLY_EXPENSE_SHEET_NAME } from "./monthly-expense-sheet";
 
 /**
  * Interface for the monthly expense request
  */
 export interface IMonthlyExpenseRequest {
   rowIndex: number; // The row index (1-based) of the month to view expenses for
-}
-
-/**
- * Interface for monthly expense details
- */
-export interface IMonthlyExpense {
-  amount: number;
-  comment?: string;
-  columnIndex: number; // Useful for potential future features like editing expenses
 }
 
 /**

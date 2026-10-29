@@ -1,6 +1,5 @@
-// @bhaisaab/pages/monthly-expense/monthly-expense-details/monthly-expense-details.tsx
 "use client";
-import { MonthlyExpenseList } from "@bhaisaab/shared/pages/dashboard/monthly-expenses/monthly-expense-details/components/monthly-expense-list";
+import { MonthlyExpenseList } from "@bhaisaab/features/monthly-expenses/monthly-expense-details/_shared/components/monthly-expense-list";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FC } from "react";
 

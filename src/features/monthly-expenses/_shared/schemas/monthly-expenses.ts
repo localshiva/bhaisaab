@@ -1,4 +1,3 @@
-// @bhaisaab/shared/constants/validation/monthly-expenses.ts
 import { z } from "zod";
 
 // Shared between client & server

@@ -1,4 +1,4 @@
-import { MonthlyExpense } from "@bhaisaab/shared/pages/dashboard/monthly-expenses/monthly-expenses";
+import { MonthlyExpense } from "@bhaisaab/features/monthly-expenses/monthly-expenses-page";
 
 export default function MonthlyPage() {
   return <MonthlyExpense />;

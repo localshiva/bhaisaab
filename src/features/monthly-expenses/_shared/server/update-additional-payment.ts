@@ -1,8 +1,9 @@
-// @bhaisaab/shared/services/spreadsheet/monthly-expense/update-additional-payment.ts
+import "server-only";
+
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
-import { MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
+import { MONTHLY_EXPENSE_SHEET_NAME } from "./monthly-expense-sheet";
 
 /**
  * Interface for updating the additional payment column

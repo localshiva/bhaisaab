@@ -1,4 +1,9 @@
-// @bhaisaab/pages/monthly-expense/components/monthly-expense-details-page.tsx
+import {
+  useExpenseDelete,
+  useExpenseEdit,
+  useMonthlyExpense,
+} from "@bhaisaab/features/monthly-expenses/_shared/hooks/monthly-expenses";
+import { IMonthlyExpense } from "@bhaisaab/features/monthly-expenses/_shared/types/monthly-expenses";
 import { ConfirmAlertDialog } from "@bhaisaab/shared/components/app/confirm-alert-dialog";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import {
@@ -20,12 +25,6 @@ import {
   TooltipTrigger,
 } from "@bhaisaab/shared/components/core/tooltip";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import {
-  useExpenseDelete,
-  useExpenseEdit,
-  useMonthlyExpense,
-} from "@bhaisaab/shared/hooks/services/monthly-expenses";
-import { IMonthlyExpense } from "@bhaisaab/shared/services/spreadsheet/monthly-expenses/get-expenses";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { ArrowLeft, Check, Edit2, Plus, Trash2, X } from "lucide-react";
 import { FC, useCallback, useMemo, useState } from "react";

@@ -1,6 +1,5 @@
-// @bhaisaab/pages/monthly-expenses/components/monthly-expenses-list.tsx
+import { IMonthlyExpenseRow } from "@bhaisaab/features/monthly-expenses/_shared/hooks/monthly-expenses";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
-import { IMonthlyExpenseRow } from "@bhaisaab/shared/hooks/services/monthly-expenses";
 import { FC } from "react";
 
 import { MonthlyExpenseEmptyList } from "./monthly-expenses-empty-list";

@@ -1,6 +1,5 @@
-// @bhaisaab/pages/monthly-expense/components/monthly-expense-summary-card.tsx
+import { IMonthlyExpenseRow } from "@bhaisaab/features/monthly-expenses/_shared/hooks/monthly-expenses";
 import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
-import { IMonthlyExpenseRow } from "@bhaisaab/shared/hooks/services/monthly-expenses";
 import { format } from "date-fns";
 import { FC, useMemo } from "react";
 

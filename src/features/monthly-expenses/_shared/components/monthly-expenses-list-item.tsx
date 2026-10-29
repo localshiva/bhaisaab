@@ -1,4 +1,3 @@
-// @bhaisaab/pages/monthly-expense/components/monthly-expense-list-item.tsx
 import { Badge } from "@bhaisaab/shared/components/core/badge";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";

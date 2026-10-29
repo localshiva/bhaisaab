@@ -1,7 +1,9 @@
+import "server-only";
+
 import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
-import { MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
+import { MONTHLY_EXPENSE_SHEET_NAME } from "./monthly-expense-sheet";
 
 /**
  * Fetches data from the loan report spreadsheet
