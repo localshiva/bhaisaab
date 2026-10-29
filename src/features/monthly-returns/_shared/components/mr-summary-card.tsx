@@ -1,4 +1,4 @@
-import { IMonthlyReturnsRow } from "@bhaisaab/features/monthly-returns/_shared/hooks/monthly-return";
+import { IMonthlyReturnsRow } from "@bhaisaab/features/monthly-returns/_shared/types/monthly-returns";
 import { getTotalIncome } from "@bhaisaab/features/monthly-returns/_shared/utils/income";
 import { AmountSummaryCard } from "@bhaisaab/shared/components/app/amount-summary-card/amount-summary-card";
 import { FC, useMemo } from "react";

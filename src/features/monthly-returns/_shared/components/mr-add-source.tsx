@@ -1,4 +1,4 @@
-import { useAddMonthlyIncomeSource } from "@bhaisaab/features/monthly-returns/_shared/hooks/monthly-return";
+import { useAddMonthlyIncomeSource } from "@bhaisaab/features/monthly-returns/_shared/hooks/use-add-monthly-income-source";
 import {
   AddSourceRequest,
   AddSourceSchema,

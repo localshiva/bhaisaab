@@ -1,4 +1,4 @@
-import { IMonthlyReturnsRow } from "@bhaisaab/features/monthly-returns/_shared/hooks/monthly-return";
+import { IMonthlyReturnsRow } from "@bhaisaab/features/monthly-returns/_shared/types/monthly-returns";
 
 export const getTotalIncome = (rows: IMonthlyReturnsRow[]) => {
   let sum = 0;

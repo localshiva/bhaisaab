@@ -2,7 +2,7 @@
 import { MRAddSource } from "@bhaisaab/features/monthly-returns/_shared/components/mr-add-source";
 import { MRSourceList } from "@bhaisaab/features/monthly-returns/_shared/components/mr-source-list";
 import { MRSummaryCard } from "@bhaisaab/features/monthly-returns/_shared/components/mr-summary-card";
-import { useMonthlyReturns } from "@bhaisaab/features/monthly-returns/_shared/hooks/monthly-return";
+import { useMonthlyReturns } from "@bhaisaab/features/monthly-returns/_shared/hooks/use-monthly-returns";
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 

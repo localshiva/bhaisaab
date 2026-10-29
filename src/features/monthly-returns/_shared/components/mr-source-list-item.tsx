@@ -1,4 +1,4 @@
-import { useDeleteMonthlySource } from "@bhaisaab/features/monthly-returns/_shared/hooks/monthly-return";
+import { useDeleteMonthlySource } from "@bhaisaab/features/monthly-returns/_shared/hooks/use-delete-monthly-source";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { BanknoteArrowUp, Loader2, Trash2 } from "lucide-react";
