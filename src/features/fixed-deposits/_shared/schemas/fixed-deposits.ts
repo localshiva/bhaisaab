@@ -15,6 +15,7 @@ export const CreateFixedDepositSchema = z
   .object({
     amount: z
       .number()
+      .int("Amount must be a whole number")
       .positive("Amount must be positive")
       .min(1, "Amount is required"),
     interestRate: z
