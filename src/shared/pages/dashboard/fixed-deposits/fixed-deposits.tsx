@@ -3,11 +3,10 @@
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useFixedDeposits } from "@bhaisaab/shared/hooks/services/fixed-deposits";
-
-import { FDCreateForm } from "./components/fd-create-form";
-import { FDEmptyList } from "./components/fd-empty-list";
-import { FDList } from "./components/fd-list";
-import { FDSummaryCard } from "./components/fd-summary-card";
+import { FDCreateForm } from "@bhaisaab/shared/pages/dashboard/fixed-deposits/components/fd-create-form";
+import { FDEmptyList } from "@bhaisaab/shared/pages/dashboard/fixed-deposits/components/fd-empty-list";
+import { FDList } from "@bhaisaab/shared/pages/dashboard/fixed-deposits/components/fd-list";
+import { FDSummaryCard } from "@bhaisaab/shared/pages/dashboard/fixed-deposits/components/fd-summary-card";
 
 export default function FixedDeposits() {
   const { isLoading, data } = useFixedDeposits();

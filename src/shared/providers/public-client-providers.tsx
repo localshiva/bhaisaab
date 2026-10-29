@@ -1,6 +1,7 @@
 "use client";
 import { SidebarProvider } from "@bhaisaab/shared/components/core/sidebar";
 import { SESSION_EXPIRED_MESSAGE } from "@bhaisaab/shared/constants/app";
+import { getErrorMessage } from "@bhaisaab/shared/utils/error";
 import {
   MutationCache,
   QueryCache,
@@ -12,8 +13,6 @@ import { SessionProvider, signOut } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
 import { toast } from "sonner";
-
-import { getErrorMessage } from "../utils/error";
 
 interface PublicClientProvidersProps {
   nonce: string | null;

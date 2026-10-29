@@ -1,10 +1,9 @@
 // @bhaisaab/shared/pages/not-found.tsx
+import { GoBackButton } from "@bhaisaab/shared/components/app/go-back-button";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { FileQuestion, Home } from "lucide-react";
 import Link from "next/link";
-
-import { GoBackButton } from "../components/app/go-back-button";
 
 export default function NotFound() {
   return (

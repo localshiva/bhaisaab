@@ -2,10 +2,9 @@
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useMonthlyExpenses } from "@bhaisaab/shared/hooks/services/monthly-expenses";
+import { MonthlyExpenseSummaryCard } from "@bhaisaab/shared/pages/dashboard/monthly-expenses/components/monthly-expense-summary-card";
+import { MonthlyExpensesList } from "@bhaisaab/shared/pages/dashboard/monthly-expenses/components/monthly-expenses-list";
 import { format } from "date-fns/format";
-
-import { MonthlyExpenseSummaryCard } from "./components/monthly-expense-summary-card";
-import { MonthlyExpensesList } from "./components/monthly-expenses-list";
 
 export const MonthlyExpense = () => {
   const { isLoading, data } = useMonthlyExpenses();

@@ -1,7 +1,6 @@
 import { SESSION_EXPIRED_MESSAGE } from "@bhaisaab/shared/constants/app";
+import { getGoogleTokens } from "@bhaisaab/shared/utils/auth/auth";
 import { google, sheets_v4 } from "googleapis";
-
-import { getGoogleTokens } from "../auth/auth";
 
 /**
  * Creates a Google Sheets API client using OAuth token from the user's session

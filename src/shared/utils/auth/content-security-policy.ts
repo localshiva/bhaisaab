@@ -1,6 +1,5 @@
+import { serverEnv } from "@bhaisaab/shared/utils/env-vars/server.env";
 import { NextRequest, NextResponse } from "next/server";
-
-import { serverEnv } from "../env-vars/server.env";
 
 export function generateNonce(): string {
   return Buffer.from(crypto.randomUUID()).toString("base64");

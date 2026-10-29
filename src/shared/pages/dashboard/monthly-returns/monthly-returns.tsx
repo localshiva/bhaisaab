@@ -2,10 +2,9 @@
 import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { useMonthlyReturns } from "@bhaisaab/shared/hooks/services/monthly-return";
-
-import { MRAddSource } from "./components/mr-add-source";
-import { MRSourceList } from "./components/mr-source-list";
-import { MRSummaryCard } from "./components/mr-summary-card";
+import { MRAddSource } from "@bhaisaab/shared/pages/dashboard/monthly-returns/components/mr-add-source";
+import { MRSourceList } from "@bhaisaab/shared/pages/dashboard/monthly-returns/components/mr-source-list";
+import { MRSummaryCard } from "@bhaisaab/shared/pages/dashboard/monthly-returns/components/mr-summary-card";
 
 export default function MonthlyReturns() {
   const { isLoading, data } = useMonthlyReturns();

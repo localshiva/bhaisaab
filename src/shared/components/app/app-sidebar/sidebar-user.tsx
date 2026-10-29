@@ -1,3 +1,4 @@
+import { ThemeSwitcher } from "@bhaisaab/shared/components/app/theme-switcher";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,8 +17,6 @@ import { ChevronUp, Loader2, User2 } from "lucide-react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useToggle } from "react-use";
-
-import { ThemeSwitcher } from "../theme-switcher";
 
 interface SidebarUserProps {
   user?: User;

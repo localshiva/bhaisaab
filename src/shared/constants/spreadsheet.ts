@@ -1,4 +1,4 @@
-import { serverEnv } from "../utils/env-vars/server.env";
+import { serverEnv } from "@bhaisaab/shared/utils/env-vars/server.env";
 
 /**
  * Configuration for Google services

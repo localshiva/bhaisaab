@@ -1,8 +1,7 @@
 // proxy.ts
+import { auth } from "@bhaisaab/shared/utils/auth/auth";
+import { setSecurityHeaders } from "@bhaisaab/shared/utils/auth/content-security-policy";
 import { NextResponse } from "next/server";
-
-import { auth } from "./shared/utils/auth/auth";
-import { setSecurityHeaders } from "./shared/utils/auth/content-security-policy";
 
 const API_AUTH_SIGNIN_PATH = "/api/auth/signin";
 

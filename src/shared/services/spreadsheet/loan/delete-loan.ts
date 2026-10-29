@@ -1,8 +1,8 @@
 // @bhaisaab/shared/services/spreadsheet/loan/delete-loan.ts
 import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
+import { deleteSingleRow } from "@bhaisaab/shared/services/spreadsheet/delete-single-row";
 import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
 
-import { deleteSingleRow } from "../delete-single-row";
 import { LOAN_REPORT_SHEET_NAME } from "./shared";
 
 /**

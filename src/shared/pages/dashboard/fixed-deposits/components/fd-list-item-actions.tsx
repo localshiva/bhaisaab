@@ -7,14 +7,13 @@ import {
   DropdownMenuTrigger,
 } from "@bhaisaab/shared/components/core/dropdown-menu";
 import { useDeleteFixedDeposit } from "@bhaisaab/shared/hooks/services/fixed-deposits";
+import { useAddFDStore } from "@bhaisaab/shared/pages/dashboard/fixed-deposits/hooks/use-add-fd-store";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { Copy, Loader2, MoreVertical, Trash2 } from "lucide-react";
 import { FC } from "react";
 import { useToggle } from "react-use";
 import { toast } from "sonner";
-
-import { useAddFDStore } from "../hooks/use-add-fd-store";
 
 interface FDListItemActionsProps {
   id: number; // Added ID for delete functionality

@@ -1,5 +1,3 @@
-import { FC, useCallback } from "react";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,7 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../core/alert-dialog";
+} from "@bhaisaab/shared/components/core/alert-dialog";
+import { FC, useCallback } from "react";
 
 interface ConfirmAlertDialogProps {
   message: string;

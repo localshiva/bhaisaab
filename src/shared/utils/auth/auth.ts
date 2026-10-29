@@ -1,12 +1,11 @@
 // In your auth.ts file
 import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
+import { serverEnv } from "@bhaisaab/shared/utils/env-vars/server.env";
 import { getCurrentScope } from "@sentry/nextjs";
 import { headers } from "next/headers";
 import NextAuth from "next-auth";
 import { getToken, JWT } from "next-auth/jwt";
 import Google from "next-auth/providers/google";
-
-import { serverEnv } from "../env-vars/server.env";
 
 const googleProviderConfig = {
   authorization: { ...googleServiceConfig.authorization },

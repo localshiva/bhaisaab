@@ -153,6 +153,20 @@ const eslintConfig = [
       "import-x/no-duplicates": "error",
       "import-x/no-extraneous-dependencies": "error",
       "import-x/no-anonymous-default-export": "error",
+
+      // Cross-directory imports use the @bhaisaab/ alias
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: String.raw`^\.\.?/.*/|^\.\./`,
+              message:
+                "Use the @bhaisaab/ alias. Relative imports are only for siblings in the same directory.",
+            },
+          ],
+        },
+      ],
     },
   },
   {

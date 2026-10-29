@@ -16,11 +16,10 @@ import {
   AddLoanSchema,
 } from "@bhaisaab/shared/constants/validation/loans";
 import { useAddLoan } from "@bhaisaab/shared/hooks/services/loan";
+import { useAddLoanModalStore } from "@bhaisaab/shared/pages/dashboard/loans/hooks/use-open-add-loan-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-
-import { useAddLoanModalStore } from "../hooks/use-open-add-loan-form";
 
 export const AddLoanForm = () => {
   const { isAddLoanOpen, toggleAddLoan, closeAddLoan } = useAddLoanModalStore();

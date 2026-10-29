@@ -1,7 +1,6 @@
+import { SESSION_EXPIRED_MESSAGE } from "@bhaisaab/shared/constants/app";
 import { AxiosError, isAxiosError } from "axios";
 import { NextResponse } from "next/server";
-
-import { SESSION_EXPIRED_MESSAGE } from "../constants/app";
 
 const isLikelyHTML = (str: string) => /^<!doctype html>/i.test(str.trim());
 

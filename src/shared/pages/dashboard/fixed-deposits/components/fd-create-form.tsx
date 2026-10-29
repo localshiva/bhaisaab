@@ -16,6 +16,7 @@ import {
   CreateFixedDepositSchema,
 } from "@bhaisaab/shared/constants/validation/fixed-deposits";
 import { useCreateFixedDeposit } from "@bhaisaab/shared/hooks/services/fixed-deposits";
+import { useAddFDStore } from "@bhaisaab/shared/pages/dashboard/fixed-deposits/hooks/use-add-fd-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addMonths } from "date-fns/addMonths";
 import { addYears } from "date-fns/addYears";
@@ -24,8 +25,6 @@ import { intervalToDuration } from "date-fns/intervalToDuration";
 import { Plus } from "lucide-react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-
-import { useAddFDStore } from "../hooks/use-add-fd-store";
 
 const INITIAL_VALUES: CreateFixedDepositRequest = {
   amount: 0,
