@@ -22,8 +22,8 @@ export const proxy = auth(req => {
     }
 
     /**
-     * A session cookie without a session means it expired
-     * or the Google token refresh failed.
+     * A session cookie without a session means it expired,
+     * the Google token refresh failed or the email is no longer allowed.
      *
      * Auth.js deletes that cookie on this same response.
      */
