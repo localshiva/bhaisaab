@@ -44,7 +44,13 @@ export async function getAllMonthlyReturns(): Promise<string[][]> {
   return fetchMonthlyReturnsData(range);
 }
 
-/** Writes [type, source, amount] into the row below the last filled row. */
+/**
+ * Writes [type, source, amount] into the row below the last filled row.
+ *
+ * Values go in as RAW, so that the sheet parses nothing.
+ * A source such as "=..." or "007" stays text, as typed,
+ * and the amount is stored as the number it was sent as.
+ */
 export async function addMonthlyIncomeSource(
   sourceData: AddSourceRequest,
 ): Promise<boolean> {
@@ -66,7 +72,7 @@ export async function addMonthlyIncomeSource(
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
       range: `${SHEET_NAME}!A${nextRowAfterLast}:C${nextRowAfterLast}`,
-      valueInputOption: "USER_ENTERED",
+      valueInputOption: "RAW",
       requestBody: {
         values: [[sourceData.type, sourceData.source, sourceData.amount]],
       },
