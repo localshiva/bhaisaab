@@ -24,7 +24,7 @@ export async function fetchMonthlyExpensesData(
 
     return response.data.values ?? [];
   } catch (error) {
-    console.error("Error fetching loans data:", error);
+    console.error("Error fetching monthly expenses data:", error);
     throw error;
   }
 }
