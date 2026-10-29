@@ -68,12 +68,19 @@ const refreshToken = async (token: JWT): Promise<JWT | null> => {
 const isTokenExpired = (token: JWT): boolean =>
   !token.expires_at || token.expires_at * 1000 <= Date.now() + 10_000;
 
+/**
+ * Matches an email against `ALLOWED_EMAILS`, ignoring spaces and letter case.
+ *
+ * The env list is already normalised when it is parsed.
+ */
+const isAllowedEmail = (email: string | null | undefined): boolean =>
+  !!email && serverEnv.ALLOWED_EMAILS.includes(email.trim().toLowerCase());
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [Google(googleProviderConfig)],
   callbacks: {
     signIn({ user }) {
-      const allowedEmails = serverEnv.ALLOWED_EMAILS;
-      return allowedEmails.includes(user.email ?? "");
+      return isAllowedEmail(user.email);
     },
     authorized({ auth }) {
       return !!auth;

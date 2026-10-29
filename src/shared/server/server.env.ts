@@ -25,7 +25,17 @@ export const serverEnv = serverSchema.parse({
   isProduction: process.env.NODE_ENV === "production",
   isDev: process.env.NODE_ENV === "development",
 
-  ALLOWED_EMAILS: process.env.ALLOWED_EMAILS?.split(",") ?? [],
+  /**
+   * Trimmed and lowercased once here, so that a sign-in matches
+   * whatever spaces or letter case the env value uses.
+   *
+   * Empty entries from a stray comma are dropped, so that a value
+   * without a real email still fails the at-least-one check.
+   */
+  ALLOWED_EMAILS:
+    process.env.ALLOWED_EMAILS?.split(",")
+      .map(email => email.trim().toLowerCase())
+      .filter(Boolean) ?? [],
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;
