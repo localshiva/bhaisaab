@@ -12,8 +12,7 @@ import {
 import { Separator } from "@bhaisaab/shared/components/core/separator";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { formatCurrency } from "@bhaisaab/shared/utils/currency";
-import { format } from "date-fns";
-import { Banknote, CalendarIcon, Loader2 } from "lucide-react";
+import { Banknote, Loader2 } from "lucide-react";
 import { FC } from "react";
 
 interface LoanPaymentsDialogProps {
@@ -33,18 +32,6 @@ export const LoanPaymentsDialog: FC<LoanPaymentsDialogProps> = ({
 
   const totalPaid =
     payments?.reduce((sum, payment) => sum + payment.amount, 0) ?? 0;
-
-  /**
-   * The sheet does not store payment dates. So, this shows a made-up
-   * date, one month apart per payment column.
-   */
-  const getPaymentDate = (columnIndex: number) => {
-    const baseDate = new Date();
-    baseDate.setMonth(
-      baseDate.getMonth() - (payments?.length ?? 0) + (columnIndex - 4),
-    );
-    return format(baseDate, "MMM d, yyyy");
-  };
 
   const renderLoading = () => (
     <div className="flex flex-col items-center justify-center py-8">
@@ -118,12 +105,6 @@ export const LoanPaymentsDialog: FC<LoanPaymentsDialogProps> = ({
                 className="text-green-600"
               >
                 {formatCurrency(payment.amount)}
-              </Typography>
-            </div>
-            <div className="flex items-center gap-1 mt-2 text-muted-foreground">
-              <CalendarIcon className="size-3" />
-              <Typography variant="small" textColor="muted">
-                {getPaymentDate(payment.columnIndex)}
               </Typography>
             </div>
           </div>
