@@ -168,7 +168,7 @@ export const MRAddSource = () => {
                     <Input
                       id="amount"
                       type="number"
-                      min="0"
+                      min="1"
                       step="1"
                       placeholder="Enter amount"
                       className={
