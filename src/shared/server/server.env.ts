@@ -1,4 +1,6 @@
 // env.server.ts
+import "server-only";
+
 import { z } from "zod";
 
 const serverSchema = z.object({

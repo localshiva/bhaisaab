@@ -1,6 +1,6 @@
 // app/auth/login/page.tsx
 import { Login } from "@bhaisaab/shared/pages/auth/login";
-import { signIn } from "@bhaisaab/shared/utils/auth/auth";
+import { signIn } from "@bhaisaab/shared/server/auth";
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 

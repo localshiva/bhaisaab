@@ -1,6 +1,6 @@
 // @bhaisaab/shared/services/spreadsheet/monthly-expense/update-additional-payment.ts
-import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
-import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
+import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
+import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
 import { MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
 

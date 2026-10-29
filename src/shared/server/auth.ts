@@ -1,6 +1,8 @@
 // In your auth.ts file
-import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
-import { serverEnv } from "@bhaisaab/shared/utils/env-vars/server.env";
+import "server-only";
+
+import { serverEnv } from "@bhaisaab/shared/server/server.env";
+import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
 import { getCurrentScope } from "@sentry/nextjs";
 import { headers } from "next/headers";
 import NextAuth from "next-auth";

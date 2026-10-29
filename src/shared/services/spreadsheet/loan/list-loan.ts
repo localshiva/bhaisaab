@@ -1,5 +1,5 @@
-import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
-import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
+import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
+import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
 import { LOAN_REPORT_SHEET_NAME } from "./shared";
 

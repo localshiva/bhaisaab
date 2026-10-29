@@ -1,6 +1,6 @@
-import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
 import { CreateFixedDepositRequest } from "@bhaisaab/shared/constants/validation/fixed-deposits";
-import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
+import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
+import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
 import { FD_SHEET_NAME } from "./shared";
 

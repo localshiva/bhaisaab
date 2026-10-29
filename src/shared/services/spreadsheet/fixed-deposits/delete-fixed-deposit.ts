@@ -1,7 +1,7 @@
 // @bhaisaab/shared/services/spreadsheet/fixed-deposits/delete.ts
-import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
-import { deleteSingleRow } from "@bhaisaab/shared/services/spreadsheet/delete-single-row";
-import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
+import { deleteSingleRow } from "@bhaisaab/shared/server/spreadsheet/delete-single-row";
+import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
+import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
 import { FD_SHEET_NAME } from "./shared";
 

@@ -1,4 +1,6 @@
-import { serverEnv } from "@bhaisaab/shared/utils/env-vars/server.env";
+import "server-only";
+
+import { serverEnv } from "@bhaisaab/shared/server/server.env";
 import { NextRequest, NextResponse } from "next/server";
 
 export function generateNonce(): string {

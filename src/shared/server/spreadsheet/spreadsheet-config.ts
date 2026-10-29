@@ -1,5 +1,7 @@
+import "server-only";
+
 import { SESSION_EXPIRED_MESSAGE } from "@bhaisaab/shared/constants/app";
-import { getGoogleTokens } from "@bhaisaab/shared/utils/auth/auth";
+import { getGoogleTokens } from "@bhaisaab/shared/server/auth";
 import { google, sheets_v4 } from "googleapis";
 
 /**

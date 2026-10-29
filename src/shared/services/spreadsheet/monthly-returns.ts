@@ -1,11 +1,10 @@
-import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
 import {
   AddSourceRequest,
   DeleteSourceRequest,
 } from "@bhaisaab/shared/constants/validation/monthly-returns";
-import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
-
-import { deleteSingleRow } from "./delete-single-row";
+import { deleteSingleRow } from "@bhaisaab/shared/server/spreadsheet/delete-single-row";
+import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
+import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
 export const SHEET_NAME = "Monthly Returns";
 

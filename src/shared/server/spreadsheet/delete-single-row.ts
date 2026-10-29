@@ -1,3 +1,5 @@
+import "server-only";
+
 import { sheets_v4 } from "googleapis";
 
 export const deleteSingleRow = async (

@@ -1,7 +1,7 @@
 // @bhaisaab/shared/services/spreadsheet/monthly-expenses/add-expense.ts
-import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
 import { AddMonthlyExpenseRequest } from "@bhaisaab/shared/constants/validation/monthly-expenses";
-import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
+import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
+import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 
 import { columnIndexToLetter, MONTHLY_EXPENSE_SHEET_NAME } from "./shared";
 

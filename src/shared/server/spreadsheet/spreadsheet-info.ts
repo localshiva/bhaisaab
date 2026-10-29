@@ -1,5 +1,7 @@
-import { googleServiceConfig } from "@bhaisaab/shared/constants/spreadsheet";
-import { createSheetsClient } from "@bhaisaab/shared/utils/spreadsheet/spreadsheet-config";
+import "server-only";
+
+import { googleServiceConfig } from "@bhaisaab/shared/server/spreadsheet/google-service-config";
+import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsheet-config";
 import { sheets_v4 } from "googleapis";
 
 /**
