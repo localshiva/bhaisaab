@@ -4,9 +4,7 @@ import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useQuery } from "@tanstack/react-query";
 
-/**
- * Hook for fetching all loans
- */
+/** Fetches every month row of the Monthly Expense sheet, newest first. */
 export function useMonthlyExpenses() {
   return useQuery({
     queryKey: monthlyExpensesQueryKey,

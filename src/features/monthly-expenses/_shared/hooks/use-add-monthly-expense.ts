@@ -7,6 +7,11 @@ import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+/**
+ * Adds an expense, with an optional comment, to a month's row.
+ *
+ * On success it invalidates the month list and that month's expenses.
+ */
 export function useAddMonthlyExpense() {
   const queryClient = useQueryClient();
 
@@ -19,9 +24,7 @@ export function useAddMonthlyExpense() {
       return data;
     },
     onSuccess: (_, variables) => {
-      // Invalidate and refetch loans query after successful mutation
       void queryClient.invalidateQueries({ queryKey: monthlyExpensesQueryKey });
-      // Also invalidate the specific loan's payments query
       void queryClient.invalidateQueries({
         queryKey: monthlyExpenseQueryKey(variables.rowIndex),
       });

@@ -8,21 +8,16 @@ import {
   MONTHLY_EXPENSE_SHEET_NAME,
 } from "./monthly-expense-sheet";
 
-/**
- * Interface for updating a monthly expense
- */
 export interface IUpdateMonthlyExpenseRequest {
-  rowIndex: number; // The row index of the month
-  columnIndex: number; // Column index of the expense to update
-  amount: number; // New amount for the expense
-  comment?: string; // Optional comment for the expense
+  rowIndex: number; // 1-based sheet row of the month
+  columnIndex: number; // 0-based sheet column of the expense
+  amount: number;
+  comment?: string;
 }
 
 /**
- * Updates an existing expense
- *
- * @param updateData Data for updating the expense
- * @returns Boolean indicating success
+ * Overwrites an expense cell's amount and replaces its note.
+ * A missing comment clears the note.
  */
 export async function updateMonthlyExpense(
   updateData: IUpdateMonthlyExpenseRequest,
@@ -31,10 +26,8 @@ export async function updateMonthlyExpense(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Use the columnIndexToLetter helper for consistent column handling
     const columnLetter = columnIndexToLetter(updateData.columnIndex);
 
-    // Update the cell with the new expense amount
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
       range: `${MONTHLY_EXPENSE_SHEET_NAME}!${columnLetter}${updateData.rowIndex}`,
@@ -56,7 +49,6 @@ export async function updateMonthlyExpense(
       throw new Error(`Sheet ${MONTHLY_EXPENSE_SHEET_NAME} not found`);
     }
 
-    // Update the cell note
     await sheetsClient.spreadsheets.batchUpdate({
       spreadsheetId,
       requestBody: {

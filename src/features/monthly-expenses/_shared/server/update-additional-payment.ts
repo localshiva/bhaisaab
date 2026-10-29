@@ -5,20 +5,14 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 
 import { MONTHLY_EXPENSE_SHEET_NAME } from "./monthly-expense-sheet";
 
-/**
- * Interface for updating the additional payment column
- */
 export interface IUpdateAdditionalPaymentRequest {
-  rowIndex: number; // The row index of the month
-  amount: number; // Amount to add as additional payment
+  rowIndex: number; // 1-based sheet row of the month
+  amount: number;
 }
 
 /**
- * Updates the additional payment for a specific month
- * Column C holds the Additional Payment value
- *
- * @param updateData Data for updating the additional payment
- * @returns Boolean indicating success
+ * Writes the amount into column C (Additional Payment) of the month's row,
+ * replacing any value already there.
  */
 export async function updateAdditionalPayment(
   updateData: IUpdateAdditionalPaymentRequest,
@@ -27,10 +21,8 @@ export async function updateAdditionalPayment(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Additional Payment is in column C
     const ADDITIONAL_PAYMENT_COLUMN = "C";
 
-    // Update the cell with the additional payment amount
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
       range: `${MONTHLY_EXPENSE_SHEET_NAME}!${ADDITIONAL_PAYMENT_COLUMN}${updateData.rowIndex}`,

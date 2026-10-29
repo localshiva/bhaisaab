@@ -29,15 +29,24 @@ interface MonthlyExpenseListItemProps {
 const lockedButtonClass =
   "opacity-50 cursor-not-allowed hover:bg-background dark:hover:bg-input/30";
 
+/**
+ * Parses a sheet date such as "January, 2025"
+ * by rewriting it to "January 1, 2025", which `new Date` reads reliably.
+ */
 function parseMonthYear(dateStr: string): Date {
   const [month, yearStr] = dateStr.split(",").map(part => part.trim());
   const year = Number.parseInt(yearStr, 10);
 
-  // Create a date string in a format widely supported
   const formattedDate = `${month} 1, ${year}`;
   return new Date(formattedDate);
 }
 
+/**
+ * Card for one month. Clicking it opens the month's expense details.
+ *
+ * Only the current month accepts new expenses and payments.
+ * For past months the buttons stay clickable and explain the lock in a toast.
+ */
 export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
   ({
     originalRowIndex,
@@ -51,13 +60,11 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
     const [isAddExpenseOpen, toggleAddExpenseOpen] = useToggle(false);
     const [isAddPaymentOpen, toggleAddPaymentOpen] = useToggle(false);
 
-    // Convert string values to numbers
     const numInHand = Number(inHand) || 0;
     const numAdditionalPayment = Number(additionalPayment) || 0;
     const numTotalExpense = Number(totalExpense) || 0;
     const numRemainder = Number(remainder) || 0;
 
-    // Parse date and determine if it's current or previous month
     const expenseDate = new Date(parseMonthYear(date));
     const currentMonth = new Date();
     const monthLabel = format(expenseDate, "MMM, yyyy");
@@ -65,7 +72,6 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
     const isCurrentMonth =
       format(expenseDate, "MMMM, yyyy") === format(currentMonth, "MMMM, yyyy");
 
-    // Calculate expense percentage
     const expensePercentage =
       numInHand > 0
         ? Math.min(100, Math.round((numTotalExpense / numInHand) * 100))
@@ -117,11 +123,9 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
           onClick={handleCardClick}
           role="button"
         >
-          {/* Top colored strip */}
           <div className="h-1 w-full bg-primary" />
 
           <div className="p-4">
-            {/* Header with month and status */}
             <div className="flex justify-between items-center mb-3">
               <div className="flex items-center gap-2">
                 <CalendarDays className="size-5 text-muted-foreground" />
@@ -145,7 +149,6 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               </div>
             </div>
 
-            {/* Expense details */}
             <div className="space-y-2 mb-4">
               <div className="flex justify-between">
                 <Typography variant="body" textColor="muted">
@@ -199,7 +202,6 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               </div>
             </div>
 
-            {/* Progress bar */}
             <div className="space-y-1">
               <div className="flex justify-between items-center">
                 <Typography variant="small" textColor="muted">
@@ -223,7 +225,6 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               </div>
             </div>
 
-            {/* Status message */}
             <div className="mt-4 p-3 rounded-lg flex items-center gap-2 bg-blue-50 dark:bg-blue-950/20">
               <Receipt className="size-5 text-blue-600 shrink-0" />
               <Typography variant="small">
@@ -233,7 +234,6 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
               </Typography>
             </div>
 
-            {/* Show action buttons directly if expenses can be added */}
             <div
               className="flex flex-wrap gap-2 pt-4"
               onClick={e => e.stopPropagation()}

@@ -25,6 +25,10 @@ interface IAdditionalPaymentFormProps {
 
 type PaymentFormData = z.infer<typeof AddAdditionalPaymentSchema>;
 
+/**
+ * Dialog that sets a month's additional payment.
+ * It closes and resets after a successful save.
+ */
 export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
   rowIndex,
   date,
@@ -46,13 +50,12 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
       { rowIndex: data.rowIndex, amount: data.amount },
       {
         onSuccess: () => {
-          // Close dialog and reset form on success
           toggleOpen(false);
           reset({ rowIndex, amount: 0 });
         },
         onError: (err: Error) => {
+          // The mutation cache shows the error toast.
           console.error("Failed to add payment:", err);
-          // Error handling will be done by the hook and toast notifications
         },
       },
     );
@@ -61,7 +64,6 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={toggleOpen}>
       <DialogContent className="sm:max-w-md">
-        {/* Header */}
         <DialogHeader>
           <DialogTitle>Add Additional Payment for {date}</DialogTitle>
           <DialogDescription>
@@ -70,9 +72,7 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Form */}
           <div className="grid gap-4 py-4">
-            {/* Payment Amount */}
             <div className="grid gap-2">
               <Controller
                 name="amount"
@@ -100,7 +100,6 @@ export const AdditionalPaymentForm: FC<IAdditionalPaymentFormProps> = ({
                           : ""
                       }
                       onChange={e => {
-                        // Ensure we always have a positive number
                         const inputValue = e.target.value;
                         const numValue =
                           inputValue === ""

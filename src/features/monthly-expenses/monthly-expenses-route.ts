@@ -3,11 +3,13 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextResponse } from "next/server";
 
 /**
- * GET handler for fetching loans data
+ * Lists every month in the Monthly Expense sheet, newest first.
+ *
+ * Each row carries its 1-based sheet row index,
+ * which the expense and additional payment routes use to address that month.
  */
 export async function GET() {
   try {
-    // Get loans data using the service
     const values = await getAllMonthlyExpenses();
 
     if (values.length === 0) {
@@ -17,7 +19,6 @@ export async function GET() {
       });
     }
 
-    // Add original row index to each row before reversing
     const rowsWithIndex = values
       .slice(1)
       .map((row, index) => ({

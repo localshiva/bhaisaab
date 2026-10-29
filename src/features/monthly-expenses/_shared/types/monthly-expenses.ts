@@ -1,15 +1,14 @@
-/**
- * Interface for monthly expense details
- */
+/** One expense cell in a month's row. The comment is the cell's note. */
 export interface IMonthlyExpense {
   amount: number;
   comment?: string;
-  columnIndex: number; // Useful for potential future features like editing expenses
+  columnIndex: number; // 0-based sheet column, used to edit or delete the cell
 }
 
+/** A month row as listed by the monthly expenses route. */
 export interface IMonthlyExpenseRow {
   data: string[]; // [date, inHand, additionalPayment, totalExpense, remainder]
-  originalRowIndex: number;
+  originalRowIndex: number; // 1-based sheet row
 }
 
 export interface IUpdateExpenseRequest {

@@ -4,14 +4,13 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * POST handler for adding an additional payment to a monthly record
+ * Writes the additional payment for a month into column C of its row,
+ * replacing any value already there.
  */
 export async function POST(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = (await request.json()) as unknown;
 
-    // Validate against schema
     const result = AddAdditionalPaymentSchema.safeParse(body);
 
     if (!result.success) {
@@ -25,7 +24,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call service to add the additional payment
     const success = await updateAdditionalPayment(result.data);
 
     if (!success) {
@@ -43,7 +41,6 @@ export async function POST(request: NextRequest) {
       message: "Additional payment added successfully",
     });
   } catch (error) {
-    // Return appropriate error response
     return getServerError(error);
   }
 }

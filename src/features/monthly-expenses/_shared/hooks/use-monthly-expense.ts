@@ -5,7 +5,10 @@ import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useQuery } from "@tanstack/react-query";
 
 /**
- * Hook for fetching monthly expenses
+ * Fetches the expenses recorded in one month's row.
+ *
+ * @param rowIndex 1-based sheet row of the month. The query is skipped
+ *                 until it is positive.
  */
 export function useMonthlyExpense(rowIndex: number, enabled = true) {
   return useQuery({
@@ -16,7 +19,6 @@ export function useMonthlyExpense(rowIndex: number, enabled = true) {
       );
       return data.data;
     },
-    // Don't fetch if rowIndex is invalid
     enabled: rowIndex > 0 && enabled,
     meta: {
       toast: true,

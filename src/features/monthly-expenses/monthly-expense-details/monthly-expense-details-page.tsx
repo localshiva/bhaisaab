@@ -3,6 +3,10 @@ import { MonthlyExpenseList } from "@bhaisaab/features/monthly-expenses/monthly-
 import { useRouter, useSearchParams } from "next/navigation";
 import { FC } from "react";
 
+/**
+ * Expenses of the month named by the `rowIndex` and `date` query params.
+ * Edit and delete controls show only when `canAddExpenses` is "true".
+ */
 const MonthlyExpenseDetails: FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -11,7 +15,6 @@ const MonthlyExpenseDetails: FC = () => {
   const date = searchParams.get("date");
   const canAddExpenses = searchParams.get("canAddExpenses");
 
-  // Handle loading state or invalid params
   if (!rowIndex || !date) {
     return <div className="container py-12 text-center">Loading...</div>;
   }

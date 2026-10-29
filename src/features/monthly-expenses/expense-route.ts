@@ -7,7 +7,6 @@ import { getServerError } from "@bhaisaab/shared/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-// Schema for PUT request
 const UpdateExpenseSchema = z.object({
   rowIndex: z.number().int().positive(),
   columnIndex: z.number().int().min(0),
@@ -15,21 +14,19 @@ const UpdateExpenseSchema = z.object({
   comment: z.string().optional(),
 });
 
-// Schema for DELETE request
 const DeleteExpenseSchema = z.object({
   rowIndex: z.number().int().positive(),
   columnIndex: z.number().int().min(0),
 });
 
 /**
- * POST handler for adding an expense with a note to a monthly record
+ * Writes an expense into the first empty cell from column F onward
+ * in the month's row, and stores the comment as that cell's note.
  */
 export async function POST(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = (await request.json()) as unknown;
 
-    // Validate against schema
     const result = AddMonthlyExpenseSchema.safeParse(body);
 
     if (!result.success) {
@@ -43,7 +40,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call service to add the expense
     const success = await addMonthlyExpense(result.data);
 
     if (!success) {
@@ -61,22 +57,21 @@ export async function POST(request: NextRequest) {
       message: "Expense added successfully",
     });
   } catch (error) {
-    // Return appropriate error response
     return getServerError(error);
   }
 }
 
-// Simple schema for validating the rowIndex parameter
 const MonthlyExpenseSchema = z.object({
   rowIndex: z.number().int().positive(),
 });
 
 /**
- * GET handler for fetching monthly expenses
+ * Returns the expenses recorded in one month's row, with their notes.
+ *
+ * `rowIndex` is the 1-based sheet row of the month.
  */
 export async function GET(request: NextRequest) {
   try {
-    // Get the rowIndex from the query string
     const searchParams = request.nextUrl.searchParams;
     const rowIndex = searchParams.get("rowIndex");
 
@@ -90,7 +85,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Validate the rowIndex
     const result = MonthlyExpenseSchema.safeParse({
       rowIndex: Number.parseInt(rowIndex, 10),
     });
@@ -106,7 +100,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch the expense data
     const expenses = await getMonthlyExpenses(result.data);
 
     return NextResponse.json({
@@ -119,14 +112,13 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * PUT handler for updating an existing expense
+ * Overwrites one expense cell and replaces its note.
+ * A missing comment clears the note.
  */
 export async function PUT(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = (await request.json()) as unknown;
 
-    // Validate against schema
     const result = UpdateExpenseSchema.safeParse(body);
 
     if (!result.success) {
@@ -140,7 +132,6 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Call service to update the expense
     const success = await updateMonthlyExpense(result.data);
 
     if (!success) {
@@ -163,7 +154,8 @@ export async function PUT(request: NextRequest) {
 }
 
 /**
- * DELETE handler for removing an expense
+ * Clears one expense cell and its note. The cell is emptied, not removed,
+ * so the other expenses keep their columns.
  */
 export async function DELETE(request: NextRequest) {
   try {
@@ -181,7 +173,6 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Validate parameters
     const result = DeleteExpenseSchema.safeParse({
       rowIndex: Number.parseInt(rowIndex, 10),
       columnIndex: Number.parseInt(columnIndex, 10),
@@ -198,7 +189,6 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Call service to delete the expense
     const success = await deleteMonthlyExpense(result.data);
 
     if (!success) {

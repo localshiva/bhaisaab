@@ -6,18 +6,13 @@ import { createSheetsClient } from "@bhaisaab/shared/server/spreadsheet/spreadsh
 
 import { MONTHLY_EXPENSE_SHEET_NAME } from "./monthly-expense-sheet";
 
-/**
- * Interface for the monthly expense request
- */
 export interface IMonthlyExpenseRequest {
-  rowIndex: number; // The row index (1-based) of the month to view expenses for
+  rowIndex: number; // 1-based sheet row of the month
 }
 
 /**
- * Fetches all expenses for a specific month
- *
- * @param requestData Data identifying which month to fetch expenses for
- * @returns Array of expense details
+ * Reads the non-empty cells from column F onward in a month's row,
+ * each with its note as the comment and its 0-based column index.
  */
 export async function getMonthlyExpenses(
   requestData: IMonthlyExpenseRequest,
@@ -26,18 +21,16 @@ export async function getMonthlyExpenses(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Expenses now start from column F (index 5) after adding Additional Payment column
     const EXPENSE_START_COLUMN = "F";
     const EXPENSE_START_INDEX = 5;
 
-    // Fetch the row with expense data (starting from column F)
     const rowResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range: `${MONTHLY_EXPENSE_SHEET_NAME}!${EXPENSE_START_COLUMN}${requestData.rowIndex}:ZZZ${requestData.rowIndex}`,
       valueRenderOption: "UNFORMATTED_VALUE",
     });
 
-    // Get cell notes to retrieve comments
+    // The values API does not return notes, so they need a second read.
     const notesResponse = await sheetsClient.spreadsheets.get({
       spreadsheetId,
       ranges: [
@@ -49,7 +42,6 @@ export async function getMonthlyExpenses(
     const rowValues = rowResponse.data.values?.[0] ?? [];
     const expenses: IMonthlyExpense[] = [];
 
-    // Get notes if available
     const notes: (string | undefined)[] = [];
     if (notesResponse.data.sheets && notesResponse.data.sheets.length > 0) {
       const sheet = notesResponse.data.sheets[0];
@@ -64,14 +56,12 @@ export async function getMonthlyExpenses(
       }
     }
 
-    // Process each cell to find expenses (non-empty cells)
     for (const [index, value] of rowValues.entries()) {
       if (value !== null && value !== undefined && value !== "") {
-        // Add expense with its amount, comment (if any), and column index
         expenses.push({
           amount: Number(value),
           comment: notes[index],
-          columnIndex: index + EXPENSE_START_INDEX, // +5 because we start from column F (index 5)
+          columnIndex: index + EXPENSE_START_INDEX,
         });
       }
     }

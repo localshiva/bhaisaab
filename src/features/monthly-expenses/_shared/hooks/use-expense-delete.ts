@@ -7,6 +7,11 @@ import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+/**
+ * Clears one expense cell and its note.
+ *
+ * On success it invalidates the month list and that month's expenses.
+ */
 export function useExpenseDelete() {
   const queryClient = useQueryClient();
 
@@ -18,9 +23,7 @@ export function useExpenseDelete() {
       return responseData;
     },
     onSuccess: (_, variables) => {
-      // Invalidate and refetch monthly expenses queries
       void queryClient.invalidateQueries({ queryKey: monthlyExpensesQueryKey });
-      // Also invalidate the specific month's expenses query
       void queryClient.invalidateQueries({
         queryKey: monthlyExpenseQueryKey(variables.rowIndex),
       });

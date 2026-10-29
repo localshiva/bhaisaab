@@ -7,7 +7,7 @@ export const MONTHLY_EXPENSE_SHEET_NAME = clientEnv.isDev
     "Monthly Expense"
   : "Monthly Expense";
 
-// Converts 0-based column index to column letter (e.g., 0 -> A, 26 -> AA)
+/** Converts a 0-based column index to A1 letters, e.g. 0 -> A, 26 -> AA. */
 export function columnIndexToLetter(index: number): string {
   let letter = "";
   let temp = index;

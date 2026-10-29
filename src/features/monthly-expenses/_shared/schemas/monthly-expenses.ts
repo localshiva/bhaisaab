@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-// Shared between client & server
+/**
+ * Fields the user enters for an expense.
+ * The comment is stored as the cell's note.
+ */
 export const BaseMonthlyExpenseSchema = z.object({
   amount: z
     .number({
@@ -12,7 +15,7 @@ export const BaseMonthlyExpenseSchema = z.object({
   comment: z.string().optional(),
 });
 
-// Only used server-side
+/** Body of the add expense request, validated by the form and the route. */
 export const AddMonthlyExpenseSchema = BaseMonthlyExpenseSchema.extend({
   rowIndex: z
     .number()
@@ -21,13 +24,15 @@ export const AddMonthlyExpenseSchema = BaseMonthlyExpenseSchema.extend({
     .describe("Row index in the spreadsheet (1-based)"),
 });
 
-// Types
 export type BaseMonthlyExpenseRequest = z.infer<
   typeof BaseMonthlyExpenseSchema
 >;
 export type AddMonthlyExpenseRequest = z.infer<typeof AddMonthlyExpenseSchema>;
 
-// Schema for adding an additional payment
+/**
+ * Body of the additional payment request.
+ * The amount replaces the month's additional payment, it is not added to it.
+ */
 export const AddAdditionalPaymentSchema = z.object({
   rowIndex: z.number().int().positive(),
   amount: z.number().positive("Amount must be greater than 0"),

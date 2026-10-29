@@ -6,6 +6,10 @@ import { DataLoading } from "@bhaisaab/shared/components/app/data-loading";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
 import { format } from "date-fns/format";
 
+/**
+ * Monthly expenses page: a summary of the latest month
+ * and a card per month, newest first.
+ */
 export const MonthlyExpense = () => {
   const { isLoading, data } = useMonthlyExpenses();
 
@@ -28,17 +32,13 @@ export const MonthlyExpense = () => {
           Monthly Expenses
         </Typography>
 
-        {/* Show the current month and year e.g "January 2023" */}
-        {/* Use date-fns to format the date */}
         <Typography variant={"body"}>
           {format(new Date(), "MMMM yyyy")}
         </Typography>
       </div>
 
-      {/* Main summary card */}
       <MonthlyExpenseSummaryCard rows={data.rows} />
 
-      {/* Display monthly expenses list */}
       <MonthlyExpensesList rows={data.rows} />
     </div>
   );

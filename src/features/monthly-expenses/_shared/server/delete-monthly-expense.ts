@@ -8,19 +8,14 @@ import {
   MONTHLY_EXPENSE_SHEET_NAME,
 } from "./monthly-expense-sheet";
 
-/**
- * Interface for deleting a monthly expense
- */
 export interface IDeleteMonthlyExpenseRequest {
-  rowIndex: number; // The row index of the month
-  columnIndex: number; // Column index of the expense to delete
+  rowIndex: number; // 1-based sheet row of the month
+  columnIndex: number; // 0-based sheet column of the expense
 }
 
 /**
- * Deletes an expense by clearing the cell value and note
- *
- * @param deleteData Data identifying which expense to delete
- * @returns Boolean indicating success
+ * Clears an expense cell's value and note. The cell is emptied, not removed,
+ * so the other expenses keep their columns and the next add reuses the gap.
  */
 export async function deleteMonthlyExpense(
   deleteData: IDeleteMonthlyExpenseRequest,
@@ -29,10 +24,8 @@ export async function deleteMonthlyExpense(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Use the same helper function from add-expense service for consistency
     const columnLetter = columnIndexToLetter(deleteData.columnIndex);
 
-    // Clear the cell value
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
       range: `${MONTHLY_EXPENSE_SHEET_NAME}!${columnLetter}${deleteData.rowIndex}`,
@@ -54,7 +47,6 @@ export async function deleteMonthlyExpense(
       throw new Error(`Sheet ${MONTHLY_EXPENSE_SHEET_NAME} not found`);
     }
 
-    // Clear the cell note
     await sheetsClient.spreadsheets.batchUpdate({
       spreadsheetId,
       requestBody: {

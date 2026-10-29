@@ -26,6 +26,10 @@ interface MonthlyExpenseFormProps {
 
 type ExpenseFormData = z.infer<typeof AddMonthlyExpenseSchema>;
 
+/**
+ * Dialog that adds an expense, with an optional comment, to a month.
+ * It closes and resets after a successful save.
+ */
 export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
   rowIndex,
   date,
@@ -48,13 +52,12 @@ export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
       { rowIndex: data.rowIndex, amount: data.amount, comment: data.comment },
       {
         onSuccess: () => {
-          // Close dialog and reset form on success
           toggleOpen(false);
           reset({ rowIndex, amount: 0, comment: "" });
         },
         onError: (err: Error) => {
+          // The mutation cache shows the error toast.
           console.error("Failed to add expense:", err);
-          // Error handling will be done by the hook and toast notifications
         },
       },
     );
@@ -63,7 +66,6 @@ export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={toggleOpen}>
       <DialogContent className="sm:max-w-md">
-        {/* Header */}
         <DialogHeader>
           <DialogTitle>Add Expense for {date}</DialogTitle>
           <DialogDescription>
@@ -72,9 +74,7 @@ export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Form */}
           <div className="grid gap-4 py-4">
-            {/* Expense Amount */}
             <div className="grid gap-2">
               <Controller
                 name="amount"
@@ -102,7 +102,6 @@ export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
                           : ""
                       }
                       onChange={e => {
-                        // Ensure we always have a positive number
                         const inputValue = e.target.value;
                         const numValue =
                           inputValue === ""
@@ -124,7 +123,6 @@ export const MonthlyExpenseForm: FC<MonthlyExpenseFormProps> = ({
               />
             </div>
 
-            {/* Comment */}
             <div className="grid gap-2">
               <Controller
                 name="comment"

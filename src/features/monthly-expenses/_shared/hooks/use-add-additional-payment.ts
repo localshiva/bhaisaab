@@ -7,7 +7,11 @@ import { IResponse } from "@bhaisaab/shared/types/http-client";
 import httpClient from "@bhaisaab/shared/utils/http-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-// Add additional payment
+/**
+ * Sets a month's additional payment, replacing the existing value.
+ *
+ * On success it invalidates the month list and that month's expenses.
+ */
 export function useAddAdditionalPayment() {
   const queryClient = useQueryClient();
 
@@ -20,9 +24,7 @@ export function useAddAdditionalPayment() {
       return data;
     },
     onSuccess: (_, variables) => {
-      // Invalidate and refetch monthly expenses query after successful mutation
       void queryClient.invalidateQueries({ queryKey: monthlyExpensesQueryKey });
-      // Also invalidate the specific month's expenses query
       void queryClient.invalidateQueries({
         queryKey: monthlyExpenseQueryKey(variables.rowIndex),
       });

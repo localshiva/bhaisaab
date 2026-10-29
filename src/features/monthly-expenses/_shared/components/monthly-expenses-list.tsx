@@ -9,6 +9,7 @@ interface MonthlyExpensesListProps {
   rows: IMonthlyExpenseRow[];
 }
 
+/** One card per month, in the order the rows are given. */
 export const MonthlyExpensesList: FC<MonthlyExpensesListProps> = ({ rows }) => {
   if (rows.length === 0) {
     return <MonthlyExpenseEmptyList />;

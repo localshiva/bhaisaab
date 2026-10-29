@@ -10,10 +10,10 @@ import {
 } from "./monthly-expense-sheet";
 
 /**
- * Adds an expense to a monthly record
+ * Writes the amount into the first empty cell from column F onward
+ * in the month's row, and stores the comment as that cell's note.
  *
- * @param expenseData Data for the new expense to be added
- * @returns Boolean indicating success
+ * Filling the first gap means a slot left by a deleted expense is reused.
  */
 export async function addMonthlyExpense(
   expenseData: AddMonthlyExpenseRequest,
@@ -22,10 +22,8 @@ export async function addMonthlyExpense(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    // Expenses now start from column F (index 5)
     const EXPENSE_START_COLUMN_INDEX = 5; // Column F
 
-    // Get the current row's expense cells to find the next empty one
     const rowResponse = await sheetsClient.spreadsheets.values.get({
       spreadsheetId,
       range: `${MONTHLY_EXPENSE_SHEET_NAME}!F${expenseData.rowIndex}:ZZ${expenseData.rowIndex}`,
@@ -34,22 +32,19 @@ export async function addMonthlyExpense(
 
     const rowValues = rowResponse.data.values?.[0] ?? [];
 
-    // Count non-empty cells to determine next empty column
     let filledCellCount = 0;
     for (const value of rowValues) {
       if (value !== null && value !== undefined && value !== "") {
         filledCellCount += 1;
       } else {
-        break; // Stop at the first empty cell
+        break;
       }
     }
 
     const nextEmptyColumnIndex = EXPENSE_START_COLUMN_INDEX + filledCellCount;
 
-    // Convert index to A1 notation (supporting columns beyond Z)
     const columnLetter = columnIndexToLetter(nextEmptyColumnIndex);
 
-    // Update the cell with the expense amount
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
       range: `${MONTHLY_EXPENSE_SHEET_NAME}!${columnLetter}${expenseData.rowIndex}`,
@@ -59,7 +54,7 @@ export async function addMonthlyExpense(
       },
     });
 
-    // If a comment is provided, add it as a note
+    // Notes can only be written through batchUpdate, not the values API.
     if (expenseData.comment) {
       const spreadsheetInfo = await sheetsClient.spreadsheets.get({
         spreadsheetId,

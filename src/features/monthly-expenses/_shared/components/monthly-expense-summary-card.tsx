@@ -7,17 +7,18 @@ interface MonthlyExpenseSummaryCardProps {
   rows: IMonthlyExpenseRow[];
 }
 
+/**
+ * Compares the latest month with the one before it.
+ * Expects rows newest first, as the monthly expenses route returns them.
+ */
 export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
   rows,
 }) => {
   const summaryData = useMemo(() => {
-    // Current month data (most recent row)
     const currentMonthRow = rows.length > 0 ? rows.at(0) : null;
 
-    // Previous month data (second most recent row)
     const previousMonthRow = rows.length > 1 ? rows.at(1) : null;
 
-    // Current month values
     const currentMonthInHand = currentMonthRow
       ? Number(currentMonthRow.data[1]) || 0
       : 0;
@@ -32,7 +33,6 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
       ? Number(previousMonthRow.data[4]) || 0
       : 0;
 
-    // Calculate expense change percentage compared to previous month
     let expenseChangePercent = 0;
     if (previousMonthRow) {
       const previousMonthExpense = Number(previousMonthRow.data[3]) || 0;
@@ -45,7 +45,6 @@ export const MonthlyExpenseSummaryCard: FC<MonthlyExpenseSummaryCardProps> = ({
       }
     }
 
-    // Current month label
     const currentMonthLabel = currentMonthRow
       ? currentMonthRow.data[0]
       : format(new Date(), "MMMM, yyyy");
