@@ -10,6 +10,9 @@ import { LOAN_REPORT_SHEET_NAME } from "./loan-report-sheet";
 /**
  * Writes the payment into the first empty cell from column E onwards
  * of the loan's row. Column C's formula then picks it up as paid.
+ *
+ * Returns false, and writes nothing, when the amount is more than
+ * the loan's pending amount in column D.
  */
 export async function addLoanPayment(
   paymentData: IAddLoanPaymentRequest,
@@ -18,13 +21,27 @@ export async function addLoanPayment(
     const sheetsClient = await createSheetsClient();
     const { spreadsheetId } = googleServiceConfig;
 
-    const rowResponse = await sheetsClient.spreadsheets.values.get({
+    const { rowIndex } = paymentData;
+
+    const rowResponse = await sheetsClient.spreadsheets.values.batchGet({
       spreadsheetId,
-      range: `${LOAN_REPORT_SHEET_NAME}!E${paymentData.rowIndex}:ZZZ${paymentData.rowIndex}`,
+      ranges: [
+        `${LOAN_REPORT_SHEET_NAME}!D${rowIndex}`,
+        `${LOAN_REPORT_SHEET_NAME}!E${rowIndex}:ZZZ${rowIndex}`,
+      ],
       valueRenderOption: "UNFORMATTED_VALUE",
     });
 
-    const rowValues = rowResponse.data.values?.[0] ?? [];
+    const [pendingRange, paymentsRange] = rowResponse.data.valueRanges ?? [];
+
+    // An empty or non-numeric pending cell counts as nothing left to pay.
+    const pendingAmount = Number(pendingRange?.values?.[0]?.[0]) || 0;
+
+    if (paymentData.amount > pendingAmount) {
+      return false;
+    }
+
+    const rowValues = paymentsRange?.values?.[0] ?? [];
 
     let filledCellCount = 0;
     for (const value of rowValues) {
@@ -42,7 +59,7 @@ export async function addLoanPayment(
 
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId,
-      range: `${LOAN_REPORT_SHEET_NAME}!${columnLetter}${paymentData.rowIndex}`,
+      range: `${LOAN_REPORT_SHEET_NAME}!${columnLetter}${rowIndex}`,
       valueInputOption: "USER_ENTERED",
       requestBody: {
         values: [[paymentData.amount]],

@@ -9,6 +9,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Writes a payment into the next empty payment cell of a loan row.
+ *
+ * Rejects a payment above the loan's pending amount. The form caps it
+ * too, but a direct request can bypass the form.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -33,7 +36,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: "Failed to add payment",
+          error: "Payment is more than the pending amount.",
         },
         { status: 400 },
       );
