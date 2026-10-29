@@ -39,6 +39,7 @@ Entry files:
 - `schemas/` holds the zod schemas for adding an expense and setting the additional payment. Zod checks that a request body has the right shape and values.
 - `types/` holds the expense and month row types.
 - `constants/` holds the React Query keys that writes use to refresh the right lists.
+- `utils/` holds the current month lock rule, used by both the month list and the API routes.
 - `server/` holds the Google Sheets reads and writes and the tab name.
 - `monthly-expense-details/_shared/components/` holds the details page's expense list with inline edit and delete.
 

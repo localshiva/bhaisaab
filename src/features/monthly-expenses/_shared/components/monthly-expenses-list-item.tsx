@@ -1,3 +1,7 @@
+import {
+  isCurrentIndiaMonth,
+  parseMonthYear,
+} from "@bhaisaab/features/monthly-expenses/_shared/utils/current-month";
 import { Badge } from "@bhaisaab/shared/components/core/badge";
 import { Button } from "@bhaisaab/shared/components/core/button";
 import { Typography } from "@bhaisaab/shared/components/core/typography";
@@ -30,18 +34,6 @@ const lockedButtonClass =
   "opacity-50 cursor-not-allowed hover:bg-background dark:hover:bg-input/30";
 
 /**
- * Parses a sheet date such as "January, 2025"
- * by rewriting it to "January 1, 2025", which `new Date` reads reliably.
- */
-function parseMonthYear(dateStr: string): Date {
-  const [month, yearStr] = dateStr.split(",").map(part => part.trim());
-  const year = Number.parseInt(yearStr, 10);
-
-  const formattedDate = `${month} 1, ${year}`;
-  return new Date(formattedDate);
-}
-
-/**
  * Card for one month. Clicking it opens the month's expense details.
  *
  * Only the current month accepts new expenses and payments.
@@ -65,12 +57,10 @@ export const MonthlyExpenseListItem: FC<MonthlyExpenseListItemProps> = memo(
     const numTotalExpense = Number(totalExpense) || 0;
     const numRemainder = Number(remainder) || 0;
 
-    const expenseDate = new Date(parseMonthYear(date));
-    const currentMonth = new Date();
+    const expenseDate = parseMonthYear(date);
     const monthLabel = format(expenseDate, "MMM, yyyy");
 
-    const isCurrentMonth =
-      format(expenseDate, "MMMM, yyyy") === format(currentMonth, "MMMM, yyyy");
+    const isCurrentMonth = isCurrentIndiaMonth(date);
 
     const expensePercentage =
       numInHand > 0
