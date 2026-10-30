@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Lets the user record extra money received in the current month on top of the money in hand. The month holds one additional payment total, and setting it replaces the old value.
+Lets the user record extra money received in the current month. The month holds one additional payment total, and setting it replaces the old value. The total counts towards the month's In Hand.
 
 ## Requirements
 
@@ -28,6 +28,7 @@ Tab: `Monthly Expense`.
 - Read: the single cell `A{rowIndex}` as displayed text, for the lock check.
 - Write: the single cell `C{rowIndex}`.
 - `rowIndex` is 1-based.
+- The month's In Hand formula in column B adds column C. So, a save changes that month's In Hand and Remainder, and the new Remainder carries into the next month through [month-rollover.md](month-rollover.md).
 
 Request body:
 

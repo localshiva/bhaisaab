@@ -39,20 +39,28 @@ Sheet tab `Loan Report`. The list reads range `A1:D` with formatted values. Form
 
 Row 1 is the header row. Each later row is one loan.
 
-| Column   | Holds          | Format                     | Written by                                                |
-| -------- | -------------- | -------------------------- | --------------------------------------------------------- |
-| A        | Provider       | text                       | the app, when the loan is added                           |
-| B        | Loan amount    | whole number, rupees       | the app, when the loan is added                           |
-| C        | Paid amount    | whole number, rupees       | sheet formula `=SUM(E{row}:ZZZ{row})`, written by the app |
-| D        | Pending amount | whole number, rupees       | sheet formula `=B{row}-C{row}`, written by the app        |
-| E to ZZZ | Payments       | whole number, one per cell | the app, one cell per recorded payment                    |
+| Column   | Holds          | Format                     | Written by                                                                       |
+| -------- | -------------- | -------------------------- | -------------------------------------------------------------------------------- |
+| A        | Provider       | text                       | the app, when the loan is added                                                  |
+| B        | Loan amount    | whole number, rupees       | the app, when the loan is added                                                  |
+| C        | Paid amount    | whole number, rupees       | sheet formula `=SUM(E{row}:ZZZ{row})`, written by the app or the `onEdit` script |
+| D        | Pending amount | whole number, rupees       | sheet formula `=B{row}-C{row}`, written by the app or the `onEdit` script        |
+| E to ZZZ | Payments       | whole number, one per cell | the app, one cell per recorded payment                                           |
 
 The list does not read columns E onwards. [loan-payments.md](loan-payments.md) covers them.
+
+The script file `Loan Report.gs` holds an `onEdit` function, which is a Google Apps Script that runs when a person edits the sheet. An edit trigger, a rule Google keeps for the script, starts it. It only acts on the `Loan Report` tab, below the header row, and on edits to column A, column B or column E onwards.
+
+- When column A of the edited row has a provider, it writes the column C and D formulas into that row.
+- When column A is empty, it clears columns C and D of that row.
+
+Each spreadsheet has its own copy of this script.
 
 ## Decisions
 
 - **The list position is the loan id.** The sheet has no id column. So, every action on a loan sends a row number worked out from the loan's position in the list.
 - **Paid and pending come from the sheet, not the app.** Columns C and D are formulas. So, they stay correct when someone edits a payment cell directly in the sheet.
+- **The `onEdit` script fills in the formulas for loans typed into the sheet.** A loan added by hand has no formulas of its own. The script gives it the same ones the app writes.
 
 ## Edge cases
 

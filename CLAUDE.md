@@ -75,3 +75,4 @@ docs/                           requirements that span several features
 - Data fetching uses React Query hooks that call the app's own `/api/spreadsheet/*` routes through `shared/utils/http-client.ts`.
 - API handlers validate request bodies with the feature's zod schema and return errors through `getServerError` from `shared/utils/error.ts`.
 - Sheet layout is a contract. Column order and header rows are documented in each feature's docs. Changing them is a behaviour change.
+- Each spreadsheet also runs its own Google Apps Script, which reads and writes the same tabs. A sheet change must keep them working. See `src/features/monthly-expenses/docs/month-rollover.md` and `src/features/loans/docs/loan-list.md`.

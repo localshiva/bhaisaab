@@ -59,7 +59,7 @@ Tab: `Monthly Expense`. Column layout of the tab: [month-list.md](month-list.md#
 
 ## Edge cases
 
-- **No row for today's month.** Every card is locked, labelled "Upcoming" when its month is later than today's and "Past" otherwise, and every write is rejected with 403. The user adds the month's row in the sheet first.
+- **No row for today's month.** Every card is locked, labelled "Upcoming" when its month is later than today's and "Past" otherwise, and every write is rejected with 403. [month-rollover.md](month-rollover.md) adds the row in the first hour of the 1st, India time. When the rollover fails, the lock stays until the row exists.
 - **Unreadable column A.** The month counts as locked and is labelled "Past". Its card shows the column A text as it is. The page hides the change controls, and the server rejects writes to that row with 403.
 - **Entirely empty month row.** It is treated as an unreadable column A. Its card renders locked with an empty month label and ₹0 amounts, and the page does not crash.
 - **Direct request to a past month.** The endpoint answers 403 and the sheet does not change.
