@@ -46,6 +46,7 @@ Entry files:
 ## Docs
 
 - [month-list.md](docs/month-list.md): the month list with its summary card and the full sheet layout.
+- [month-rollover.md](docs/month-rollover.md): the Google Apps Script that opens each new month and carries the remainder forward.
 - [add-expense.md](docs/add-expense.md): adding an expense with an optional comment.
 - [additional-payment.md](docs/additional-payment.md): setting a month's additional payment.
 - [expense-details.md](docs/expense-details.md): viewing, editing and deleting one month's expenses.
