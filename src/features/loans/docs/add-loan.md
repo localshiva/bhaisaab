@@ -42,6 +42,7 @@ Columns E onwards stay empty until a payment is recorded. The full layout is in 
 - **Every successful write shows a success toast.** Adding a loan, adding a payment and deleting a loan each confirm with a short toast. It gives consistent feedback across the app.
 - **Adding a loan drops the cached payment histories.** Payment histories are cached by sheet row. A new loan can land in a row that an earlier loan used, so a cached history could belong to another loan.
 - **The paid formula sums up to column ZZZ.** Payments take one cell each from column E, with no column limit. ZZZ is the last column a Google Sheet can have. So, the formula covers every possible payment cell.
+- **The API writes the formulas itself.** The sheet's `onEdit` script, which [loan-list.md](loan-list.md) describes, only runs for edits a person makes. Google does not run it for changes made through the Sheets API.
 
 ## Edge cases
 
