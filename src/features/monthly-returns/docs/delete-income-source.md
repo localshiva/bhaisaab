@@ -37,7 +37,7 @@ The full layout is in [income-list.md](income-list.md).
 ## Decisions
 
 - **A delete asks for confirmation first.** A delete cannot be undone and shifts the rows below it. Loans, fixed deposits and expenses confirm their deletes the same way.
-- **A delete removes only `A:C`, never the whole row.** Row 2 also holds the sheet's total formulas in `G2:I2`. Deleting the whole row would delete those formulas together with the first source. The formulas read open-ended ranges that start at row 2, such as `C2:C`. So, they keep working after the `A:C` cells shift up.
+- **A delete removes only `A:C`, never the whole row.** Row 2 also holds the sheet's total formulas in `G2:I2`. Deleting the whole row would delete those formulas together with the first source, and the [month rollover](../../monthly-expenses/docs/month-rollover.md) reads `G2`. The formulas read open-ended ranges that start at row 2, such as `C2:C`. So, they keep working after the `A:C` cells shift up.
 - **`id` is a 0-based sheet row with the header at 0.** The Sheets API addresses the deleted range by 0-based row index. So, the API passes `id` straight to the delete call and adds 1 only to build the A1 range it reads.
 - **`id` must be at least 1.** Row 0 is the header row.
 - **`source` must match column B.** Rows shift up after every delete, and the sheet can also be edited outside the app. The check stops a stale `id` from deleting a different source.

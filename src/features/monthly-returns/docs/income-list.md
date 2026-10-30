@@ -51,6 +51,7 @@ Row 2 also holds three totals in `G2:I2`, with their labels `Total Income`, `Tot
 
 - The app never writes to columns G, H or I.
 - The app never treats `G:I` values as a source. They reach the page inside the row 2 array and are ignored there, like the rest of columns D to Z.
+- The sheet's month rollover reads `G2` as the new month's income. See [month-rollover.md](../../monthly-expenses/docs/month-rollover.md).
 
 ## Decisions
 
@@ -59,11 +60,12 @@ Row 2 also holds three totals in `G2:I2`, with their labels `Total Income`, `Tot
 - **Every amount uses `formatCurrency`.** One format everywhere, so that the list, its total and the summary card read the same way.
 - **Rows without a usable amount are skipped.** A missing or non-numeric amount would turn every total into `NaN`, and the item it rendered could not be deleted. A blank row has no amount, so the same rule skips it.
 - **The page computes its own totals from columns A to C.** The sheet's totals in `G2:I2` belong to the sheet. The page does not read them as totals and the app never writes them.
+- **A change to the sources reaches the next month, not the current one.** The rollover copies `G2` into a month once, when the month opens. So, the current and past months keep the income they opened with.
 
 ## Edge cases
 
 - **Empty sheet.** The API returns empty `headers` and `rows`. The page shows an empty list, totals of ₹0, and "Total (0 sources)".
-- **Header row only.** Same as an empty sheet, except `headers` holds the header row.
+- **Header row only.** Same as an empty sheet, except `headers` holds the header row. `G2` is then 0, and the next month's rollover fails.
 - **Other types.** A row whose type is neither `Salary` nor `Rent` counts only in "Total Income".
 - **Missing or non-numeric amount.** The row is skipped. The items below it keep their own sheet rows as delete ids.
 - **Blank row between sources.** The row is skipped. The items below it keep their own sheet rows as delete ids.
